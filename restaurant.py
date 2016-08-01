@@ -11,20 +11,24 @@ class Restaurant:
 		self.market = market
 		self.ingredients = {} # ingredient_name -> Ingredient
 
-	def updateIngredientWeight(ingredient, newWeight):
-		resp = ingredient.updateWeight(newWeight)
-		if resp == PLACE_BUY_REQUEST:
-			placeSellRequest(ingredient)
-		elif resp == PLACE_SELL_REQUEST:
-			placeBuyRequest(ingredient)
+	def updateIngredientWeight(self, ingredientName, newWeight):
+		ingred = self.ingredients[ingredientName]
+		if not ingred:
+			raise Exception("Ingredient %s doesn't exist, dudebro" % ingredientName)
 
-	def placeSellRequest(ingredient):
+		resp = ingred.updateWeight(newWeight)
+		if resp == ingredient.PLACE_BUY_REQUEST:
+			self.placeBuyRequest(ingred)
+		elif resp == ingredient.PLACE_SELL_REQUEST:
+			self.placeSellRequest(ingred)
+
+	def placeSellRequest(self, ingr):
 		# gather all the info the market needs for this sell request
 		# do remember that the market has some info on the seller already stored
-		market.receiveSellRequest()
+		self.market.receiveSellRequest(self, ingr.name, amount=(ingr.weight - ingr.sellWeight), minPrice=ingr.minSellPrice)
 
-	def placeBuyRequest(ingredient):
+	def placeBuyRequest(self, ingr):
 		# gather all the info the market needs for this buy request
 		# do remember that the market has some info on the seller already stored
-		market.receiveBuyRequest()
+		self.market.receiveBuyRequest(self, ingr.name, amount=ingr.preferredPurchaseAmount, maxPrice=ingr.maxBuyPrice)
 

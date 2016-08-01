@@ -22,11 +22,39 @@ class Marketplace:
 		self.sellRequests = []
 		self.purchaseRecords = []
 
-	def receiveSellRequest(restaurant, ingredient, weight, minPrice):
+	def receiveSellRequest(self, restaurant, ingrName, amount, minPrice):
+		print "Sell request received"
+		sellRequest = SellRequest(restaurant, ingrName, amount, minPrice)
+		self.sellRequests.append(sellRequest)
+
+		self.transact()
+
+	def receiveBuyRequest(self, restaurant, ingrName, amount, maxPrice):
+		print "Buy request received"
+		buyRequest = BuyRequest(restaurant, ingrName, amount, maxPrice)
+		self.buyRequests.append(buyRequest)
+
+		self.transact()
+
+	def transact(self):
+		# match buyers n sellers, ya'll
 		pass
 
-	def receiveBuyRequest(restaurant, ingredient, weight, maxPrice):
-		pass
+class BuyRequest:
+	def __init__(self, restaurant, ingredientName, amount, maxPrice):
+		self.restaurant = restaurant
+		self.ingredientName = ingredientName
+		self.preferredPurchaseAmount = amount
+		self.maxPrice = maxPrice
+		# TODO other stuff here, like preferred sellers or something...
+
+class SellRequest:
+	def __init__(self, restaurant, ingredientName, amount, minPrice):
+		self.restaurant = restaurant
+		self.ingredientName = ingredientName
+		self.amountAvailable = amount
+		self.minPrice = minPrice
+		# TODO other stuff here, like preferred buyers or something...
 
 
 

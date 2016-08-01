@@ -32,7 +32,7 @@ class Ingredient:
 		self.minSellPrice = minSellPrice
 		
 
-	def updateWeight(newWeight):
+	def updateWeight(self, newWeight):
 		# Update weight, and maybe we wanna make a buy or sell request
 		oldWeight = self.weight
 		self.weight = newWeight
@@ -41,5 +41,5 @@ class Ingredient:
 			if oldWeight > self.buyWeight and self.weight < self.buyWeight:
 				return PLACE_BUY_REQUEST
 		elif self.willingToSell:
-			if oldWeight < self.sellWeight and self.weight > self.buyWeight:
+			if oldWeight < self.sellWeight and self.weight > self.sellWeight:
 				return PLACE_SELL_REQUEST
