@@ -5,7 +5,7 @@ class Restaurant:
 	"""
 	A Restaurant can buy and sell inventory!
 	"""
-	def __init__(self, name, money=0, market=None):
+	def __init__(self, name, money=0.0, market=None):
 		self.name = name
 		self.money = money
 		self.market = market
@@ -31,4 +31,15 @@ class Restaurant:
 		# gather all the info the market needs for this buy request
 		# do remember that the market has some info on the seller already stored
 		self.market.receiveBuyRequest(self, ingr.name, amount=ingr.preferredPurchaseAmount, maxPrice=ingr.maxBuyPrice)
+
+	def display(self):
+		print self.name
+		print "Money %f" % self.money
+		for ingr in self.ingredients.values():
+			ingr.display()
+		print
+		print
+
+
+
 

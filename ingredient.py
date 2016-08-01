@@ -43,3 +43,7 @@ class Ingredient:
 		elif self.willingToSell:
 			if oldWeight < self.sellWeight and self.weight > self.sellWeight:
 				return PLACE_SELL_REQUEST
+
+	def display(self):
+		print self.name
+		print "Amount %d" % self.weight
