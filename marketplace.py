@@ -7,10 +7,9 @@ Open Questions
 - How do we do security? how does the market know that it's actually a certain restaurant that is making a buy or sell request??
     This influences how I store restaurants here, whether it's by name or ingredient or private public key pair or whatever
 """
-from restaurant import Ingredient, Restaurant
+import restaurant
 
-
-class Market:
+class Marketplace:
 	"""
 	MarketPlace where restaurants can buy and sell stuff!
 
@@ -18,7 +17,7 @@ class Market:
 	Buyer posts a Buy Request
 	"""
 	def __init__(self):
-		self.restaurants = {}
+		self.restaurants = {} # name -> Restaurant
 		self.buyRequests = []
 		self.sellRequests = []
 		self.purchaseRecords = []
