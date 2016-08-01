@@ -35,10 +35,11 @@ def basicSimulation():
 	for r in market.restaurants.values():
 		r.display()
 
-
-	print "** Transact! **"
 	market.matchBuyersAndSellers()
 
+	print
+	print
+	print "** After Transaction! **"
 	for r in market.restaurants.values():
 		r.display()
 

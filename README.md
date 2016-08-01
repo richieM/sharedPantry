@@ -9,3 +9,8 @@ marketplace.py -- Marketplace, where transactions occur
 
 simulation.py -- holds various simulations of markets and transactions
 
+
+To run a simulation:
+
+python simulation.py
+

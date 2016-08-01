@@ -45,5 +45,4 @@ class Ingredient:
 				return PLACE_SELL_REQUEST
 
 	def display(self):
-		print self.name
-		print "Amount %d" % self.weight
+		print "Item: %s -- Amount: %f" % (self.name, self.weight)

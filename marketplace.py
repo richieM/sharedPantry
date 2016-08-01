@@ -60,6 +60,9 @@ class Marketplace:
 		totalPrice = pricePerUnit * amountOfGoods
 
 		if buyReq.restaurant.money >= totalPrice:
+			print " ** Transaction occuring **"
+			print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellReq.restaurant.name)
+			print "Amount of goods: %f -- Price per unit: %f -- Total price: $ %f" % (amountOfGoods, pricePerUnit, totalPrice)
 			escrowMoney = 0
 			escrowGoods = 0
 
