@@ -19,9 +19,10 @@ class Ingredient:
 	Ingredients that a restaurant has that they can buy or sell.
 	Each ingredient at a restaurant has it's own unique instance
 	"""
-	def __init__(self, name=0, willingToSell=False, willingToBuy=False, buyWeight=0, sellWeight=0, maxBuyPrice=0, minSellPrice=0, preferredPurchaseAmount=0, dollarsPerHourFromIngredient=10, avgPoundsConsumedPerHour=24.0/168.0, randomnessInDemand=.2):
+	def __init__(self, name=0, initialWeight=0, willingToSell=False, willingToBuy=False, buyWeight=0, sellWeight=0, maxBuyPrice=0, minSellPrice=0, preferredPurchaseAmount=0, dollarsPerHourFromIngredient=1, avgPoundsConsumedPerHour=.1, randomnessInDemand=.1):
 		self.name = name
-		self.weight = 0
+		self.weight = initialWeight
+		# TODO self.hourCreated
 
 		self.willingToSell = willingToSell
 		self.willingToBuy = willingToBuy
@@ -46,39 +47,40 @@ class Ingredient:
 		self.howMuchToRestockPounds = howMuchToRestockPounds
 
 	def anHourPassed(self, hour):
-		currDemandInPounds = self.avgPoundsConsumedPerHour * (1 + self.randomnessInDemand * random.random())
-		if self.isItTimeToRestock(hour):
-			self.restock()
-	
+		# Eat some food, make some cash, maybe order more...
+		currDemandInPounds = self.avgPoundsConsumedPerHour * (1 + random.uniform(-1 * self.randomnessInDemand, self.randomnessInDemand))
 		if self.weight >= 0:
-			if currDemandInPounds > self.weight:
+			if currDemandInPounds < self.weight:
 				self.revenueFromThisIngredient += currDemandInPounds * self.dollarsPerHourFromIngredient
 				newWeight = self.weight - currDemandInPounds
-				return self.updateWeight(newWeight)
-			elif currDemandInPounds < self.weight and currDemandInPounds > 0:
+				return self.updateWeight(newWeight, hour)
+			elif currDemandInPounds > self.weight:
 				currDemandInPounds = self.weight
 				self.revenueFromThisIngredient += currDemandInPounds * self.dollarsPerHourFromIngredient
 				newWeight = 0
-				return self.updateWeight(newWeight)
+				return self.updateWeight(newWeight, hour)
 
 	def isItTimeToRestock(self, hour):
 		if ((hour % self.restockEveryHours) - self.restockOnHour) == 0:
 			return True
 		else:
 			return False
-
-	def restock(self):
-		self.weight = self.weight + self.howMuchToRestockPounds
 		
-	def updateWeight(self, newWeight):
+	def updateWeight(self, newWeight, hour):
 		# Update weight, and maybe we wanna make a buy or sell request
+
+		# If it's time to restock, just bump the weight up...
+		if self.isItTimeToRestock(hour):
+			newWeight = self.weight + self.howMuchToRestockPounds
+			
 		oldWeight = self.weight
 		self.weight = newWeight
 
 		if self.willingToBuy:
 			if oldWeight > self.buyWeight and self.weight < self.buyWeight:
 				return PLACE_BUY_REQUEST
-		elif self.willingToSell:
+		
+		if self.willingToSell:
 			if oldWeight < self.sellWeight and self.weight > self.sellWeight:
 				return PLACE_SELL_REQUEST
 
