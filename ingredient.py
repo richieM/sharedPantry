@@ -1,28 +1,21 @@
-"""
-TODO
-	- need to add preferredSellWeight?
-"""
-
 import random
 
 PLACE_BUY_REQUEST = "PLACE_BUY_REQUEST"
 PLACE_SELL_REQUEST = "PLACE_SELL_REQUEST"
 
-# ingredient id -> ingredient name
-# TODO not used right now, but maybe later
-ingredients = {0: "lemon",
-			   1: "apple",
-			   2: "rice"}
+base_ingredient_prices = {"lemon": (2.0, 1.0)}
 
 class Ingredient:
 	"""
 	Ingredients that a restaurant has that they can buy or sell.
 	Each ingredient at a restaurant has it's own unique instance
 	"""
-	def __init__(self, name=0, initialWeight=0, willingToSell=False, willingToBuy=False, buyWeight=0, sellWeight=0, maxBuyPrice=0, minSellPrice=0, preferredPurchaseAmount=0, dollarsPerHourFromIngredient=1, avgPoundsConsumedPerHour=.1, randomnessInDemand=.1):
+	def __init__(self, name=0, expirationTime=48.0, restaurant=None, willingToSell=False, willingToBuy=False, buyWeight=0, sellWeight=0, maxBuyPrice=0, preferredPurchaseAmount=0, dollarsPerHourFromIngredient=1, avgPoundsConsumedPerHour=.1, randomnessInDemand=.1):
 		self.name = name
-		self.weight = initialWeight
-		# TODO self.hourCreated
+
+		self.expirationTime = expirationTime
+		self.restaurant = restaurant
+		self.ingrChunks = []
 
 		self.willingToSell = willingToSell
 		self.willingToBuy = willingToBuy
@@ -32,7 +25,6 @@ class Ingredient:
 		self.preferredPurchaseAmount = preferredPurchaseAmount
 
 		self.sellWeight = sellWeight
-		self.minSellPrice = minSellPrice
 
 		self.dollarsPerHourFromIngredient = dollarsPerHourFromIngredient
 		self.avgPoundsConsumedPerHour = avgPoundsConsumedPerHour
@@ -41,6 +33,17 @@ class Ingredient:
 		self.revenueFromThisIngredient = 0
 		self.moneySpentOnThisIngredient = 0
 
+		## Important Metrics
+		self.amountOfWastedFood = 0
+		self.hoursWithoutIngredient = 0
+		self.totalFreshness = 0
+		self.totalFoodConsumed = 0
+
+		self.currentHour = -1
+
+		# Register this ingredient on the Seller marketplace
+		self.restaurant.placeSellRequest(self)
+
 	def setRestockParams(self, restockEveryHours=24*7, restockOnHour=0, howMuchToRestockPounds=50):
 		self.restockEveryHours = restockEveryHours
 		self.restockOnHour = restockOnHour
@@ -48,41 +51,112 @@ class Ingredient:
 
 	def anHourPassed(self, hour):
 		# Eat some food, make some cash, maybe order more...
-		currDemandInPounds = self.avgPoundsConsumedPerHour * (1 + random.uniform(-1 * self.randomnessInDemand, self.randomnessInDemand))
-		if self.weight >= 0:
-			if currDemandInPounds < self.weight:
-				self.revenueFromThisIngredient += currDemandInPounds * self.dollarsPerHourFromIngredient
-				newWeight = self.weight - currDemandInPounds
-				return self.updateWeight(newWeight, hour)
-			elif currDemandInPounds > self.weight:
-				currDemandInPounds = self.weight
-				self.revenueFromThisIngredient += currDemandInPounds * self.dollarsPerHourFromIngredient
-				newWeight = 0
-				return self.updateWeight(newWeight, hour)
 
-	def isItTimeToRestock(self, hour):
-		if ((hour % self.restockEveryHours) - self.restockOnHour) == 0:
-			return True
-		else:
-			return False
-		
-	def updateWeight(self, newWeight, hour):
-		# Update weight, and maybe we wanna make a buy or sell request
+		# calculate current demand in pounds
+		originalWeight = self.getWeight();
+		self.currentHour = hour
 
-		# If it's time to restock, just bump the weight up...
-		if self.isItTimeToRestock(hour):
-			newWeight = self.weight + self.howMuchToRestockPounds
-			
-		oldWeight = self.weight
-		self.weight = newWeight
+		self.throwAwayOldFood()
+		self.restockFood()
+		self.feedCustomers(originalWeight)
+
+	def restockFood(self):
+		if ((self.currentHour % self.restockEveryHours) - self.restockOnHour) == 0:
+			restockedFood = IngrChunk(weight=self.howMuchToRestockPounds, hourCreated=self.currentHour, ingr=self)
+			self.ingrChunks.append(restockedFood)
+
+	def feedCustomers(self, originalWeight):
+		howMuchFoodToServe = self.avgPoundsConsumedPerHour * (1 + random.uniform(-1 * self.randomnessInDemand, self.randomnessInDemand))
+
+		howMuchWeServed, totalFreshness = self.consumeFood(howMuchFoodToServe)
+		self.totalFoodConsumed += howMuchWeServed
+		self.totalFreshness += totalFreshness
+
+		self.revenueFromThisIngredient += howMuchWeServed * self.dollarsPerHourFromIngredient
+		self.hoursWithoutIngredient += (howMuchFoodToServe - howMuchWeServed) / (howMuchFoodToServe)
 
 		if self.willingToBuy:
-			if oldWeight > self.buyWeight and self.weight < self.buyWeight:
-				return PLACE_BUY_REQUEST
+			if (originalWeight > self.buyWeight or self.currentHour == 0) and self.getWeight() < self.buyWeight:
+				self.restaurant.placeBuyRequest(self)
+
+	def consumeFood(self, howMuchFood):
+		"""
+		Go through the IngrChunks and 'eat' the oldest food.
+		This method is not called if we have 0 IngrChunks (I hope)
+
+		Returns:
+			- (howMuchWeServed, totalFreshness)
+		"""
+
+		origHowMuchFood = howMuchFood
+		totalFreshness = 0
+		while howMuchFood > 0 and len(self.ingrChunks) > 0:
+			sortedList = sorted(self.ingrChunks, key=lambda ic: ic.hourCreated, reverse=True)
+			currChunk = sortedList[0]
+
+			if currChunk.weight > howMuchFood:  # current chunk has more than we need
+				currChunk.weight -= howMuchFood
+				totalFreshness += howMuchFood * currChunk.getCurrentFreshness(self.currentHour)
+				howMuchFood = 0
+				break
+			else:  # current chunk has less than we need, so eat it all and keep going...
+				howMuchFood -= currChunk.weight
+				totalFreshness += currChunk.weight * currChunk.getCurrentFreshness(self.currentHour)
+				self.ingrChunks.remove(currChunk)
+
+		howMuchWeServed = origHowMuchFood - howMuchFood
 		
-		if self.willingToSell:
-			if oldWeight < self.sellWeight and self.weight > self.sellWeight:
-				return PLACE_SELL_REQUEST
+		return (howMuchWeServed, totalFreshness)
 
 	def display(self):
-		print "Item: %s -- Amount: %f" % (self.name, self.weight)
+		print "Item: %s -- Amount: %f" % (self.name, self.getWeight())
+
+	def getWeight(self):
+		sum = 0
+		for ic in self.ingrChunks:
+			sum += ic.weight
+		return sum
+
+	def throwAwayOldFood(self):
+		for ic in self.ingrChunks:
+			if (self.currentHour - ic.hourCreated) > self.expirationTime:
+				self.amountOfWastedFood += ic.weight
+				self.ingrChunks.remove(ic)
+
+	def getCheapestIngrChunk(self, currHour):
+		"""
+		Returns cheapest price and amount of that value
+		"""
+		if self.willingToSell:
+			if self.getWeight() > self.sellWeight:
+				sortedList = sorted(self.ingrChunks, key=lambda ic: ic.hourCreated, reverse=True)
+				currChunk = sortedList[0]
+
+				return currChunk
+
+		return None
+
+
+class IngrChunk:
+	def __init__(self, weight, hourCreated, ingr):
+		self.weight = weight
+		self.hourCreated = hourCreated
+		self.ingr = ingr
+
+	def getCurrentPrice(self, currHour):
+		highPrice, lowPrice = base_ingredient_prices[self.ingr.name]
+
+		currPrice = highPrice - ((highPrice - lowPrice) * ((currHour - self.hourCreated) / float(self.ingr.expirationTime)))
+		return currPrice
+
+	def getCurrentFreshness(self, currHour):
+		currFreshness = 1 - ((currHour - self.hourCreated) / float(self.ingr.expirationTime))
+		return currFreshness
+
+	def subtractWeight(self, amountToSubtract):
+		# Called by market.makeATransaction to remove a record if we use all the ingredient
+		self.weight -= amountToSubtract
+		if self.weight <= .05: # fudge factor
+			self.ingr.ingrChunks.remove(this)
+
+

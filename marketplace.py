@@ -1,14 +1,6 @@
 """
 TODO:
-- solve after Hour 3 it doesn't seem to be transacting...
 
-Open Questions
-- How much knowledge of the ingredients and restaurants should the Market have?
-	Maybe the market knows nothing about the ingredients and restaurants, and it just gets buy and sell requests in...
-- Should the wallet info be stored here on the market side? Probably...
-	But then it like debits the payment on the seller side?
-- How do we do security? how does the market know that it's actually a certain restaurant that is making a buy or sell request??
-    This influences how I store restaurants here, whether it's by name or ingredient or private public key pair or whatever
 
 Pricing Models:
 - dynamic but trivial: find middle ground between buyer and seller
@@ -38,10 +30,10 @@ Metrics for the restaurants
 - Extra freshness -- but how do you meausure that quanitatively?
 - delivery cost
 - For each restaurant:
- 	- $$ -- you paid This / you usually pay THISSSS
+ 	- $$Revenue$$ -- you paid This / you usually pay THISSSS
  	- Stress -- Running out incidents of running out (low stock incidents) -- amount of time when you can't feed demand
  	- Waste -- how much waste
- 	- Food Quality -- based on freshness  Average Freshness of ingredients (in days...)
+ 	- Freshness / Food Quality -- based on freshness  Average Freshness of ingredients (in days...)
 
 TODO:
 - ingredients turning into revenue through time so that the values drop (in)consistently
@@ -57,6 +49,8 @@ Experiment
 
 
 import restaurant
+import random
+import ingredient
 
 class Marketplace:
 	"""
@@ -70,55 +64,75 @@ class Marketplace:
 		self.buyRequests = []
 		self.sellRequests = []
 		self.purchaseRecords = []
+		self.currentHour = -1
 
 	def anHourPassed(self, hour):
-		for r in self.restaurants:
-			r.anHourPassed()
+		self.currentHour = hour
+		print "HOUR %d" % self.currentHour
+		for r in self.restaurants.values():
+			r.anHourPassed(self.currentHour)
+			if (self.currentHour % 1) == 0:
+				r.display()
+		self.matchBuyersAndSellers()
 
-	def receiveSellRequest(self, restaurant, ingredient, minPrice):
-		print "** SELL REQUEST RECEIVED -- %s is selling %s" % (restaurant.name, ingredient.name)
+	def receiveSellRequest(self, restaurant, ingredient):
+		print "** ADDING SELLER REQUEST -- %s wants to sell %s" % (restaurant.name,ingredient.name)
 		print
-		sellRequest = SellRequest(restaurant, ingredient, minPrice)
+		sellRequest = SellRequest(restaurant, ingredient)
 		self.sellRequests.append(sellRequest)
 
-		#self.matchBuyersAndSellers()
-
-	def receiveBuyRequest(self, restaurant, ingredient, amount, maxPrice):
-		print "** BUY REQUEST RECEIVED -- %s wants to buy %d lbs of %s" % (restaurant.name, amount, ingredient.name)
+	def receiveBuyRequest(self, restaurant, ingredient):
+		print "** BUY REQUEST RECEIVED -- %s wants to buy %d lbs of %s" % (restaurant.name, ingredient.preferredPurchaseAmount, ingredient.name)
 		print
-		buyRequest = BuyRequest(restaurant, ingredient, amount, maxPrice)
+		buyRequest = BuyRequest(restaurant, ingredient)
 		self.buyRequests.append(buyRequest)
-
-		#self.matchBuyersAndSellers()
 
 	def matchBuyersAndSellers(self):
 		"""
 		Matching buyers n sellerz, ya'll
 
-		Version 1.0, transactions are trivial.  Simply loop over each buy request and see if there is a sell request to match.  Then make it rain...
+		Version 2.0:
+		Find the cheapest possible ingredient.
+		Loop over all the SellRequests and get a IngrChunk from each if possible...
 		"""
+		random.shuffle(self.buyRequests) # shuffle buyRequests for fairness
+
 		for br in self.buyRequests:
-			matchingSellReqs = [sr for sr in self.sellRequests if sr.ingredient.name == br.ingredient.name and sr.minPrice < br.maxPrice]
-			for sr in matchingSellReqs:
-				self.makeATransaction(sr, br)
-				if br.amountFulfilled <= 0:
-					self.buyRequests.remove(br)
+			while br.amountFulfilled < br.preferredPurchaseAmount:
+				cheapestIngrChunk = self.getCheapestIngrChunk(br)
+				if cheapestIngrChunk is None:
 					break
 
-		for sr in self.sellRequests:
-			if sr.amountAvailable() <= 0:
-				self.sellRequests.remove(sr)
+				self.makeATransaction(cheapestIngrChunk, br)
+				if br.amountFulfilled >= br.preferredPurchaseAmount:
+					break
 
-	def makeATransaction(self, sellReq, buyReq):
+	def getCheapestIngrChunk(self, br):
+		sellRequestsWithIngredient = [sr for sr in self.sellRequests if sr.ingredient.name == br.ingredient.name and sr.restaurant.name != br.restaurant.name]
+
+		currCheapestIngrChunk = None
+		for sr in sellRequestsWithIngredient:
+			currIngrChunk = sr.ingredient.getCheapestIngrChunk(self.currentHour)
+			if currCheapestIngrChunk is None:
+				currCheapestIngrChunk = currIngrChunk
+			else:
+				if currIngrChunk.getCurrentPrice() < currCheapestIngrChunk.getCurrentPrice():
+					currCheapestIngrChunk = currIngrChunk
+
+		return currCheapestIngrChunk
+
+
+
+	def makeATransaction(self, ingrChunk, buyReq):
 		buyerIngr = buyReq.ingredient
-		sellerIngr = sellReq.ingredient
+		sellerIngr = ingrChunk.ingr
 
-		amountOfGoods = self.calculateHowMuchToTransact(sellReq, buyReq)
-		pricePerUnit = self.calculatePriceForTransaction(sellReq, buyReq)
+		amountOfGoods = self.calculateHowMuchToTransact(ingrChunk, buyReq)
+		pricePerUnit = self.calculatePriceForTransaction(ingrChunk, buyReq)
 		totalPrice = pricePerUnit * amountOfGoods
 
 		print " ** Transaction occuring **"
-		print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellReq.restaurant.name)
+		print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellerIngr.restaurant.name)
 		print "Amount of goods: %f -- Price per unit: %f -- Total price: $ %f" % (amountOfGoods, pricePerUnit, totalPrice)
 		print
 		escrowMoney = 0
@@ -130,13 +144,14 @@ class Marketplace:
 		buyerIngr.moneySpentOnThisIngredient += totalPrice
 		escrowMoney = totalPrice
 		# Pull goods from seller
-		sellerIngr.weight -= amountOfGoods
+		ingrChunk.weight -= amountOfGoods
 		escrowGoods = amountOfGoods
 
 
 		##### Deliver money and goods to appropriate parties, simulating delivery complete
 		# Deliver goods to buyer
-		buyerIngr.weight += amountOfGoods
+		newChunk = ingredient.IngrChunk(weight=amountOfGoods, hourCreated=ingrChunk.hourCreated, ingr=buyerIngr)
+		buyerIngr.ingrChunks.append(newChunk)
 		escrowGoods = 0
 		# Deliver funds to seller
 		sellerIngr.moneySpentOnThisIngredient -= totalPrice
@@ -144,47 +159,40 @@ class Marketplace:
 
 
 		###### Transaction complete, update the BuyRequest and SellRequest
-		buyReq.amountFulfilled = amountOfGoods
+		buyReq.amountFulfilled += amountOfGoods
 
 
-		# Remove buy and sell requests if they're fulfilled
-		if sellReq.amountAvailable() <= 0:
-			self.sellRequests.remove(sellReq)
-
+		# Remove buy requests if they're fulfilled
 		if buyReq.amountFulfilled == buyReq.preferredPurchaseAmount:
 			self.buyRequests.remove(buyReq)
 		
 
-	def calculateHowMuchToTransact(self, sellReq, buyReq):
+	def calculateHowMuchToTransact(self, ingrChunk, buyReq):
 		howMuchToBuy = buyReq.preferredPurchaseAmount - buyReq.amountFulfilled
 
-		if sellReq.amountAvailable() >= howMuchToBuy:
+		if ingrChunk.weight >= howMuchToBuy:
 			return howMuchToBuy
 		else:
-			return sellReq.amountAvailable()
+			return ingrChunk.weight
 
-	def calculatePriceForTransaction(self, sellReq, buyReq):
-		# first pass -- price is set by finding the middle between min and max prices.
-		price = sellReq.minPrice + (buyReq.maxPrice - sellReq.minPrice) / 2
-		return price
+	def calculatePriceForTransaction(self, ingrChunk, buyReq):
+		return ingrChunk.getCurrentPrice(self.currentHour)
 
 
 class BuyRequest:
-	def __init__(self, restaurant, ingredient, amount, maxPrice):
+	def __init__(self, restaurant, ingredient):
 		self.restaurant = restaurant
 		self.ingredient = ingredient
-		self.preferredPurchaseAmount = amount
+		self.preferredPurchaseAmount = ingredient.preferredPurchaseAmount
 		self.amountFulfilled = 0
-		self.maxPrice = maxPrice
+		self.maxPrice = ingredient.maxBuyPrice
 		# TODO other stuff here, like preferred sellers or something...
 
 
-# TODO amountAvailable should be dynamicly calculated, maybe, because the value could change...
 class SellRequest:
-	def __init__(self, restaurant, ingredient, minPrice):
+	def __init__(self, restaurant, ingredient):
 		self.restaurant = restaurant
 		self.ingredient = ingredient
-		self.minPrice = minPrice
 		# TODO other stuff here, like preferred buyers or something...
 
 	def amountAvailable(self):

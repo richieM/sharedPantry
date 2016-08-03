@@ -12,14 +12,10 @@ class Restaurant:
 		self.ingredients = {} # ingredient_name -> Ingredient
 
 	def placeSellRequest(self, ingr):
-		# gather all the info the market needs for this sell request
-		# do remember that the market has some info on the seller already stored
-		self.market.receiveSellRequest(self, ingr, minPrice=ingr.minSellPrice)
+		self.market.receiveSellRequest(self, ingr)
 
 	def placeBuyRequest(self, ingr):
-		# gather all the info the market needs for this buy request
-		# do remember that the market has some info on the seller already stored
-		self.market.receiveBuyRequest(self, ingr, amount=ingr.preferredPurchaseAmount, maxPrice=ingr.maxBuyPrice)
+		self.market.receiveBuyRequest(self, ingr)
 
 	def anHourPassed(self, hour):
 		# An hour passed, so we'll have to ask each ingredient to change, as well as 
@@ -36,11 +32,29 @@ class Restaurant:
 	def display(self):
 		print self.name
 		revenue = 0
+		amountOfWastedFood = 0
+		hoursWithoutIngredients = 0
+		totalFreshness = 0
+		totalFoodConsumed = 0
 		for ingr in self.ingredients.values():
 			ingr.display()
 			revenue += ingr.revenueFromThisIngredient
 			revenue -= ingr.moneySpentOnThisIngredient
+			amountOfWastedFood += ingr.amountOfWastedFood
+			hoursWithoutIngredients += ingr.hoursWithoutIngredient
+			totalFreshness += ingr.totalFreshness
+			totalFoodConsumed += ingr.totalFoodConsumed
+		
+		if totalFoodConsumed == 0:
+			avgFreshness = 0
+		else:
+			avgFreshness = totalFreshness / totalFoodConsumed
+
 		print "Total revenue %f" % revenue
+		print "Wasted Food %f" % amountOfWastedFood
+		print "Hours without ingredients %f" % hoursWithoutIngredients
+		print "avgFreshness %f" % avgFreshness
+		print "totalFoodConsumed %f" % totalFoodConsumed
 		print
 		print
 
