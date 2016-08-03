@@ -113,10 +113,12 @@ class Marketplace:
 		currCheapestIngrChunk = None
 		for sr in sellRequestsWithIngredient:
 			currIngrChunk = sr.ingredient.getCheapestIngrChunk(self.currentHour)
+			if currIngrChunk is None:
+				return None
 			if currCheapestIngrChunk is None:
 				currCheapestIngrChunk = currIngrChunk
 			else:
-				if currIngrChunk.getCurrentPrice() < currCheapestIngrChunk.getCurrentPrice():
+				if currIngrChunk.getCurrentPrice(self.currentHour) < currCheapestIngrChunk.getCurrentPrice(self.currentHour):
 					currCheapestIngrChunk = currIngrChunk
 
 		return currCheapestIngrChunk

@@ -1,6 +1,7 @@
 import ingredient
 import marketplace
 import restaurant
+import random
 
 # Create market
 def basicSimulation():
@@ -30,5 +31,24 @@ def basicSimulation():
 	for hour in xrange(48):
 		market.anHourPassed(hour)
 
+def superHighTechSim():
+	print "** Create a market **"
+	market = marketplace.Marketplace()
 
-basicSimulation()
+	# Add Sally's restaurant
+	for n in xrange(10):
+		currRestaurant = restaurant.Restaurant(n, market=market)
+		currRestaurant.ingredients["lemon"] = ingredient.Ingredient(name="lemon", expirationTime=48, restaurant=currRestaurant,
+										willingToBuy=True, willingToSell=True,
+										sellWeight=20,
+										buyWeight=5, maxBuyPrice=2, preferredPurchaseAmount=10,
+										avgPoundsConsumedPerHour=1, dollarsPerHourFromIngredient=1)
+		currRestaurant.ingredients["lemon"].setRestockParams(restockEveryHours=48, restockOnHour= (int) (random.random() * 48), howMuchToRestockPounds=48)
+		market.restaurants[currRestaurant.name] = currRestaurant
+
+	for hour in xrange(1000):
+		market.anHourPassed(hour)
+
+
+
+superHighTechSim()
