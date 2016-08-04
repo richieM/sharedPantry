@@ -44,6 +44,29 @@ class Ingredient:
 		# Register this ingredient on the Seller marketplace
 		self.restaurant.placeSellRequest(self)
 
+		self.setupSimData()
+
+	def setupSimData(self):
+		self.simData = {}
+
+		self.simData["revenue"] = []
+		self.simData["hoursWithout"] = []
+		self.simData["waste"] = []
+		self.simData["avgFreshness"] = []
+
+	def getSimData(self):
+		return self.simData
+
+	def recordSimData(self):
+		self.simData["revenue"].append(self.revenueFromThisIngredient)
+		self.simData["hoursWithout"].append(self.hoursWithoutIngredient)
+		self.simData["waste"].append(self.amountOfWastedFood)
+		if self.totalFreshness == 0:
+			avgFreshness = 0
+		else:
+			avgFreshness = self.totalFoodConsumed / (float)(self.totalFreshness)
+		self.simData["avgFreshness"].append(avgFreshness)
+
 	def setRestockParams(self, restockEveryHours=24*7, restockOnHour=0, howMuchToRestockPounds=50):
 		self.restockEveryHours = restockEveryHours
 		self.restockOnHour = restockOnHour
@@ -59,6 +82,8 @@ class Ingredient:
 		self.throwAwayOldFood()
 		self.restockFood()
 		self.feedCustomers(originalWeight)
+
+		self.recordSimData()
 
 	def restockFood(self):
 		if ((self.currentHour % self.restockEveryHours) - self.restockOnHour) == 0:

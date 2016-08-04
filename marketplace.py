@@ -45,6 +45,24 @@ TODO:
 Experiment 
 7 restaurants, 1 ingredient, 1 shipment each week
 
+Pretty much all the metrics are at the Ingredient level, so just keep it there, and roll it up later.
+
+Revenue -- revenue += ingr.revenueFromThisIngredient
+Stress -- hoursWithoutIngredients += ingr.hoursWithoutIngredient
+Waste -- amountOfWastedFood += ingr.amountOfWastedFood
+Freshness -- totalFreshness += ingr.totalFreshness; avgFreshness = totalFreshness / totalFoodConsumed
+	Total Food Consumed -- totalFoodConsumed += ingr.totalFoodConsumed
+
+market
+	restaurant
+		ingredient
+			ingr.revenueFromThisIngredient
+			ingr.hoursWithoutIngredient
+			ingr.amountOfWastedFood
+			ingr.totalFreshness
+			ingr.totalFoodConsumed
+
+
 """
 
 
@@ -180,6 +198,17 @@ class Marketplace:
 	def calculatePriceForTransaction(self, ingrChunk, buyReq):
 		return ingrChunk.getCurrentPrice(self.currentHour)
 
+	def gatherSimData(self):
+		self.simData = {}
+		self.simData["market"] = {}
+		for r in self.restaurants.values():
+			currRestData = {}
+			for ingr in r.ingredients.values():
+				currIngrData = ingr.getSimData()
+				currRestData[ingr.name] = currIngrData
+			self.simData["market"][r.name] = currRestData
+
+		return self.simData
 
 class BuyRequest:
 	def __init__(self, restaurant, ingredient):

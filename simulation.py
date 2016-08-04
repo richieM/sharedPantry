@@ -31,6 +31,10 @@ def basicSimulation():
 	for hour in xrange(48):
 		market.anHourPassed(hour)
 
+	simData = market.gatherSimData();
+
+	return simData
+
 def superHighTechSim():
 	print "** Create a market **"
 	market = marketplace.Marketplace()
@@ -50,5 +54,5 @@ def superHighTechSim():
 		market.anHourPassed(hour)
 
 
-
-superHighTechSim()
+#basicSimulation()
+#superHighTechSim()
