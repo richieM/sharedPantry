@@ -20,9 +20,12 @@ def graphTest():
 
 @app.route("/runSim")
 def runSim():
+    controlData = simulation.controlExactNeeds()
+
+    experimentData = simulation.experiment1()
     simData = simulation.basicSimulation()
     labels = range(0,48)
-    values = simData["market"]["Sally's"]["lemon"]["revenue"]
+    values = simData["market"]["Sally's"]["lemon"]["profit"]
     return render_template('chart.html', values=values, labels=labels)
 
 @app.route('/testTemplates/<name>')

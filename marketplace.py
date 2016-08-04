@@ -47,7 +47,7 @@ Experiment
 
 Pretty much all the metrics are at the Ingredient level, so just keep it there, and roll it up later.
 
-Revenue -- revenue += ingr.revenueFromThisIngredient
+Revenue -- revenue += ingr.profit
 Stress -- hoursWithoutIngredients += ingr.hoursWithoutIngredient
 Waste -- amountOfWastedFood += ingr.amountOfWastedFood
 Freshness -- totalFreshness += ingr.totalFreshness; avgFreshness = totalFreshness / totalFoodConsumed
@@ -56,7 +56,7 @@ Freshness -- totalFreshness += ingr.totalFreshness; avgFreshness = totalFreshnes
 market
 	restaurant
 		ingredient
-			ingr.revenueFromThisIngredient
+			ingr.profit
 			ingr.hoursWithoutIngredient
 			ingr.amountOfWastedFood
 			ingr.totalFreshness
@@ -116,23 +116,25 @@ class Marketplace:
 		random.shuffle(self.buyRequests) # shuffle buyRequests for fairness
 
 		for br in self.buyRequests:
-			while br.amountFulfilled < br.preferredPurchaseAmount:
+			while (br.preferredPurchaseAmount - br.amountFulfilled) > .05:
 				cheapestIngrChunk = self.getCheapestIngrChunk(br)
-				if cheapestIngrChunk is None:
+				if cheapestIngrChunk is not None:
+					self.makeATransaction(cheapestIngrChunk, br)
+				else:
 					break
 
-				self.makeATransaction(cheapestIngrChunk, br)
-				if br.amountFulfilled >= br.preferredPurchaseAmount:
-					break
+		for br in self.buyRequests:
+			if (br.preferredPurchaseAmount - br.amountFulfilled) <= .05:
+				self.buyRequests.remove(br)
 
 	def getCheapestIngrChunk(self, br):
 		sellRequestsWithIngredient = [sr for sr in self.sellRequests if sr.ingredient.name == br.ingredient.name and sr.restaurant.name != br.restaurant.name]
 
 		currCheapestIngrChunk = None
 		for sr in sellRequestsWithIngredient:
-			currIngrChunk = sr.ingredient.getCheapestIngrChunk(self.currentHour)
+			currIngrChunk = sr.ingredient.getCheapestIngrChunk(self.currentHour, br.preferredPurchaseAmount)
 			if currIngrChunk is None:
-				return None
+				continue
 			if currCheapestIngrChunk is None:
 				currCheapestIngrChunk = currIngrChunk
 			else:
@@ -155,13 +157,14 @@ class Marketplace:
 		print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellerIngr.restaurant.name)
 		print "Amount of goods: %f -- Price per unit: %f -- Total price: $ %f" % (amountOfGoods, pricePerUnit, totalPrice)
 		print
+
 		escrowMoney = 0
 		escrowGoods = 0
 
 
 		##### Put money and goods in escrow, simulating delivery pickup
 		# Pull funds from buyer
-		buyerIngr.moneySpentOnThisIngredient += totalPrice
+		buyerIngr.profit -= totalPrice
 		escrowMoney = totalPrice
 		# Pull goods from seller
 		ingrChunk.weight -= amountOfGoods
@@ -174,18 +177,16 @@ class Marketplace:
 		buyerIngr.ingrChunks.append(newChunk)
 		escrowGoods = 0
 		# Deliver funds to seller
-		sellerIngr.moneySpentOnThisIngredient -= totalPrice
+		sellerIngr.profit += totalPrice
 		escrowMoney = 0
 
 
 		###### Transaction complete, update the BuyRequest and SellRequest
 		buyReq.amountFulfilled += amountOfGoods
 
-
-		# Remove buy requests if they're fulfilled
-		if buyReq.amountFulfilled == buyReq.preferredPurchaseAmount:
-			self.buyRequests.remove(buyReq)
-		
+		# Remove ingrChunk if it's spent
+		if ingrChunk.weight < .01:
+			ingrChunk.ingr.ingrChunks.remove(ingrChunk)
 
 	def calculateHowMuchToTransact(self, ingrChunk, buyReq):
 		howMuchToBuy = buyReq.preferredPurchaseAmount - buyReq.amountFulfilled
