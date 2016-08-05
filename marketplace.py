@@ -61,8 +61,6 @@ market
 			ingr.amountOfWastedFood
 			ingr.totalFreshness
 			ingr.totalFoodConsumed
-
-
 """
 
 
