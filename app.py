@@ -30,16 +30,19 @@ def runSim():
     controlProfit = controlData["market"]["Sally's"]["lemon"]["profit"]
     controlFreshness = controlData["market"]["Sally's"]["lemon"]["avgFreshness"]
 
-
     experimentData = simulation.experiment1()
     experimentProfit = experimentData["market"][1]["lemon"]["profit"]
     experimentFreshness = experimentData["market"][1]["lemon"]["avgFreshness"]
+
+    allProfits = []
+    for r in experimentData["market"].values():
+        allProfits.append(r["lemon"]["profit"])
     
     labels = range(0,len(controlProfit))
 
     return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
                             controlFreshness = controlFreshness, experimentFreshness = experimentFreshness,
-                            labels=labels)
+                            allProfits = allProfits, labels=labels)
 
 @app.route('/testTemplates/<name>')
 def testTemplates(name):
