@@ -53,6 +53,10 @@ def superHighTechSim():
 	for hour in xrange(1000):
 		market.anHourPassed(hour)
 
+	simData = market.gatherSimData();
+
+	return simData
+
 
 #basicSimulation()
 #superHighTechSim()

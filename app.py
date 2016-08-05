@@ -23,6 +23,7 @@ def runSim():
     simData = simulation.basicSimulation()
     labels = range(0,48)
     values = simData["market"]["Sally's"]["lemon"]["revenue"]
+
     return render_template('chart.html', values=values, labels=labels)
 
 @app.route('/testTemplates/<name>')
