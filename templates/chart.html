@@ -3,6 +3,29 @@
 <head>
   <style>
 
+  #controlsDiv {
+    
+    float:left;
+    width: 20%;
+  }
+
+  #graphs {
+      float: right;
+      width: 80%;
+  }
+
+  #profitChart {
+      
+  }
+
+  #freshnessChart {
+     
+  }
+
+  
+
+
+
 aside { 
     display: inline-block;
     padding-right: 100px;
@@ -10,7 +33,9 @@ aside {
 
 canvas{
   vertical-align: top;
-
+  position: inline-block;
+}
+p{border:;
 }
 h1   {font-family: 'Helvetica';
       text-align: center;
@@ -248,9 +273,11 @@ button:active {
 <body>
 
 
-<h1 class="titleBar">sharedPantry</h1> 
+
+<h1>microMarket</h1> 
 <br></br>
 
+<div id="controlsDiv">
 <aside>
 <button type="button">SIMULATE</button>
 <br></br>
@@ -377,19 +404,26 @@ button:active {
 <br></br>
 
 </aside>
+</div>
 
 <!-- bar chart canvas element -->
-<canvas id="chart" width="900" height="750"></canvas>
+<div id = "graphs">
+<canvas id="profitChart" width="900" height="700"></canvas>
+<br>
+<canvas id="freshnessChart" width="900" height="700"></canvas>
+</div>
  
 <script>
-  
-   // bar chart data
-   var barData = {
+    // PROFIT CHART!!!
+   // return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
+                           // experimentProfit = experimentProfit, experimentFreshness = experimentFreshness,
+                            //labels=labels)
+   var profitData = {
    labels : [{% for item in labels %}
                   "{{item}}",
               {% endfor %}],
    datasets : [
-      {
+      { 
             fillColor: "rgba(0,0,0,0)",
             strokeColor: "rgba(0,0,255,1)",
             pointColor: "rgba(255,255,255,1)",
@@ -397,30 +431,32 @@ button:active {
             pointHighlightFill: "rgba(0,0,0,1)",
             pointHighlightStroke: "rgba(0,0,0,1)",
             bezierCurve : false,
-            data : [{% for item in values %}
+            data : [{% for item in experimentProfit %}
                       {{item}},
                     {% endfor %}],
-      },
-      {
-            fillColor: "rgba(0,0,255,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
+      }, 
+      {     fillColor: "rgba(0,0,0,0)",
+            strokeColor: "rgba(200,200,200,1)",
+            pointColor: "rgba(255,255,255,1)",
+            pointStrokeColor: "rgba(200,200,200,1)",
+            pointHighlightFill: "rgba(0,0,0,1)",
+            pointHighlightStroke: "rgba(0,0,0,1)",
             bezierCurve : false,
-            data : [{% for item in values %}
+            data : [{% for item in controlProfit %}
                       {{item}},
                     {% endfor %}],
-      }]
+
+      }
+      ]
 
      
    };
+
    var options = {     
     scaleFontFamily : "'He'",
     pointLabelFontFamily : "'Helvetica'",
     scaleFontColor : "#000",
-};
+  };
 
 
     Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
@@ -437,14 +473,15 @@ button:active {
     Chart.defaults.global.scaleFontSize = 10;
  
    // get bar chart canvas
-   var mychart = document.getElementById("chart").getContext("2d");
- 
+   var profitChart = document.getElementById("profitChart").getContext("2d");
+
    steps = 10
    max = 100
    // draw bar chart
 
-   var LineChartDemo = new Chart(mychart).Line(barData, {
-        scaleSteps: steps,
+   var profitChartDemoThingy = new Chart(profitChart).Line(profitData, {
+       scaleOverride: false,
+       scaleSteps: steps,
         scaleStepWidth: Math.ceil(max / steps),
         scaleStartValue: 0,
         scaleShowVerticalLines: true,
@@ -453,10 +490,85 @@ button:active {
         scaleShowLabels: true,
         bezierCurve: false,
  
-   });
+   }); 
+</script>
+
+<script>
+  
+   // bar chart data
+   var freshnessData = {
+   labels : [{% for item in labels %}
+                  "{{item}}",
+              {% endfor %}],
+   datasets : [
+      { 
+            fillColor: "rgba(0,0,0,0)",
+            strokeColor: "rgba(0,0,255,1)",
+            pointColor: "rgba(255,255,255,1)",
+            pointStrokeColor: "rgba(0,0,255,1)",
+            pointHighlightFill: "rgba(0,0,0,1)",
+            pointHighlightStroke: "rgba(0,0,0,1)",
+            bezierCurve : false,
+            data : [{% for item in experimentFreshness %}
+                      {{item}},
+                    {% endfor %}],
+      }, 
+      {     fillColor: "rgba(0,0,0,0)",
+            strokeColor: "rgba(200,200,200,1)",
+            pointColor: "rgba(255,255,255,1)",
+            pointStrokeColor: "rgba(200,200,200,1)",
+            pointHighlightFill: "rgba(0,0,0,1)",
+            pointHighlightStroke: "rgba(0,0,0,1)",
+            bezierCurve : false,
+            data : [{% for item in controlFreshness %}
+                      {{item}},
+                    {% endfor %}],
+
+      }
+      ]
+
+     
+   };
+
+   var options = {     
+    scaleFontFamily : "'He'",
+    pointLabelFontFamily : "'Helvetica'",
+    scaleFontColor : "#000",
+  };
+
+
+    Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
+    Chart.defaults.global.animationSteps = 50;
+    Chart.defaults.global.tooltipYPadding = 10;
+    Chart.defaults.global.tooltipCornerRadius = 0;
+    Chart.defaults.global.tooltipCaretSize = 2;
+    Chart.defaults.global.tooltipFontSize = 10;
+    Chart.defaults.global.tooltipTitleFontStyle = "normal";
+    Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,1)";
+    Chart.defaults.global.animationEasing = "easeOutBounce";
+    Chart.defaults.global.responsive = false;
+    Chart.defaults.global.scaleLineColor = "black";
+    Chart.defaults.global.scaleFontSize = 10;
  
+   // get bar chart canvas
+   var freshnessChart = document.getElementById("freshnessChart").getContext("2d");
+
+   steps = 10
+   max = 100
+   // draw bar chart
+
+   var freshnessChart = new Chart(freshnessChart).Line(freshnessData, {
+       scaleOverride: false,
+       scaleSteps: steps,
+        scaleStepWidth: Math.ceil(max / steps),
+        scaleStartValue: 0,
+        scaleShowVerticalLines: true,
+        scaleShowGridLines : true,
+        barShowStroke : true,
+        scaleShowLabels: true,
+        bezierCurve: false,
  
- 
+   }); 
 </script>
  
 </body>
