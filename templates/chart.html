@@ -5,13 +5,15 @@
 
 aside { 
     display: inline-block;
-    padding-right: 100px;
+    padding-right: 50px;
+    text-align: center;
 }
-
 canvas{
   vertical-align: top;
 }
-p{border:;
+section {
+  border: 2px solid black;
+  text-align: center;
 }
 h1   {font-family: 'Helvetica';
       text-align: center;
@@ -22,21 +24,23 @@ h1   {font-family: 'Helvetica';
     -webkit-text-stroke-color: black;
       }
 h2 {font-family: 'Helvetica';
+    text-align: center;
     font-size: .6em;
     color: blue;
 }
 h3 {font-family: 'Helvetica';
     font-size: 1em;
+    text-align: center;
     color: black;
-
+    letter-spacing: .5px;
 }
 label{font-family: 'Helvetica';
     font-size: .8em;
     font-weight: bold;
     color: black;
+
 }
 body {width: 100%;
-      text-align: center;
       font-family: 'Helvetica';
       }  
 /* The Dropdown */
@@ -195,6 +199,7 @@ input[type='radio']:after {
     display: inline-block;
     visibility: visible;
     border: 2px solid black;
+  
 }
 
 input[type='radio']:checked:after {
@@ -209,20 +214,21 @@ input[type='radio']:checked:after {
     display: inline-block;
     visibility: visible;
     border: 2px solid black;
+    
 }
 
 
 /*The Submit Buttons*/
 button {
-    width: 200px;
+    width: 240px;
     height: 40px;
     background-color: black; 
     border: none;
     color: white;
-    text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 10px;
+
 }
 
 button:hover {
@@ -256,8 +262,8 @@ button:active {
 <button type="button">SIMULATE</button>
 <br></br>
 
+<section>
 <h3>GENERAL SETTINGS</h3> 
-<br></br>
 
  <!--<div class="dropdown">
   <button class="dropbtn">USERS</button>
@@ -276,13 +282,10 @@ button:active {
 
 <input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
 <br></br>
-<br></br>
-
 
 <h2>duration</h2> 
 
 <input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
-<br></br>
 <br></br>
 
 <div class="control-group">
@@ -298,7 +301,10 @@ button:active {
   </label>
 </div>
 <br></br>
+</section>
 
+<br></br>
+<section>
 <h3>ITEM PROPERTIES</h3> 
 
 <h2>expiration time</h2> 
@@ -335,7 +341,9 @@ button:active {
 <input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
 <br></br>
 <br></br>
-
+</section>
+<br></br>
+<section>
 <h3>DISPLAY CONTROLS</h3>
 
 <div class="control-group">
@@ -364,19 +372,20 @@ button:active {
     <input type="radio" name="sadio" checked="checked"/>
     <div class="control__indicator"></div>
   </label>
-  <l></l>
+  
   <label class="control control--radio">freshness
     <input type="radio" name="sadio"/>
     <div class="control__indicator"></div>
   </label>
-   <l></l>
+  
   <label class="control control--radio">waste
     <input type="radio" name="sadio"/>
     <div class="control__indicator"></div>
   </label>
 </div>
-<br></br>
 
+<br></br>
+</section>
 </aside>
 
 <!-- bar chart canvas element -->
@@ -417,11 +426,7 @@ button:active {
 
      
    };
-   var options = {     
-    scaleFontFamily : "'He'",
-    pointLabelFontFamily : "'Helvetica'",
-    scaleFontColor : "#000",
-};
+
 
 
     Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
@@ -436,6 +441,7 @@ button:active {
     Chart.defaults.global.responsive = false;
     Chart.defaults.global.scaleLineColor = "black";
     Chart.defaults.global.scaleFontSize = 10;
+
  
    // get bar chart canvas
    var mychart = document.getElementById("chart").getContext("2d");
@@ -455,8 +461,10 @@ button:active {
         barShowStroke : true,
         scaleShowLabels: true,
         bezierCurve: false,
+
  
    });
+
  
  
  
