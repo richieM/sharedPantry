@@ -113,7 +113,7 @@ def controlExactNeeds():
 
 	return simData
 
-experiment1()
+#experiment1()
 #controlExactNeeds()
 #basicSimulation()
 #superHighTechSim()
