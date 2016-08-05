@@ -88,6 +88,10 @@ def experiment1():
 	for hour in xrange(168):
 		market.anHourPassed(hour)
 
+	simData = market.gatherSimData();
+
+	return simData
+
 def controlExactNeeds():
 	"""
 	Control experiment
@@ -113,7 +117,7 @@ def controlExactNeeds():
 	sallys.ingredients["lemon"].setRestockParams(restockEveryHours=168, restockOnHour=0, howMuchToRestockPounds=168)
 	market.restaurants["Sally's"] = sallys
 
-	for hour in xrange(196):
+	for hour in xrange(168):
 		market.anHourPassed(hour)
 
 	simData = market.gatherSimData();

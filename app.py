@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Hello World!"
+    return "Hello World ya dummie!"
 
 @app.route("/coolDude/<name>")
 def coolDude(name):
@@ -21,11 +21,16 @@ def graphTest():
 @app.route("/runSim")
 def runSim():
     controlData = simulation.controlExactNeeds()
+    controlValues = controlData["market"]["Sally's"]["lemon"]["profit"]
 
-    values = controlData["market"]["Sally's"]["lemon"]["profit"]
-    labels = range(0,len(values))
 
-    return render_template('chart.html', values=values, labels=labels)
+    experimentData = simulation.experiment1()
+    experimentValues = experimentData["market"][1]["lemon"]["profit"]
+    
+
+    labels = range(0,len(controlValues))
+
+    return render_template('chart.html', experimentValues = experimentValues, controlValues = controlValues, labels=labels)
 
 @app.route('/testTemplates/<name>')
 def testTemplates(name):
