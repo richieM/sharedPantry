@@ -30,8 +30,7 @@ class Ingredient:
 		self.avgPoundsConsumedPerHour = avgPoundsConsumedPerHour
 		self.randomnessInDemand = randomnessInDemand
 
-		self.revenueFromThisIngredient = 0
-		self.moneySpentOnThisIngredient = 0
+		self.profit = 0
 
 		## Important Metrics
 		self.amountOfWastedFood = 0
@@ -49,7 +48,7 @@ class Ingredient:
 	def setupSimData(self):
 		self.simData = {}
 
-		self.simData["revenue"] = []
+		self.simData["profit"] = []
 		self.simData["hoursWithout"] = []
 		self.simData["waste"] = []
 		self.simData["avgFreshness"] = []
@@ -58,7 +57,7 @@ class Ingredient:
 		return self.simData
 
 	def recordSimData(self):
-		self.simData["revenue"].append(self.revenueFromThisIngredient)
+		self.simData["profit"].append(self.profit)
 		self.simData["hoursWithout"].append(self.hoursWithoutIngredient)
 		self.simData["waste"].append(self.amountOfWastedFood)
 		if self.totalFreshness == 0:
@@ -90,6 +89,11 @@ class Ingredient:
 			restockedFood = IngrChunk(weight=self.howMuchToRestockPounds, hourCreated=self.currentHour, ingr=self)
 			self.ingrChunks.append(restockedFood)
 
+			# subtract the cost of the restock from revenue
+			highPrice, unused = base_ingredient_prices[self.name]
+			costOfRestock = self.howMuchToRestockPounds * highPrice
+			self.profit -= costOfRestock
+
 	def feedCustomers(self, originalWeight):
 		howMuchFoodToServe = self.avgPoundsConsumedPerHour * (1 + random.uniform(-1 * self.randomnessInDemand, self.randomnessInDemand))
 
@@ -97,7 +101,7 @@ class Ingredient:
 		self.totalFoodConsumed += howMuchWeServed
 		self.totalFreshness += totalFreshness
 
-		self.revenueFromThisIngredient += howMuchWeServed * self.dollarsPerHourFromIngredient
+		self.profit += howMuchWeServed * self.dollarsPerHourFromIngredient
 		self.hoursWithoutIngredient += (howMuchFoodToServe - howMuchWeServed) / (howMuchFoodToServe)
 
 		if self.willingToBuy:
@@ -116,7 +120,7 @@ class Ingredient:
 		origHowMuchFood = howMuchFood
 		totalFreshness = 0
 		while howMuchFood > 0 and len(self.ingrChunks) > 0:
-			sortedList = sorted(self.ingrChunks, key=lambda ic: ic.hourCreated, reverse=True)
+			sortedList = sorted(self.ingrChunks, key=lambda ic: ic.hourCreated)
 			currChunk = sortedList[0]
 
 			if currChunk.weight > howMuchFood:  # current chunk has more than we need
@@ -148,12 +152,12 @@ class Ingredient:
 				self.amountOfWastedFood += ic.weight
 				self.ingrChunks.remove(ic)
 
-	def getCheapestIngrChunk(self, currHour):
+	def getCheapestIngrChunk(self, currHour, br_amount):
 		"""
 		Returns cheapest price and amount of that value
 		"""
 		if self.willingToSell:
-			if self.getWeight() > self.sellWeight:
+			if (self.getWeight() - br_amount) > self.sellWeight:
 				sortedList = sorted(self.ingrChunks, key=lambda ic: ic.hourCreated, reverse=True)
 				currChunk = sortedList[0]
 
@@ -183,5 +187,3 @@ class IngrChunk:
 		self.weight -= amountToSubtract
 		if self.weight <= .05: # fudge factor
 			self.ingr.ingrChunks.remove(this)
-
-

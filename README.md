@@ -14,3 +14,8 @@ To run a simulation:
 
 python simulation.py
 
+To run the app:
+
+python app.py
+Visit in browser--  localhost:5000/runSim 
+

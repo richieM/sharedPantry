@@ -31,15 +31,15 @@ class Restaurant:
 
 	def display(self):
 		print self.name
-		revenue = 0
+		
+		profit = 0
 		amountOfWastedFood = 0
 		hoursWithoutIngredients = 0
 		totalFreshness = 0
 		totalFoodConsumed = 0
 		for ingr in self.ingredients.values():
 			ingr.display()
-			revenue += ingr.revenueFromThisIngredient
-			revenue -= ingr.moneySpentOnThisIngredient
+			profit += ingr.profit
 			amountOfWastedFood += ingr.amountOfWastedFood
 			hoursWithoutIngredients += ingr.hoursWithoutIngredient
 			totalFreshness += ingr.totalFreshness
@@ -50,7 +50,7 @@ class Restaurant:
 		else:
 			avgFreshness = totalFreshness / totalFoodConsumed
 
-		print "Total revenue %f" % revenue
+		print "Profit %f" % profit
 		print "Wasted Food %f" % amountOfWastedFood
 		print "Hours without ingredients %f" % hoursWithoutIngredients
 		print "avgFreshness %f" % avgFreshness
