@@ -20,17 +20,26 @@ def graphTest():
 
 @app.route("/runSim")
 def runSim():
+    """
+        self.simData["profit"] = []
+        self.simData["hoursWithout"] = []
+        self.simData["waste"] = []
+        self.simData["avgFreshness"] = []
+    """
     controlData = simulation.controlExactNeeds()
-    controlValues = controlData["market"]["Sally's"]["lemon"]["profit"]
+    controlProfit = controlData["market"]["Sally's"]["lemon"]["profit"]
+    controlFreshness = controlData["market"]["Sally's"]["lemon"]["avgFreshness"]
 
 
     experimentData = simulation.experiment1()
-    experimentValues = experimentData["market"][1]["lemon"]["profit"]
+    experimentProfit = experimentData["market"][1]["lemon"]["profit"]
+    experimentFreshness = experimentData["market"][1]["lemon"]["avgFreshness"]
     
+    labels = range(0,len(controlProfit))
 
-    labels = range(0,len(controlValues))
-
-    return render_template('chart.html', experimentValues = experimentValues, controlValues = controlValues, labels=labels)
+    return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
+                            controlFreshness = controlFreshness, experimentFreshness = experimentFreshness,
+                            labels=labels)
 
 @app.route('/testTemplates/<name>')
 def testTemplates(name):

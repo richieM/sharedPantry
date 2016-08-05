@@ -63,7 +63,7 @@ class Ingredient:
 		if self.totalFreshness == 0:
 			avgFreshness = 0
 		else:
-			avgFreshness = self.totalFoodConsumed / (float)(self.totalFreshness)
+			avgFreshness = self.totalFreshness / self.totalFoodConsumed 
 		self.simData["avgFreshness"].append(avgFreshness)
 
 	def setRestockParams(self, restockEveryHours=24*7, restockOnHour=0, howMuchToRestockPounds=50):

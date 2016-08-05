@@ -3,13 +3,39 @@
 <head>
   <style>
 
+  #controlsDiv {
+    
+    float:left;
+    width: 20%;
+  }
+
+  #graphs {
+      float: right;
+      width: 80%;
+  }
+
+  #profitChart {
+      
+  }
+
+  #freshnessChart {
+     
+  }
+
+  
+
+
+
 aside { 
     display: inline-block;
-    padding-right: 50px;
+    padding-left: 20px;
+    padding-right: 100px;
     text-align: center;
 }
 canvas{
   vertical-align: top;
+  position: inline-block;
+  padding-left: 50px;
 }
 section {
   border: 2px solid black;
@@ -17,14 +43,16 @@ section {
 }
 h1   {font-family: 'Helvetica';
       text-align: center;
-      font-size: 4em;
+      font-size: 2em;
       letter-spacing: 2px;
+
     -webkit-text-fill-color: white; /* Will override color (regardless of order) */
-    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: black;
       }
 h2 {font-family: 'Helvetica';
     text-align: center;
+    vertical-align: top;
     font-size: .6em;
     color: blue;
 }
@@ -33,6 +61,15 @@ h3 {font-family: 'Helvetica';
     text-align: center;
     color: black;
     letter-spacing: .5px;
+}
+
+h4 {font-family: 'Helvetica';
+    font-size: 1em;
+    text-align: right;
+    color: blue;
+    letter-spacing: .5px;
+    padding-right: 200px;
+    padding-top: 80px;
 }
 label{font-family: 'Helvetica';
     font-size: .8em;
@@ -252,18 +289,25 @@ button:active {
    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
  
 </head>
+
+
+
 <body>
 
 
-<h1>microMarket</h1> 
+
+
 <br></br>
 
+<div id="controlsDiv">
 <aside>
+  <h1>microMarket</h1> 
 <button type="button">SIMULATE</button>
 <br></br>
 
 <section>
 <h3>GENERAL SETTINGS</h3> 
+<br></br>
 
  <!--<div class="dropdown">
   <button class="dropbtn">USERS</button>
@@ -279,13 +323,13 @@ button:active {
 -->
 
 <h2>participants</h2> 
-
 <input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
 <br></br>
 
 <h2>duration</h2> 
-
 <input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
 <br></br>
 
 <div class="control-group">
@@ -306,12 +350,12 @@ button:active {
 <br></br>
 <section>
 <h3>ITEM PROPERTIES</h3> 
+<br></br>
 
 <h2>expiration time</h2> 
 <input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
 <br></br>
 <br></br>
-
 <h2>sell weight</h2> 
 <input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
 <br></br>
@@ -341,10 +385,12 @@ button:active {
 <input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
 <br></br>
 <br></br>
+
 </section>
 <br></br>
 <section>
 <h3>DISPLAY CONTROLS</h3>
+<br></br>
 
 <div class="control-group">
   <h2>X</h2>
@@ -387,14 +433,23 @@ button:active {
 <br></br>
 </section>
 </aside>
+</div>
 
 <!-- bar chart canvas element -->
-<canvas id="chart" width="900" height="750"></canvas>
+<div id = "graphs">
+  <h4> PROFITS</h4>
+<canvas id="profitChart" width="800" height="600"></canvas>
+<br>
+ <h4> FRESHNESS</h3>
+<canvas id="freshnessChart" width="800" height="600"></canvas>
+</div>
  
 <script>
-  
-   // bar chart data
-   var barData = {
+    // PROFIT CHART!!!
+   // return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
+                           // experimentProfit = experimentProfit, experimentFreshness = experimentFreshness,
+                            //labels=labels)
+   var profitData = {
    labels : [{% for item in labels %}
                   "{{item}}",
               {% endfor %}],
@@ -407,7 +462,7 @@ button:active {
             pointHighlightFill: "rgba(0,0,0,1)",
             pointHighlightStroke: "rgba(0,0,0,1)",
             bezierCurve : false,
-            data : [{% for item in experimentValues %}
+            data : [{% for item in experimentProfit %}
                       {{item}},
                     {% endfor %}],
       }, 
@@ -418,9 +473,10 @@ button:active {
             pointHighlightFill: "rgba(0,0,0,1)",
             pointHighlightStroke: "rgba(0,0,0,1)",
             bezierCurve : false,
-            data : [{% for item in controlValues %}
+            data : [{% for item in controlProfit %}
                       {{item}},
                     {% endfor %}],
+
       }
       ]
 
@@ -428,6 +484,11 @@ button:active {
    };
 
 
+   var options = {     
+    scaleFontFamily : "'He'",
+    pointLabelFontFamily : "'Helvetica'",
+    scaleFontColor : "#000",
+  };
 
     Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
     Chart.defaults.global.animationSteps = 50;
@@ -444,14 +505,13 @@ button:active {
 
  
    // get bar chart canvas
-   var mychart = document.getElementById("chart").getContext("2d");
- 
+   var profitChart = document.getElementById("profitChart").getContext("2d");
+
    steps = 10
    max = 100
    // draw bar chart
 
-   var LineChartDemo = new Chart(mychart).Line(barData, {
-
+   var profitChartDemoThingy = new Chart(profitChart).Line(profitData, {
        scaleOverride: false,
        scaleSteps: steps,
         scaleStepWidth: Math.ceil(max / steps),
@@ -461,13 +521,86 @@ button:active {
         barShowStroke : true,
         scaleShowLabels: true,
         bezierCurve: false,
+   }); 
+</script>
 
- 
-   });
+<script>
 
+  
+   // bar chart data
+   var freshnessData = {
+   labels : [{% for item in labels %}
+                  "{{item}}",
+              {% endfor %}],
+   datasets : [
+      { 
+            fillColor: "rgba(0,0,0,0)",
+            strokeColor: "rgba(0,0,255,1)",
+            pointColor: "rgba(255,255,255,1)",
+            pointStrokeColor: "rgba(0,0,255,1)",
+            pointHighlightFill: "rgba(0,0,0,1)",
+            pointHighlightStroke: "rgba(0,0,0,1)",
+            bezierCurve : false,
+            data : [{% for item in experimentFreshness %}
+                      {{item}},
+                    {% endfor %}],
+      }, 
+      {     fillColor: "rgba(0,0,0,0)",
+            strokeColor: "rgba(200,200,200,1)",
+            pointColor: "rgba(255,255,255,1)",
+            pointStrokeColor: "rgba(200,200,200,1)",
+            pointHighlightFill: "rgba(0,0,0,1)",
+            pointHighlightStroke: "rgba(0,0,0,1)",
+            bezierCurve : false,
+            data : [{% for item in controlFreshness %}
+                      {{item}},
+                    {% endfor %}],
+
+      }
+      ]
+
+     
+   };
+
+   var options = {     
+    scaleFontFamily : "'He'",
+    pointLabelFontFamily : "'Helvetica'",
+    scaleFontColor : "#000",
+  };
+
+
+    Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
+    Chart.defaults.global.animationSteps = 50;
+    Chart.defaults.global.tooltipYPadding = 10;
+    Chart.defaults.global.tooltipCornerRadius = 0;
+    Chart.defaults.global.tooltipCaretSize = 2;
+    Chart.defaults.global.tooltipFontSize = 10;
+    Chart.defaults.global.tooltipTitleFontStyle = "normal";
+    Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,1)";
+    Chart.defaults.global.animationEasing = "easeOutBounce";
+    Chart.defaults.global.responsive = false;
+    Chart.defaults.global.scaleLineColor = "black";
+    Chart.defaults.global.scaleFontSize = 10;
  
+   // get bar chart canvas
+   var freshnessChart = document.getElementById("freshnessChart").getContext("2d");
+
+   steps = 10
+   max = 100
+   // draw bar chart
+
+   var freshnessChart = new Chart(freshnessChart).Line(freshnessData, {
+       scaleOverride: false,
+       scaleSteps: steps,
+        scaleStepWidth: Math.ceil(max / steps),
+        scaleStartValue: 0,
+        scaleShowVerticalLines: true,
+        scaleShowGridLines : true,
+        barShowStroke : true,
+        scaleShowLabels: true,
+        bezierCurve: false,
  
- 
+   }); 
 </script>
  
 </body>
