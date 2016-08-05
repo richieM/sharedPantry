@@ -1,6 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <style>
+
+aside { 
+    display: inline-block;
+    padding-right: 100px;
+}
+
+canvas{
+  vertical-align: top;
+
+}
+h1   {font-family: 'Helvetica';
+      text-align: center;
+      font-size: 4em;
+      letter-spacing: 2px;
+    -webkit-text-fill-color: white; /* Will override color (regardless of order) */
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: black;
+      }
+h2 {font-family: 'Helvetica';
+    font-size: .6em;
+    color: blue;
+}
+h3 {font-family: 'Helvetica';
+    font-size: 1em;
+    color: black;
+
+}
+label{font-family: 'Helvetica';
+    font-size: .8em;
+    font-weight: bold;
+    color: black;
+}
+body {width: 100%;
+      text-align: center;
+      font-family: 'Helvetica';
+      }  
+/* The Dropdown */
+dropbtn {
+    background-color: white;
+    color: black;
+    padding: 16px;
+    font-size: 16px;
+    border: 2px;
+    cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: blue;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    font-size: 6;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 1em;
+}
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: black}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+    font-size: .6em;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: black;
+    color: blue;
+
+}
+
+/* The Slider */
+input[type=range] {
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+    
+    /*fix for FF unable to apply focus style bug */
+    border: 1px solid white;
+    
+    /*required for proper track sizing in FF*/
+    width: 200px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 200px;
+    height: 3px;
+    background: black;
+    border: none;
+    border-radius: 0px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: black;
+    margin-top: -6px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: black;
+}
+
+input[type=range]::-moz-range-track {
+    width: 200px;
+    height: 3px;
+    background: black;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: black;
+}
+
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    width: 200px;
+    height: 3px;
+    
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+    
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: black;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: black;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: black;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: black;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: black;
+}
+
+/*The Radio Button*/
+input[type='radio']:after {
+    width: 12px;
+    height: 12px;
+    border-radius: 12px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: white;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid black;
+}
+
+input[type='radio']:checked:after {
+    width: 12px;
+    height: 12px;
+    border-radius: 12px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: black;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid black;
+}
+
+
+/*The Submit Buttons*/
+button {
+    width: 200px;
+    height: 40px;
+    background-color: black; 
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+}
+
+button:hover {
+    background-color: blue; 
+    color: white;
+}
+
+button:active {
+    background-color: white; 
+    border-color: black;
+    color: blue;
+}
+
+
+</style>
+
    <meta charset="utf-8" />
    <title>Chart.js </title>
  
@@ -9,13 +246,143 @@
  
 </head>
 <body>
- 
-<h1>Our Sexy Chart</h1>
+
+
+<h1 class="titleBar">sharedPantry</h1> 
+<br></br>
+
+<aside>
+<button type="button">SIMULATE</button>
+<br></br>
+
+<h3>GENERAL SETTINGS</h3> 
+<br></br>
+
+ <!--<div class="dropdown">
+  <button class="dropbtn">USERS</button>
+  <div class="dropdown-content">
+    <a href="#">All</a>
+    <a href="#">Brazilian Cafe</a>
+    <a href="#">Sally's Diner</a>
+    <a href="#">Wolfe's</a>
+  </div>
+</div>
+<br></br>
+<br></br>
+-->
+
+<h2>participants</h2> 
+
+<input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
+<br></br>
+
+
+<h2>duration</h2> 
+
+<input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
+<br></br>
+
+<div class="control-group">
+  <h2>transactions by</h2>
+  <label class="control control--radio">price
+    <input type="radio" name="radio" checked="checked"/>
+    <div class="control__indicator"></div>
+  </label>
+  <l></l>
+  <label class="control control--radio">freshness
+    <input type="radio" name="radio"/>
+    <div class="control__indicator"></div>
+  </label>
+</div>
+<br></br>
+
+<h3>ITEM PROPERTIES</h3> 
+
+<h2>expiration time</h2> 
+<input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
+<br></br>
+
+<h2>sell weight</h2> 
+<input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
+<br></br>
+
+<h2>sell amount</h2> 
+<input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
+<br></br>
+
+<h2>buy weight</h2> 
+<input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
+<br></br>
+
+<h2>buy amount</h2> 
+<input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
+<br></br>
+
+<h2>consumption rate</h2> 
+<input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
+<br></br>
+
+<h2>market price</h2> 
+<input id="slider1" type="range" min="0" max="100" step="1"  value ="50" />
+<br></br>
+<br></br>
+
+<h3>DISPLAY CONTROLS</h3>
+
+<div class="control-group">
+  <h2>X</h2>
+  <label class="control control--radio">time
+    <input type="radio" name="badio" checked="checked"/>
+    <div class="control__indicator"></div>
+  </label>
+  <l></l>
+  <label class="control control--radio">participants
+    <input type="radio" name="badio"/>
+    <div class="control__indicator"></div>
+  </label>
+   <l></l>
+  <label class="control control--radio">transactions
+    <input type="radio" name="badio"/>
+    <div class="control__indicator"></div>
+  </label>
+</div>
+<br></br>
+
+
+<div class="control-group">
+  <h2>Y</h2>
+  <label class="control control--radio">profit
+    <input type="radio" name="sadio" checked="checked"/>
+    <div class="control__indicator"></div>
+  </label>
+  <l></l>
+  <label class="control control--radio">freshness
+    <input type="radio" name="sadio"/>
+    <div class="control__indicator"></div>
+  </label>
+   <l></l>
+  <label class="control control--radio">waste
+    <input type="radio" name="sadio"/>
+    <div class="control__indicator"></div>
+  </label>
+</div>
+<br></br>
+
+</aside>
+
 <!-- bar chart canvas element -->
-<canvas id="chart" width="600" height="400"></canvas>
+<canvas id="chart" width="900" height="750"></canvas>
  
 <script>
- 
+  
    // bar chart data
    var barData = {
    labels : [{% for item in labels %}
@@ -23,12 +390,12 @@
               {% endfor %}],
    datasets : [
       {
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
+            fillColor: "rgba(0,0,0,0)",
+            strokeColor: "rgba(0,0,255,1)",
+            pointColor: "rgba(255,255,255,1)",
+            pointStrokeColor: "rgba(0,0,255,1)",
+            pointHighlightFill: "rgba(0,0,0,1)",
+            pointHighlightStroke: "rgba(0,0,0,1)",
             bezierCurve : false,
             data : [{% for item in values %}
                       {{item}},
@@ -46,27 +413,37 @@
                       {{item}},
                     {% endfor %}],
       }]
-   }
- 
+
+     
+   };
+   var options = {     
+    scaleFontFamily : "'He'",
+    pointLabelFontFamily : "'Helvetica'",
+    scaleFontColor : "#000",
+};
+
+
+    Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
     Chart.defaults.global.animationSteps = 50;
-    Chart.defaults.global.tooltipYPadding = 16;
+    Chart.defaults.global.tooltipYPadding = 10;
     Chart.defaults.global.tooltipCornerRadius = 0;
+    Chart.defaults.global.tooltipCaretSize = 2;
+    Chart.defaults.global.tooltipFontSize = 10;
     Chart.defaults.global.tooltipTitleFontStyle = "normal";
-    Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
+    Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,1)";
     Chart.defaults.global.animationEasing = "easeOutBounce";
     Chart.defaults.global.responsive = false;
     Chart.defaults.global.scaleLineColor = "black";
-    Chart.defaults.global.scaleFontSize = 16;
+    Chart.defaults.global.scaleFontSize = 10;
  
    // get bar chart canvas
    var mychart = document.getElementById("chart").getContext("2d");
  
-   steps = 100
-   max = 1
+   steps = 10
+   max = 100
    // draw bar chart
 
    var LineChartDemo = new Chart(mychart).Line(barData, {
-        scaleOverride: true,
         scaleSteps: steps,
         scaleStepWidth: Math.ceil(max / steps),
         scaleStartValue: 0,
@@ -77,6 +454,7 @@
         bezierCurve: false,
  
    });
+ 
  
  
 </script>

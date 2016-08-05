@@ -53,12 +53,19 @@ def superHighTechSim():
 	for hour in xrange(1000):
 		market.anHourPassed(hour)
 
+
+	simData = market.gatherSimData();
+
+	return simData
+
+
 def experiment1():
 	"""
 	Medium size market -- 7 players
 	Restaurant only orders what they need for the day
 	Lots of trading...
 	Everyone's reorders are synchronized
+>>>>>>> 7847ce0f6668542371ea7e4f26e524aeac182ed0
 
 	Outcomes:
 	Freshness!
@@ -106,7 +113,7 @@ def controlExactNeeds():
 	sallys.ingredients["lemon"].setRestockParams(restockEveryHours=168, restockOnHour=0, howMuchToRestockPounds=168)
 	market.restaurants["Sally's"] = sallys
 
-	for hour in xrange(168):
+	for hour in xrange(196):
 		market.anHourPassed(hour)
 
 	simData = market.gatherSimData();

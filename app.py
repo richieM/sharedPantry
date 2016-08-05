@@ -21,12 +21,12 @@ def graphTest():
 @app.route("/runSim")
 def runSim():
     controlData = simulation.controlExactNeeds()
-    
+
+
     values = controlData["market"]["Sally's"]["lemon"]["profit"]
     labels = range(0,len(values))
-   
-    import pdb; pdb.set_trace()
-    return render_template('chart2.html', values=values, labels=labels)
+
+    return render_template('chart.html', values=values, labels=labels)
 
 @app.route('/testTemplates/<name>')
 def testTemplates(name):
