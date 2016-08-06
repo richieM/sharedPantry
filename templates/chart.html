@@ -160,78 +160,99 @@
    // return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
                            // experimentProfit = experimentProfit, experimentFreshness = experimentFreshness,
                             //labels=labels)
-   var profitData = {
-   labels : [{% for item in labels %}
+  var profitData = {
+  labels : [{% for item in labels %}
                   "{{item}}",
               {% endfor %}],
-   datasets : [
-      {     fillColor: "rgba(0,0,0,0)",
-            strokeColor: "rgba(200,200,200,1)",
-            pointColor: "rgba(200,200,200,1)",
-            pointStrokeColor: "rgba(0,0,0,0)",
-            pointHighlightFill: "rgba(0,0,0,1)",
-            pointHighlightStroke: "rgba(0,0,0,1)",
-            bezierCurve : false,
+  datasets : [
+      {     lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            radius: 1, // ?
+            pointHitRadius: 10,
             data : [{% for item in controlProfit %}
                       {{item}},
                     {% endfor %}],
 
       },
       { 
-            fillColor: "rgba(0,0,0,0)",
-            strokeColor: "rgba(0,0,255,1)",
-            pointColor: "rgba(0,0,255,1)",
-            pointRadius: 20,
-            pointStrokeColor: "rgba(0,0,0,0)",
-            pointHighlightFill: "rgba(0,0,0,1)",
-            pointHighlightStroke: "rgba(0,0,0,1)",
-            bezierCurve : false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            radius: 1, // ?
+            pointHitRadius: 10,
             data : [{% for item in experimentProfit %}
                       {{item}},
                     {% endfor %}],
       }
-      ] 
-   };
+    ] 
+  };
 
+  steps = 10;
+  max = 100;
 
-   var options = {     
+  var options = {     
     scaleFontFamily : "'He'",
     pointLabelFontFamily : "'Helvetica'",
     scaleFontColor : "#000",
+    scaleOverride: false,
+    scaleSteps: steps,
+    scaleStepWidth: Math.ceil(max / steps),
+    scaleStartValue: 0,
+    scaleShowVerticalLines: true,
+    scaleShowGridLines : true,
+    barShowStroke : true,
+    scaleShowLabels: true,
+    bezierCurve: false,
   };
 
-    Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
-    Chart.defaults.global.animationSteps = 50;
-    Chart.defaults.global.tooltipYPadding = 10;
-    Chart.defaults.global.tooltipCornerRadius = 0;
-    Chart.defaults.global.tooltipCaretSize = 2;
-    Chart.defaults.global.tooltipFontSize = 10;
-    Chart.defaults.global.tooltipTitleFontStyle = "normal";
-    Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,1)";
-    Chart.defaults.global.animationEasing = "easeOutBounce";
-    Chart.defaults.global.responsive = false;
-    Chart.defaults.global.scaleLineColor = "black";
-    Chart.defaults.global.scaleFontSize = 10;
+  Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
+  Chart.defaults.global.animationSteps = 50;
+  Chart.defaults.global.tooltipYPadding = 10;
+  Chart.defaults.global.tooltipCornerRadius = 0;
+  Chart.defaults.global.tooltipCaretSize = 2;
+  Chart.defaults.global.tooltipFontSize = 10;
+  Chart.defaults.global.tooltipTitleFontStyle = "normal";
+  Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,1)";
+  Chart.defaults.global.animationEasing = "easeOutBounce";
+  Chart.defaults.global.responsive = false;
+  Chart.defaults.global.scaleLineColor = "black";
+  Chart.defaults.global.scaleFontSize = 10;
 
- 
-   // get bar chart canvas
-   var profitChart = document.getElementById("profitChart").getContext("2d");
+  // get bar chart canvas
+  var profitChart = document.getElementById("profitChart").getContext("2d");
 
-   steps = 10
-   max = 100
-   // draw bar chart
+  
+  // draw bar chart
+  var profitChartThingy = new Chart(profitChart, {
+    type: 'line',
+    data: profitData,
+    options: options
+  });
 
-   var profitChartDemoThingy = new Chart(profitChart).Line(profitData, {
-       scaleOverride: false,
-       scaleSteps: steps,
-        scaleStepWidth: Math.ceil(max / steps),
-        scaleStartValue: 0,
-        scaleShowVerticalLines: true,
-        scaleShowGridLines : true,
-        barShowStroke : true,
-        scaleShowLabels: true,
-        bezierCurve: false,
-   }); 
+   
 </script>
 
 <script> 
@@ -241,25 +262,43 @@
                   "{{item}}",
               {% endfor %}],
    datasets : [
-      {     fillColor: "rgba(0,0,0,0)",
-            strokeColor: "rgba(200,200,200,1)",
-            pointColor: "rgba(200,200,200,1)",
-            pointStrokeColor: "rgba(0,0,0,0)",
-            pointHighlightFill: "rgba(0,0,0,1)",
-            pointHighlightStroke: "rgba(0,0,0,1)",
-            bezierCurve : false,
+      {     lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            radius: 1, // ?
+            pointHitRadius: 10,
             data : [{% for item in controlFreshness %}
                       {{item}},
                     {% endfor %}],
       },
       { 
-            fillColor: "rgba(0,0,0,0)",
-            strokeColor: "rgba(0,200,0,1)",
-            pointColor: "rgba(0,200,0,1)",
-            pointStrokeColor: "rgba(0,0,0,0)",
-            pointHighlightFill: "rgba(0,0,0,1)",
-            pointHighlightStroke: "rgba(0,0,0,1)",
-            bezierCurve : false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            radius: 1, // ?
+            pointHitRadius: 10,
             data : [{% for item in experimentFreshness %}
                       {{item}},
                     {% endfor %}],
@@ -267,10 +306,22 @@
       ]  
    };
 
+   steps = 10;
+   max = 100;
+
    var options = {     
-    scaleFontFamily : "'He'",
-    pointLabelFontFamily : "'Helvetica'",
-    scaleFontColor : "#000",
+      scaleFontFamily : "'He'",
+      pointLabelFontFamily : "'Helvetica'",
+      scaleFontColor : "#000",
+      scaleOverride: false,
+      scaleSteps: steps,
+      scaleStepWidth: Math.ceil(max / steps),
+      scaleStartValue: 0,
+      scaleShowVerticalLines: true,
+      scaleShowGridLines : true,
+      barShowStroke : true,
+      scaleShowLabels: true,
+      bezierCurve: false,
   };
 
 
@@ -290,22 +341,13 @@
    // get bar chart canvas
    var freshnessChart = document.getElementById("freshnessChart").getContext("2d");
 
-   steps = 10
-   max = 100
    // draw bar chart
+  var freshnessChartThingy = new Chart(freshnessChart, {
+    type: 'line',
+    data: freshnessData,
+    options: options
+  });
 
-   var freshnessChart = new Chart(freshnessChart).Line(freshnessData, {
-       scaleOverride: false,
-       scaleSteps: steps,
-        scaleStepWidth: Math.ceil(max / steps),
-        scaleStartValue: 0,
-        scaleShowVerticalLines: true,
-        scaleShowGridLines : true,
-        barShowStroke : true,
-        scaleShowLabels: true,
-        bezierCurve: false,
- 
-   }); 
 </script>
 
 <script>
@@ -321,13 +363,22 @@
       randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.3)"
 
      datasets.push({ 
-            fillColor: "rgba(0,0,0,0)",
-            strokeColor: randomColor,
-            pointColor: randomColor,
-            pointStrokeColor: "rgba(0,0,0,0)",
-            pointHighlightFill: "rgb(0,0,0,1",
-            pointHighlightStroke: "rgb(0,0,0,1",
-            bezierCurve : true,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            radius: 1, // ?
+            pointHitRadius: 10,
             data : allProfitsData[i],
       })
    }
@@ -341,10 +392,22 @@
    datasets : datasets
    };
 
+   steps = 10;
+   max = 100;
+
    var options = {     
-    scaleFontFamily : "'He'",
-    pointLabelFontFamily : "'Helvetica'",
-    scaleFontColor : "#000",
+      scaleFontFamily : "'He'",
+      pointLabelFontFamily : "'Helvetica'",
+      scaleFontColor : "#000",
+      scaleOverride: false,
+      scaleSteps: steps,
+      scaleStepWidth: Math.ceil(max / steps),
+      scaleStartValue: 0,
+      scaleShowVerticalLines: true,
+      scaleShowGridLines : true,
+      barShowStroke : true,
+      scaleShowLabels: true,
+      bezierCurve: true,
   };
 
     Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
@@ -364,21 +427,13 @@
    // get bar chart canvas
    var allProfitsChart = document.getElementById("allProfitsChart").getContext("2d");
 
-   steps = 10
-   max = 100
-   // draw bar chart
-
-   var allProfitsChart = new Chart(allProfitsChart).Line(allProfitsData, {
-       scaleOverride: false,
-       scaleSteps: steps,
-        scaleStepWidth: Math.ceil(max / steps),
-        scaleStartValue: 0,
-        scaleShowVerticalLines: true,
-        scaleShowGridLines : true,
-        barShowStroke : true,
-        scaleShowLabels: true,
-        bezierCurve: true,
-   }); 
+  // draw bar chart
+  var allProfitsChartThingy = new Chart(allProfitsChart, {
+    type: 'line',
+    data: allProfitsData,
+    options: options
+  });
+   
 </script>
 </body>
 
