@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask import render_template
 import simulation
 app = Flask(__name__)
@@ -43,6 +43,49 @@ def runSim():
     return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
                             controlFreshness = controlFreshness, experimentFreshness = experimentFreshness,
                             allProfits = allProfits, labels=labels)
+
+
+
+@app.route('/resimulate', methods=['GET', 'POST'])
+def resimulate():
+    """
+        self.simData["profit"] = []
+        self.simData["hoursWithout"] = []
+        self.simData["waste"] = []
+        self.simData["avgFreshness"] = []
+    """
+
+    
+    controlData = simulation.controlExactNeeds()
+    controlProfit = controlData["market"]["Sally's"]["lemon"]["profit"]
+    controlFreshness = controlData["market"]["Sally's"]["lemon"]["avgFreshness"]
+
+
+    experimentData = simulation.experiment1()
+    experimentProfit = experimentData["market"][1]["lemon"]["profit"]
+    experimentFreshness = experimentData["market"][1]["lemon"]["avgFreshness"]
+    
+    labels = range(0,len(controlProfit))
+
+    results = {}
+    results["controlProfit"] = controlProfit
+    results["controlFreshness"] = controlFreshness
+    results["experimentProfit"] = experimentProfit
+    results["experimentFreshness"] = experimentFreshness
+
+    # jsonify will do for us all the work, returning the
+    # previous data structure in JSON
+    return jsonify(results=results)
+
+    """
+    return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
+                            controlFreshness = controlFreshness, experimentFreshness = experimentFreshness,
+                            labels=labels)
+    """
+
+    
+    #return [1,2,3,4,5]
+
 
 @app.route('/testTemplates/<name>')
 def testTemplates(name):

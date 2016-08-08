@@ -13,8 +13,33 @@
 <div id="controlsDiv">
 
 <aside>
+<<<<<<< Updated upstream
 <h1>hotPotato</h1> 
 <button type="button">SIMULATE</button>
+=======
+<button type="button" class="simulate_button">SIMULATE</button>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $(".simulate_button").click(function(){
+        
+        var request = new XMLHttpRequest();
+         request.onload = function() {
+          // We could do more interesting things with the response
+          // or, we could ignore it entirely
+          alert(request.responseText);
+        };
+        // We point the request at the appropriate command
+        request.open("GET", "/resimulate", true);
+        // and then we send it off
+        request.send();
+    });
+});
+</script>
+
+
+>>>>>>> Stashed changes
 <br></br>
 
 <section>
