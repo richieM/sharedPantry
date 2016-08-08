@@ -64,12 +64,10 @@ def experiment1():
 	Medium size market -- 7 players
 	Restaurant only orders what they need for the day
 	Lots of trading...
-	Everyone's reorders are synchronized
->>>>>>> 7847ce0f6668542371ea7e4f26e524aeac182ed0
 
 	Outcomes:
 	Freshness!
-	Always have what you need?
+	Always have what you need
 	"""
 	print "** Create a market **"
 	market = marketplace.Marketplace()
