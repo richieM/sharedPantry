@@ -131,10 +131,10 @@ function getChartData(simData, chartType, ingrName) {
 
   datasetArray = []
   for (key in simData.results.market) {
-    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)"
+    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.5)"
     datasetArray.push(
       {     lineTension: 0.1,
-            backgroundColor: randomColor,
+            backgroundColor: "rgba(0,0,0,0)",
             borderColor: randomColor,
             borderCapStyle: 'butt',
             borderDash: [],
@@ -245,18 +245,18 @@ $(document).ready(function(){
 <br></br>
 
 
-<h2><span id="participantCount">10</span><br>participants</h2> 
-<input id="participants_slider" type="range" min="1" max="50" step="1" value ="10" oninput="updateSliderCount('participantCount', this.value);"/>
+<h2>Participants <span id="participantCount">7</span></h2> 
+<input id="participants_slider" type="range" min="1" max="50" step="1" value ="7" oninput="updateSliderCount('participantCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>duration: <span id="durationCount">48</span> hours</h2> 
-<input id="duration_slider" type="range" min="24" max="24*7*30" step="1"  value ="48" oninput="updateSliderCount('durationCount', this.value);"/>
+<h2>duration: <span id="durationCount">168</span> hours</h2> 
+<input id="duration_slider" type="range" min="24" max="336" step="1"  value ="168" oninput="updateSliderCount('durationCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Unpredictability in Demand</h2> 
-<input id="unpredictability_slider" type="range" min="0" max="1" step=".01"  value =".50" />
+<h2>Unpredictability in Demand <span id="unpredictabilityCount">.30</span></h2> 
+<input id="unpredictability_slider" type="range" min="0" max="1" step=".01"  value =".30" oninput="updateSliderCount('unpredictabilityCount', this.value);"/>
 <br></br>
 <br></br>
 
@@ -280,38 +280,38 @@ $(document).ready(function(){
 <h3>RESTAURANT PROPERTIES</h3> 
 <br></br>
 
-<h2>Expiration time (days)</h2> 
-<input id="expiration_slider" type="range" min="1" max="14" step="1"  value ="7" />
+<h2>Expiration time (days) <span id="expirationCount">7</span></h2> 
+<input id="expiration_slider" type="range" min="1" max="14" step="1"  value ="7" oninput="updateSliderCount('expirationCount', this.value);" />
 <br></br>
 <br></br>
 
-<h2>Sell weight</h2> 
-<input id="sell_weight_slider" type="range" min="1" max="100" step="1"  value ="20" />
+<h2>Sell weight <span id="sellWeightCount">20</span></h2> 
+<input id="sell_weight_slider" type="range" min="1" max="100" step="1"  value ="20" oninput="updateSliderCount('sellWeightCount', this.value);" />
 <br></br>
 <br></br>
 
-<h2>Sell Amount</h2> 
-<input id="sell_amount_slider" type="range" min="1" max="100" step="1"  value ="20" />
+<h2>Sell Amount <span id="sellAmountCount">20</span></h2> 
+<input id="sell_amount_slider" type="range" min="1" max="100" step="1"  value ="20" oninput="updateSliderCount('sellAmountCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Buy Weight</h2> 
-<input id="buy_weight_slider" type="range" min="1" max="100" step="1"  value ="5" />
+<h2>Buy Weight <span id="buyWeightCount">5</span></h2> 
+<input id="buy_weight_slider" type="range" min="1" max="50" step="1"  value ="5" oninput="updateSliderCount('buyWeightCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Buy Amount</h2> 
-<input id="buy_amount_slider" type="range" min="1" max="100" step="1"  value ="10" />
+<h2>Buy Amount <span id="buyAmountCount">20</span></h2> 
+<input id="buy_amount_slider" type="range" min="1" max="100" step="1"  value ="20" oninput="updateSliderCount('buyAmountCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Customer Consumption Rate (Food per hour)</h2> 
-<input id="consumption_rate_slider" type="range" min="1" max="30" step="1"  value ="5" />
+<h2>Customer Consumption Rate (Food per hour) <span id="consumptionRateCount">3</span></h2> 
+<input id="consumption_rate_slider" type="range" min="1" max="30" step="1"  value ="3" oninput="updateSliderCount('consumptionRateCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Dollars per unit of ingredient</h2> 
-<input id="unit_price_slider" type="range" min="0" max="100" step="1"  value ="50" />
+<h2>Dollars per unit of ingredient <span id="dollarzzzCount">5</span></h2> 
+<input id="unit_price_slider" type="range" min="1" max="100" step="1"  value ="5" oninput="updateSliderCount('dollarzzzCount', this.value);"/>
 <br></br>
 <br></br>
 

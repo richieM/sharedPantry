@@ -4,6 +4,7 @@ PLACE_BUY_REQUEST = "PLACE_BUY_REQUEST"
 PLACE_SELL_REQUEST = "PLACE_SELL_REQUEST"
 
 base_ingredient_prices = {"lemon": (2.0, 1.0)}
+bulk_lemon_cost = 1
 
 class Ingredient:
 	"""
@@ -66,14 +67,6 @@ class Ingredient:
 			avgFreshness = self.totalFreshness / self.totalFoodConsumed 
 		self.simData["avgFreshness"].append(avgFreshness)
 
-	def setRestockParams(self, restockEveryHours=24*7, restockOnHour=0, howMuchToRestockPounds=50, shouldRestock=True):
-		# TODO
-
-		self.restockEveryHours = restockEveryHours
-		self.restockOnHour = restockOnHour
-		self.howMuchToRestockPounds = howMuchToRestockPounds
-		self.shouldRestock = shouldRestock
-
 	def anHourPassed(self, hour):
 		# Eat some food, make some cash, maybe order more...
 
@@ -82,20 +75,19 @@ class Ingredient:
 		self.currentHour = hour
 
 		self.throwAwayOldFood()
-		self.restockFood()
 		self.feedCustomers(originalWeight)
 
 		self.recordSimData()
 
-	def restockFood(self):
-		if self.shouldRestock and ((self.currentHour % self.restockEveryHours) - self.restockOnHour) == 0:
-			restockedFood = IngrChunk(weight=self.howMuchToRestockPounds, hourCreated=self.currentHour, ingr=self)
-			self.ingrChunks.append(restockedFood)
+	def restockFood(self, howMuchToRestock):
+		
+		restockedFood = IngrChunk(weight=howMuchToRestock, hourCreated=self.currentHour, ingr=self)
+		self.ingrChunks.append(restockedFood)
 
-			# subtract the cost of the restock from revenue
-			highPrice, unused = base_ingredient_prices[self.name]
-			costOfRestock = self.howMuchToRestockPounds * highPrice
-			self.profit -= costOfRestock
+		# subtract the cost of the restock from revenue
+		highPrice, unused = base_ingredient_prices[self.name]
+		costOfRestock = howMuchToRestock * bulk_lemon_cost # you buy at bulk cost...
+		self.profit -= costOfRestock
 
 	def feedCustomers(self, originalWeight):
 		howMuchFoodToServe = self.avgPoundsConsumedPerHour * (1 + random.uniform(-1 * self.randomnessInDemand, self.randomnessInDemand))
@@ -109,7 +101,7 @@ class Ingredient:
 			self.hoursWithoutIngredient += (howMuchFoodToServe - howMuchWeServed) / (howMuchFoodToServe)
 
 		if self.willingToBuy:
-			if (originalWeight > self.buyWeight or self.currentHour == 0) and self.getWeight() < self.buyWeight:
+			if self.getWeight() < self.buyWeight:
 				self.restaurant.placeBuyRequest(self)
 
 	def consumeFood(self, howMuchFood):

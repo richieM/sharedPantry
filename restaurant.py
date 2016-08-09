@@ -10,6 +10,8 @@ class Restaurant:
 		self.market = market
 		# TODO add location and do streetwalk distance...
 		self.ingredients = {} # ingredient_name -> Ingredient
+		self.restockable = False
+		self.lastRestockTime = -1
 
 	def placeSellRequest(self, ingr):
 		self.market.receiveSellRequest(self, ingr)

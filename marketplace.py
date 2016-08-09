@@ -75,12 +75,14 @@ class Marketplace:
 	Seller posts a Sell Request
 	Buyer posts a Buy Request
 	"""
-	def __init__(self):
+	def __init__(self, bulkResupplySize):
 		self.restaurants = {} # name -> Restaurant
 		self.buyRequests = []
 		self.sellRequests = []
 		self.purchaseRecords = []
 		self.currentHour = -1
+
+		self.bulkResupplySize = bulkResupplySize
 
 	def anHourPassed(self, hour):
 		self.currentHour = hour
@@ -90,6 +92,9 @@ class Marketplace:
 			if (self.currentHour % 1) == 0:
 				r.display()
 		self.matchBuyersAndSellers()
+		self.restockIfNecessary()
+
+		#import pdb; pdb.set_trace()
 
 	def receiveSellRequest(self, restaurant, ingredient):
 		print "** ADDING SELLER REQUEST -- %s wants to sell %s" % (restaurant.name,ingredient.name)
@@ -100,7 +105,11 @@ class Marketplace:
 	def receiveBuyRequest(self, restaurant, ingredient):
 		print "** BUY REQUEST RECEIVED -- %s wants to buy %d lbs of %s" % (restaurant.name, ingredient.preferredPurchaseAmount, ingredient.name)
 		print
-		buyRequest = BuyRequest(restaurant, ingredient)
+		for br in self.buyRequests:
+			if br.restaurant == restaurant:
+				return
+
+		buyRequest = BuyRequest(restaurant, ingredient, self.currentHour)
 		self.buyRequests.append(buyRequest)
 
 	def matchBuyersAndSellers(self):
@@ -121,9 +130,13 @@ class Marketplace:
 				else:
 					break
 
+		buyRequestsThatWillStay = []
 		for br in self.buyRequests:
-			if (br.preferredPurchaseAmount - br.amountFulfilled) <= .05:
-				self.buyRequests.remove(br)
+			if br.ingredient.getWeight() < br.ingredient.buyWeight:
+				buyRequestsThatWillStay.append(br)
+
+		self.buyRequests = buyRequestsThatWillStay
+
 
 	def getCheapestIngrChunk(self, br):
 		sellRequestsWithIngredient = [sr for sr in self.sellRequests if sr.ingredient.name == br.ingredient.name and sr.restaurant.name != br.restaurant.name]
@@ -209,13 +222,69 @@ class Marketplace:
 
 		return self.simData
 
+	def restockIfNecessary(self):
+		"""
+		Restock one of the bigger restaurants if a buy Request hasn't been satisfied
+		in like 2 hours...
+		"""
+		for br in self.buyRequests:
+			if self.currentHour > br.hourCreated:
+				self.restockABigSupplier();
+				return
+
+	def calcHowMuchFoodToRestock(self):
+
+		foodShouldLastHowManyHours = 24;
+		totalFoodPerHourNeeded = 0
+
+		for r in self.restaurants.values():
+			for i in r.ingredients.values():
+				totalFoodPerHourNeeded += i.avgPoundsConsumedPerHour
+
+
+		totalFoodNeeded = int(totalFoodPerHourNeeded * foodShouldLastHowManyHours)
+
+		howManyChunksToOrder = int((totalFoodNeeded / self.bulkResupplySize) + 1)
+		
+		howMuchFood = howManyChunksToOrder * self.bulkResupplySize
+
+		return howMuchFood
+
+
+	def restockABigSupplier(self):
+		"""
+		Gather closely children, the time to restock is upon us.
+
+
+		- Determine how much we wanna order
+		- Dump that food on the next large restaurant...
+		"""
+		howMuchFoodToOrder = self.calcHowMuchFoodToRestock()
+
+		print "********** REORDERING FOOD %d lbs" % howMuchFoodToOrder
+
+		restaurantToRestock = None
+		for currRest in self.restaurants.values():
+			if currRest.restockable:
+				if not restaurantToRestock:
+					restaurantToRestock = currRest
+				else:
+					if currRest.lastRestockTime < restaurantToRestock.lastRestockTime:
+						restaurantToRestock = currRest
+
+		for i in restaurantToRestock.ingredients.values():
+			i.restockFood(howMuchFoodToOrder)
+			restaurantToRestock.lastRestockTime = self.currentHour
+				
+
 class BuyRequest:
-	def __init__(self, restaurant, ingredient):
+	def __init__(self, restaurant, ingredient, hourCreated):
 		self.restaurant = restaurant
 		self.ingredient = ingredient
 		self.preferredPurchaseAmount = ingredient.preferredPurchaseAmount
 		self.amountFulfilled = 0
 		self.maxPrice = ingredient.maxBuyPrice
+		self.hourCreated = hourCreated
 		# TODO other stuff here, like preferred sellers or something...
 
 

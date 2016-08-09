@@ -27,15 +27,12 @@ def runSim():
 def resimulate():
     """
     Dynamically rerun the sim with new params, dawgie!!!!
-    Gets hit after you click the Simulate button
 
-        Individual values are accessed like:
-            participants = int(sim_args['participants'])
-
-    self.simData["profit"] = []
-    self.simData["hoursWithout"] = []
-    self.simData["waste"] = []
-    self.simData["avgFreshness"] = []
+    Sim data params...
+        self.simData["profit"] = []
+        self.simData["hoursWithout"] = []
+        self.simData["waste"] = []
+        self.simData["avgFreshness"] = []
     """
 
     ingredient = "lemon"
