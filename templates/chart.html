@@ -67,14 +67,16 @@ function updateChart(response) {
   if (typeof profitChart == "object") {
     $("#profitChartCanvas").remove();
     $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
-  }
 
-  // Blow away freshnessChart if it exists
-  if (typeof freshnessChart == "object") {
     $("#freshnessChartCanvas").remove();
     $("#charts").append('<canvas id="freshnessChartCanvas" width="800" height="600"></canvas>');
-  }
 
+    $("#wasteChartCanvas").remove();
+    $("#charts").append('<canvas id="wasteChartCanvas" width="800" height="600"></canvas>');
+
+    $("#outOfStockChartCanvas").remove();
+    $("#charts").append('<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>');
+  }
 
   // PROFIT CHART
   // Get canvas
@@ -96,6 +98,28 @@ function updateChart(response) {
   var freshnessChart = new Chart(freshnessChartCanvasContainer, {
     type: 'line',
     data: getChartData(jsonResponse, "avgFreshness", ingredient),
+    options: getChartOptions()
+  });
+
+
+  // WASTE CHART
+  wasteChartCanvasContainer = document.getElementById("wasteChartCanvas").getContext("2d");
+
+  // Draw Chart
+  var wasteChart = new Chart(wasteChartCanvasContainer, {
+    type: 'line',
+    data: getChartData(jsonResponse, "waste", ingredient),
+    options: getChartOptions()
+  });
+
+
+  // OUT OF STOCK CHARToutOfStockChartCanvas
+  outOfStockChartCanvasContainer = document.getElementById("outOfStockChartCanvas").getContext("2d");
+
+  // Draw Chart
+  var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
+    type: 'line',
+    data: getChartData(jsonResponse, "hoursWithout", ingredient),
     options: getChartOptions()
   });
 }
@@ -342,13 +366,23 @@ $(document).ready(function(){
 <!-- bar chart canvas element -->
 <div id="charts">
 
-<h4> PROFITS</h4>
+<h4>PROFITS</h4>
 <canvas id="profitChartCanvas" width="800" height="600"></canvas>
 <br></br>
 
-<h4> FRESHNESS</h3>
+<h4>FRESHNESS</h3>
 <canvas id="freshnessChartCanvas" width="800" height="600"></canvas>
 <br></br>
+
+<h4>WASTE</h3>
+<canvas id="wasteChartCanvas" width="800" height="600"></canvas>
+<br></br>
+
+<h4>HOURS WITH NO INGREDIENTS</h3>
+<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>
+<br></br>
+
+
 </div>
 
 <script>
