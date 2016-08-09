@@ -207,13 +207,14 @@ $(document).ready(function(){
 <h3>GENERAL SETTINGS</h3> 
 <br></br>
 
-<h2>Participants</h2> 
-<input id="participants_slider" type="range" min="0" max="50" step="1"  value ="10" />
+
+<h2><span id="participantCount">50</span><br>participants</h2> 
+<input id="participants_slider" type="range" min="0" max="100" step="1" value ="50" oninput="updateSliderCount('participantCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Duration (Days)</h2> 
-<input id="duration_slider" type="range" min="0" max="100" step="1"  value ="50" />
+<h2>duration: <span id="durationCount">50</span> hours</h2> 
+<input id="duration_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('durationCount', this.value);"/>
 <br></br>
 <br></br>
 
@@ -342,7 +343,9 @@ $(document).ready(function(){
 </div>
 
 <script>
-
+  function updateSliderCount (id, val) {
+    document.getElementById(id).textContent = val;
+  }
 </script>
  
 <script>
@@ -355,20 +358,20 @@ $(document).ready(function(){
                   "{{item}}",
               {% endfor %}],
   datasets : [
-      {     lineTension: 0.1,
-            backgroundColor: "rgba(75,192,192,0.4)",
-            borderColor: "rgba(75,192,192,1)",
+      {     lineTension: 1,
+            backgroundColor: "rgba(0,0,0,0)",
+            borderColor: "rgba(0,0,0,.1)",
             borderCapStyle: 'butt',
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(75,192,192,1)",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
-            pointHoverBorderWidth: 2,
+            pointBorderColor: "rgba(200,200,200,1)",
+            pointBackgroundColor: "rgba(200,200,200,1)",
+            pointBorderWidth: 2,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: "rgba(0,0,0,1)",
+            pointHoverBorderColor: "rgba(0,0,0,1)",
+            pointHoverBorderWidth: 3,
             radius: 1, // ?
             pointHitRadius: 10,
             data : [{% for item in controlProfit %}
@@ -377,8 +380,8 @@ $(document).ready(function(){
 
       },
       { 
-            lineTension: 0.1,
-            backgroundColor: "rgba(75,192,192,0.4)",
+            lineTension: 1,
+            backgroundColor: "rgba(0,0,0,0)",
             borderColor: "rgba(75,192,192,1)",
             borderCapStyle: 'butt',
             borderDash: [],
@@ -391,7 +394,7 @@ $(document).ready(function(){
             pointHoverBackgroundColor: "rgba(75,192,192,1)",
             pointHoverBorderColor: "rgba(220,220,220,1)",
             pointHoverBorderWidth: 2,
-            radius: 1, // ?
+            radius: 3, // ?
             pointHitRadius: 10,
             data : [{% for item in experimentProfit %}
                       {{item}},
@@ -430,6 +433,7 @@ $(document).ready(function(){
   Chart.defaults.global.responsive = false;
   Chart.defaults.global.scaleLineColor = "black";
   Chart.defaults.global.scaleFontSize = 10;
+  Chart.defaults.global.legend.display = false;
 
   // get bar chart canvas
   var profitChart = document.getElementById("profitChart").getContext("2d");
@@ -455,29 +459,29 @@ $(document).ready(function(){
                   "{{item}}",
               {% endfor %}],
    datasets : [
-      {     lineTension: 0.1,
-            backgroundColor: "rgba(75,192,192,0.4)",
-            borderColor: "rgba(75,192,192,1)",
+      {     lineTension: 1,
+            backgroundColor: "rgba(0,0,0,0)",
+            borderColor: "rgba(0,0,255,0.5)",
             borderCapStyle: 'butt',
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(75,192,192,1)",
+            pointBorderColor: "rgba(0,0,255,0)",
             pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
+            pointBorderWidth: 0,
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
-            pointHoverBorderWidth: 2,
-            radius: 1, // ?
+            pointHoverBackgroundColor: "rgba(255,255,255,1)",
+            pointHoverBorderColor: "rgba(220,220,220,0)",
+            pointHoverBorderWidth: 0,
+            radius: 3, // ?
             pointHitRadius: 10,
             data : [{% for item in controlFreshness %}
                       {{item}},
                     {% endfor %}],
       },
       { 
-            lineTension: 0.1,
-            backgroundColor: "rgba(75,192,192,0.4)",
+            lineTension: 1,
+            backgroundColor: "rgba(0,0,0,0)",
             borderColor: "rgba(75,192,192,1)",
             borderCapStyle: 'butt',
             borderDash: [],
@@ -490,7 +494,7 @@ $(document).ready(function(){
             pointHoverBackgroundColor: "rgba(75,192,192,1)",
             pointHoverBorderColor: "rgba(220,220,220,1)",
             pointHoverBorderWidth: 2,
-            radius: 1, // ?
+            radius: 3, // ?
             pointHitRadius: 10,
             data : [{% for item in experimentFreshness %}
                       {{item}},
@@ -530,6 +534,7 @@ $(document).ready(function(){
     Chart.defaults.global.responsive = false;
     Chart.defaults.global.scaleLineColor = "black";
     Chart.defaults.global.scaleFontSize = 10;
+    Chart.defaults.global.legend.display = false;
  
    // get bar chart canvas
    var freshnessChart = document.getElementById("freshnessChart").getContext("2d");
@@ -556,21 +561,21 @@ $(document).ready(function(){
       randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.3)"
 
      datasets.push({ 
-            lineTension: 0.1,
-            backgroundColor: "rgba(75,192,192,0.4)",
-            borderColor: "rgba(75,192,192,1)",
+            lineTension: 1,
+            backgroundColor: "rgba(0,0,0,0)",
+            borderColor: randomColor,
             borderCapStyle: 'butt',
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(75,192,192,1)",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
+            pointBorderColor: randomColor,
+            pointBackgroundColor: randomColor,
+            pointBorderWidth: 0,
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBackgroundColor: "rgba(255,255,255,1)",
+            pointHoverBorderColor: "rgba(255,255,255,1)",
             pointHoverBorderWidth: 2,
-            radius: 1, // ?
+            radius: 3, // ?
             pointHitRadius: 10,
             data : allProfitsData[i],
       })
@@ -615,6 +620,7 @@ $(document).ready(function(){
     Chart.defaults.global.responsive = false;
     Chart.defaults.global.scaleLineColor = "black";
     Chart.defaults.global.scaleFontSize = 10;
+    Chart.defaults.global.legend.display = false;
 
  
    // get bar chart canvas
