@@ -26,7 +26,7 @@ def runSim():
         self.simData["hoursWithout"] = []
         self.simData["waste"] = []
         self.simData["avgFreshness"] = []
-    """
+    
     controlData = simulation.controlExactNeeds()
     controlProfit = controlData["market"]["Sally's"]["lemon"]["profit"]
     controlFreshness = controlData["market"]["Sally's"]["lemon"]["avgFreshness"]
@@ -42,8 +42,12 @@ def runSim():
     labels = range(0,len(controlProfit))
 
     return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
-                            controlFreshness = controlFreshness, experimentFreshness = experimentFreshness,
-                            allProfits = allProfits, labels=labels)
+                        controlFreshness = controlFreshness, experimentFreshness = experimentFreshness,
+                        allProfits = allProfits, labels=labels)
+    """
+
+    return render_template('chart.html')
+
 
 @app.route('/resimulate', methods=['GET', 'POST'])
 def resimulate():

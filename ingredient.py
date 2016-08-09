@@ -105,7 +105,8 @@ class Ingredient:
 		self.totalFreshness += totalFreshness
 
 		self.profit += howMuchWeServed * self.dollarsPerHourFromIngredient
-		self.hoursWithoutIngredient += (howMuchFoodToServe - howMuchWeServed) / (howMuchFoodToServe)
+		if howMuchFoodToServe != 0: # TODO oops hacky
+			self.hoursWithoutIngredient += (howMuchFoodToServe - howMuchWeServed) / (howMuchFoodToServe)
 
 		if self.willingToBuy:
 			if (originalWeight > self.buyWeight or self.currentHour == 0) and self.getWeight() < self.buyWeight:

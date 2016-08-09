@@ -19,22 +19,6 @@
 <script src="./static/jquery-1.11.3.js"></script>
 
 <script>
-function updateChart(response) {
-  // allProfitsChartThingy
-  newData = [];
-
-  var jsonResponse = JSON.parse(response.responseText);
-
-  for (var key in jsonResponse.results.market) {
-    newData.push(jsonResponse.results.market[key]["lemon"]["profit"]);
-  }
-
-  allProfitsChartThingy.data.datasets = newData;
-  allProfitsChartThingy.update();
-
-  console.log("worked, maybe...");
-}
-
 function setupChartDefaults() {
   Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
   Chart.defaults.global.animationSteps = 50;
@@ -51,8 +35,10 @@ function setupChartDefaults() {
 
   steps = 10;
   max = 100;
+}
 
-  var options = {     
+function getChartOptions() {
+  chartOptions = {     
     scaleFontFamily : "'He'",
     pointLabelFontFamily : "'Helvetica'",
     scaleFontColor : "#000",
@@ -67,25 +53,71 @@ function setupChartDefaults() {
     bezierCurve: false,
   };
 
+  return chartOptions
 }
 
-function createChartData(simData) {
-  // Converts simData to chart.js data structure...
+function updateChart(response) {
+  ingredient = "lemon"
+  // allProfitsChartThingy
+  newData = [];
 
-  profitData = {
-  labels : [{% for item in labels %}
-                  "{{item}}",
-              {% endfor %}],
-  datasets : [
+  var jsonResponse = JSON.parse(response.responseText);
+
+  // Blow away profitChart if it exists
+  if (typeof profitChart == "object") {
+    $("#profitChartCanvas").remove();
+    $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
+  }
+
+  // Blow away freshnessChart if it exists
+  if (typeof freshnessChart == "object") {
+    $("#freshnessChartCanvas").remove();
+    $("#charts").append('<canvas id="freshnessChartCanvas" width="800" height="600"></canvas>');
+  }
+
+
+  // PROFIT CHART
+  // Get canvas
+  profitChartCanvasContainer = document.getElementById("profitChartCanvas").getContext("2d");
+
+  // Draw Chart
+  var profitChart = new Chart(profitChartCanvasContainer, {
+    type: 'line',
+    data: getChartData(jsonResponse, "profit", ingredient),
+    options: getChartOptions()
+  });
+
+
+  // FRESHNESS CHART
+  // Get canvas
+  freshnessChartCanvasContainer = document.getElementById("freshnessChartCanvas").getContext("2d");
+
+  // Draw chart
+  var freshnessChart = new Chart(freshnessChartCanvasContainer, {
+    type: 'line',
+    data: getChartData(jsonResponse, "avgFreshness", ingredient),
+    options: getChartOptions()
+  });
+}
+
+function getChartData(simData, chartType, ingrName) {
+  // Converts simData JSON to chart.js data structure...
+  duration = parseInt($("#duration_slider").val());
+  labelData = Array.apply(null, {length: duration}).map(Number.call, Number)
+
+  datasetArray = []
+  for (key in simData.results.market) {
+    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)"
+    datasetArray.push(
       {     lineTension: 0.1,
-            backgroundColor: "rgba(75,192,192,0.4)",
-            borderColor: "rgba(75,192,192,1)",
+            backgroundColor: randomColor,
+            borderColor: randomColor,
             borderCapStyle: 'butt',
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(75,192,192,1)",
-            pointBackgroundColor: "#fff",
+            pointBorderColor: randomColor,
+            pointBackgroundColor: randomColor,
             pointBorderWidth: 1,
             pointHoverRadius: 5,
             pointHoverBackgroundColor: "rgba(75,192,192,1)",
@@ -93,62 +125,38 @@ function createChartData(simData) {
             pointHoverBorderWidth: 2,
             radius: 1, // ?
             pointHitRadius: 10,
-            data : [{% for item in controlProfit %}
-                      {{item}},
-                    {% endfor %}],
+            data : simData.results.market[key][ingrName][chartType],
+      });
+  }
 
-      },
-      { 
-            lineTension: 0.1,
-            backgroundColor: "rgba(75,192,192,0.4)",
-            borderColor: "rgba(75,192,192,1)",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(75,192,192,1)",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
-            pointHoverBorderWidth: 2,
-            radius: 1, // ?
-            pointHitRadius: 10,
-            data : [{% for item in experimentProfit %}
-                      {{item}},
-                    {% endfor %}],
-      }
-    ] 
+  chartData = {
+    labels: labelData,
+    datasets : datasetArray
   };
 
-  return profitData;
+  return chartData;
 }
 
-$(document).ready(function(){
-
-    setupChartDefaults();
-
-    $(".simulate").click(function(){
-        // Collect all the data we need from sliders and shit
+function simulate() {
+  // Collect all the data we need from sliders and shit
         // call the simulator with those parameters
         // get data back and then replace the chart with stuff
-        var participants = $("#participants_slider").val();
-        var duration = $("#duration_slider").val();
-        var unpredictability = $("#unpredictability_slider").val();
+        participants = $("#participants_slider").val();
+        duration = $("#duration_slider").val();
+        unpredictability = $("#unpredictability_slider").val();
 
         // TODO how to do buttons wtf?!?
-        var priceButton = $("#price_button").data("clicked");
-        var freshnessButton = $("#freshness_button").val();
+        priceButton = $("#price_button").data("clicked");
+        freshnessButton = $("#freshness_button").val();
         // END TODO
 
-        var expirationTime = $("#expiration_slider").val();
-        var sellWeight = $("#sell_weight_slider").val();
-        var sellAmount = $("#sell_amount_slider").val();
-        var buyWeight = $("#buy_weight_slider").val();
-        var buyAmount = $("#buy_amount_slider").val();
-        var consumptionRate = $("#consumption_rate_slider").val();
-        var unitPrice = $("#unit_price_slider").val();
+        expirationTime = $("#expiration_slider").val();
+        sellWeight = $("#sell_weight_slider").val();
+        sellAmount = $("#sell_amount_slider").val();
+        buyWeight = $("#buy_weight_slider").val();
+        buyAmount = $("#buy_amount_slider").val();
+        consumptionRate = $("#consumption_rate_slider").val();
+        unitPrice = $("#unit_price_slider").val();
 
         console.log("Participants: " + participants);
         console.log("Duration: " + duration);
@@ -188,15 +196,20 @@ $(document).ready(function(){
 
         var request = new XMLHttpRequest();
          request.onload = function() {
-          // We could do more interesting things with the response
-          // or, we could ignore it entirely
-          alert(request.responseText);
           updateChart(request);
         };
         // We point the request at the appropriate command
         request.open("GET", url_text, true);
         // and then we send it off
         request.send();
+}
+
+$(document).ready(function(){
+    setupChartDefaults();
+    simulate();
+
+    $(".simulate").click(function(){
+        simulate();
     });
 });
 </script>
@@ -327,18 +340,14 @@ $(document).ready(function(){
 </div>
 
 <!-- bar chart canvas element -->
-<div id = "graphs">
+<div id="charts">
 
 <h4> PROFITS</h4>
-<canvas id="profitChart" width="800" height="600"></canvas>
+<canvas id="profitChartCanvas" width="800" height="600"></canvas>
 <br></br>
 
 <h4> FRESHNESS</h3>
-<canvas id="freshnessChart" width="800" height="600"></canvas>
-<br></br>
-
-<h4> PROFITS -- All restaurants</h3>
-<canvas id="allProfitsChart" width="800" height="600"></canvas>
+<canvas id="freshnessChartCanvas" width="800" height="600"></canvas>
 <br></br>
 </div>
 
@@ -346,293 +355,6 @@ $(document).ready(function(){
   function updateSliderCount (id, val) {
     document.getElementById(id).textContent = val;
   }
-</script>
- 
-<script>
-    // PROFIT CHART!!!
-   // return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
-                           // experimentProfit = experimentProfit, experimentFreshness = experimentFreshness,
-                            //labels=labels)
-  var profitData = {
-  labels : [{% for item in labels %}
-                  "{{item}}",
-              {% endfor %}],
-  datasets : [
-      {     lineTension: 1,
-            backgroundColor: "rgba(0,0,0,0)",
-            borderColor: "rgba(0,0,0,.1)",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(200,200,200,1)",
-            pointBackgroundColor: "rgba(200,200,200,1)",
-            pointBorderWidth: 2,
-            pointHoverRadius: 6,
-            pointHoverBackgroundColor: "rgba(0,0,0,1)",
-            pointHoverBorderColor: "rgba(0,0,0,1)",
-            pointHoverBorderWidth: 3,
-            radius: 1, // ?
-            pointHitRadius: 10,
-            data : [{% for item in controlProfit %}
-                      {{item}},
-                    {% endfor %}],
-
-      },
-      { 
-            lineTension: 1,
-            backgroundColor: "rgba(0,0,0,0)",
-            borderColor: "rgba(75,192,192,1)",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(75,192,192,1)",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
-            pointHoverBorderWidth: 2,
-            radius: 3, // ?
-            pointHitRadius: 10,
-            data : [{% for item in experimentProfit %}
-                      {{item}},
-                    {% endfor %}],
-      }
-    ] 
-  };
-
-  steps = 10;
-  max = 100;
-
-  var options = {     
-    scaleFontFamily : "'He'",
-    pointLabelFontFamily : "'Helvetica'",
-    scaleFontColor : "#000",
-    scaleOverride: false,
-    scaleSteps: steps,
-    scaleStepWidth: Math.ceil(max / steps),
-    scaleStartValue: 0,
-    scaleShowVerticalLines: true,
-    scaleShowGridLines : true,
-    barShowStroke : true,
-    scaleShowLabels: true,
-    bezierCurve: false,
-  };
-
-  Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
-  Chart.defaults.global.animationSteps = 50;
-  Chart.defaults.global.tooltipYPadding = 10;
-  Chart.defaults.global.tooltipCornerRadius = 0;
-  Chart.defaults.global.tooltipCaretSize = 2;
-  Chart.defaults.global.tooltipFontSize = 10;
-  Chart.defaults.global.tooltipTitleFontStyle = "normal";
-  Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,1)";
-  Chart.defaults.global.animationEasing = "easeOutBounce";
-  Chart.defaults.global.responsive = false;
-  Chart.defaults.global.scaleLineColor = "black";
-  Chart.defaults.global.scaleFontSize = 10;
-  Chart.defaults.global.legend.display = false;
-
-  // get bar chart canvas
-  var profitChart = document.getElementById("profitChart").getContext("2d");
-
-  // draw bar chart
-  var profitChartThingy = new Chart(profitChart, {
-    type: 'line',
-    data: profitData,
-    options: options
-  });
-
-   
-</script>
-
-<script>
-
-    // Freshness GRAPH
-   // bar chart data
-
-
-   var freshnessData = {
-   labels : [{% for item in labels %}
-                  "{{item}}",
-              {% endfor %}],
-   datasets : [
-      {     lineTension: 1,
-            backgroundColor: "rgba(0,0,0,0)",
-            borderColor: "rgba(0,0,255,0.5)",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(0,0,255,0)",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 0,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(255,255,255,1)",
-            pointHoverBorderColor: "rgba(220,220,220,0)",
-            pointHoverBorderWidth: 0,
-            radius: 3, // ?
-            pointHitRadius: 10,
-            data : [{% for item in controlFreshness %}
-                      {{item}},
-                    {% endfor %}],
-      },
-      { 
-            lineTension: 1,
-            backgroundColor: "rgba(0,0,0,0)",
-            borderColor: "rgba(75,192,192,1)",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(75,192,192,1)",
-            pointBackgroundColor: "#fff",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
-            pointHoverBorderWidth: 2,
-            radius: 3, // ?
-            pointHitRadius: 10,
-            data : [{% for item in experimentFreshness %}
-                      {{item}},
-                    {% endfor %}],
-      }
-      ]  
-   };
-
-   steps = 10;
-   max = 100;
-
-   var options = {     
-      scaleFontFamily : "'He'",
-      pointLabelFontFamily : "'Helvetica'",
-      scaleFontColor : "#000",
-      scaleOverride: false,
-      scaleSteps: steps,
-      scaleStepWidth: Math.ceil(max / steps),
-      scaleStartValue: 0,
-      scaleShowVerticalLines: true,
-      scaleShowGridLines : true,
-      barShowStroke : true,
-      scaleShowLabels: true,
-      bezierCurve: false,
-  };
-
-
-    Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
-    Chart.defaults.global.animationSteps = 50;
-    Chart.defaults.global.tooltipYPadding = 10;
-    Chart.defaults.global.tooltipCornerRadius = 0;
-    Chart.defaults.global.tooltipCaretSize = 2;
-    Chart.defaults.global.tooltipFontSize = 10;
-    Chart.defaults.global.tooltipTitleFontStyle = "normal";
-    Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,1)";
-    Chart.defaults.global.animationEasing = "easeOutBounce";
-    Chart.defaults.global.responsive = false;
-    Chart.defaults.global.scaleLineColor = "black";
-    Chart.defaults.global.scaleFontSize = 10;
-    Chart.defaults.global.legend.display = false;
- 
-   // get bar chart canvas
-   var freshnessChart = document.getElementById("freshnessChart").getContext("2d");
-
-   // draw bar chart
-  var freshnessChartThingy = new Chart(freshnessChart, {
-    type: 'line',
-    data: freshnessData,
-    options: options
-  });
-
-</script>
-
-<script>
-    // PROFIT CHART all restaurants
-   // return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
-                           // experimentProfit = experimentProfit, experimentFreshness = experimentFreshness,
-                            //labels=labels)
-   var allProfitsData = {{allProfits}};
-   var index = 0;
-   var datasets = [];
-
-   for (i=0; i<allProfitsData.length; i++) {
-      randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.3)"
-
-     datasets.push({ 
-            lineTension: 1,
-            backgroundColor: "rgba(0,0,0,0)",
-            borderColor: randomColor,
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: randomColor,
-            pointBackgroundColor: randomColor,
-            pointBorderWidth: 0,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(255,255,255,1)",
-            pointHoverBorderColor: "rgba(255,255,255,1)",
-            pointHoverBorderWidth: 2,
-            radius: 3, // ?
-            pointHitRadius: 10,
-            data : allProfitsData[i],
-      })
-   }
-
-   console.log(datasets)
-
-   var allProfitsData = {
-   labels : [{% for item in labels %}
-                  "{{item}}",
-              {% endfor %}],
-   datasets : datasets
-   };
-
-   steps = 10;
-   max = 100;
-
-   var options = {     
-      scaleFontFamily : "'He'",
-      pointLabelFontFamily : "'Helvetica'",
-      scaleFontColor : "#000",
-      scaleOverride: false,
-      scaleSteps: steps,
-      scaleStepWidth: Math.ceil(max / steps),
-      scaleStartValue: 0,
-      scaleShowVerticalLines: true,
-      scaleShowGridLines : true,
-      barShowStroke : true,
-      scaleShowLabels: true,
-      bezierCurve: true,
-  };
-
-    Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
-    Chart.defaults.global.animationSteps = 50;
-    Chart.defaults.global.tooltipYPadding = 10;
-    Chart.defaults.global.tooltipCornerRadius = 0;
-    Chart.defaults.global.tooltipCaretSize = 2;
-    Chart.defaults.global.tooltipFontSize = 10;
-    Chart.defaults.global.tooltipTitleFontStyle = "normal";
-    Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,1)";
-    Chart.defaults.global.animationEasing = "easeOutBounce";
-    Chart.defaults.global.responsive = false;
-    Chart.defaults.global.scaleLineColor = "black";
-    Chart.defaults.global.scaleFontSize = 10;
-    Chart.defaults.global.legend.display = false;
-
- 
-   // get bar chart canvas
-   var allProfitsChart = document.getElementById("allProfitsChart").getContext("2d");
-
-  // draw bar chart
-  var allProfitsChartThingy = new Chart(allProfitsChart, {
-    type: 'line',
-    data: allProfitsData,
-    options: options
-  });
-   
 </script>
 
 </body>
@@ -645,7 +367,7 @@ $(document).ready(function(){
                 width: 20%;
   }
 
-  #graphs {float: right;
+  #charts {float: right;
            width: 80%;
   }
 
