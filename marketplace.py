@@ -47,7 +47,7 @@ Experiment
 
 Pretty much all the metrics are at the Ingredient level, so just keep it there, and roll it up later.
 
-Revenue -- revenue += ingr.profit
+Profit -- revenue += ingr.profit
 Stress -- hoursWithoutIngredients += ingr.hoursWithoutIngredient
 Waste -- amountOfWastedFood += ingr.amountOfWastedFood
 Freshness -- totalFreshness += ingr.totalFreshness; avgFreshness = totalFreshness / totalFoodConsumed

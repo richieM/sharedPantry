@@ -66,10 +66,13 @@ class Ingredient:
 			avgFreshness = self.totalFreshness / self.totalFoodConsumed 
 		self.simData["avgFreshness"].append(avgFreshness)
 
-	def setRestockParams(self, restockEveryHours=24*7, restockOnHour=0, howMuchToRestockPounds=50):
+	def setRestockParams(self, restockEveryHours=24*7, restockOnHour=0, howMuchToRestockPounds=50, shouldRestock=True):
+		# TODO
+
 		self.restockEveryHours = restockEveryHours
 		self.restockOnHour = restockOnHour
 		self.howMuchToRestockPounds = howMuchToRestockPounds
+		self.shouldRestock = shouldRestock
 
 	def anHourPassed(self, hour):
 		# Eat some food, make some cash, maybe order more...
@@ -85,7 +88,7 @@ class Ingredient:
 		self.recordSimData()
 
 	def restockFood(self):
-		if ((self.currentHour % self.restockEveryHours) - self.restockOnHour) == 0:
+		if self.shouldRestock and ((self.currentHour % self.restockEveryHours) - self.restockOnHour) == 0:
 			restockedFood = IngrChunk(weight=self.howMuchToRestockPounds, hourCreated=self.currentHour, ingr=self)
 			self.ingrChunks.append(restockedFood)
 

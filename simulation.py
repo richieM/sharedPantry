@@ -2,6 +2,7 @@ import ingredient
 import marketplace
 import restaurant
 import random
+import math
 
 # Create market
 def basicSimulation():
@@ -121,6 +122,61 @@ def controlExactNeeds():
 	simData = market.gatherSimData();
 
 	return simData
+
+def dynamicSim(params, ingrName):
+	"""
+	Take in params from the frontEnd and passes them to a sim :)
+
+	THE DREAM
+	THE TIME HAS COME
+	THIS IS IT YA'LL
+	"""
+	market = marketplace.Marketplace()
+
+	ingredientName = ingrName
+	howManyRestaurants = int(params["participants"])
+	duration = int(params["duration"])
+	unpredictability = int(params["unpredictability"])
+	expirationTime = int(params["expirationTime"])
+	sellWeight = int(params["sellWeight"])
+	buyWeight = int(params["buyWeight"])
+	buyAmount = int(params["buyAmount"])
+	consumptionRate = int(params["consumptionRate"])
+	unitPrice = int(params["unitPrice"])
+
+	totalAmountOfFoodPerDay = consumptionRate * howManyRestaurants
+
+	percentageOfRestaurantsWithStorageSpace = .3
+	numLargeRestaurants = math.ceil(howManyRestaurants * .3)
+	numSmallRestaurants = howManyRestaurants - numLargeRestaurants
+	
+	for n in xrange(howManyRestaurants):
+		currRestaurant = restaurant.Restaurant(n, market=market)
+		currRestaurant.ingredients[ingredientName] = ingredient.Ingredient(name=ingredientName, expirationTime=randomVal(expirationTime), restaurant=currRestaurant,
+										willingToBuy=True, willingToSell=True,
+										sellWeight=randomVal(sellWeight),
+										buyWeight=randomVal(buyWeight), preferredPurchaseAmount=randomVal(buyAmount),
+										avgPoundsConsumedPerHour=randomVal(consumptionRate), dollarsPerHourFromIngredient=randomVal(unitPrice), randomnessInDemand=randomVal(unpredictability))
+		
+		#TODO fix this to be smarter. probably put all the restock logic in the marketplace and not in the ingredients...
+		if n < numLargeRestaurants:
+			currRestaurant.ingredients[ingredientName].setRestockParams(restockEveryHours=168, restockOnHour= int(n * (168 / numLargeRestaurants)), howMuchToRestockPounds=int(totalAmountOfFoodPerDay * 7 / numLargeRestaurants))
+		else:
+			currRestaurant.ingredients[ingredientName].setRestockParams(shouldRestock=False)
+		
+		market.restaurants[currRestaurant.name] = currRestaurant
+
+	for hour in xrange(duration):
+		market.anHourPassed(hour)
+
+	simData = market.gatherSimData();
+
+	return simData
+
+def randomVal(val):
+	stDev = val/4.0
+	return int(random.gauss(val, stDev))
+
 
 #experiment1()
 #controlExactNeeds()

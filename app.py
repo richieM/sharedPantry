@@ -1,5 +1,6 @@
 from flask import Flask, jsonify
 from flask import render_template
+from flask import request
 import simulation
 app = Flask(__name__)
 
@@ -44,17 +45,24 @@ def runSim():
                             controlFreshness = controlFreshness, experimentFreshness = experimentFreshness,
                             allProfits = allProfits, labels=labels)
 
-
-
 @app.route('/resimulate', methods=['GET', 'POST'])
 def resimulate():
     """
-        self.simData["profit"] = []
-        self.simData["hoursWithout"] = []
-        self.simData["waste"] = []
-        self.simData["avgFreshness"] = []
+    Dynamically rerun the sim with new params, dawgie!!!!
+    Gets hit after you click the Simulate button
+
+        Individual values are accessed like:
+            participants = int(sim_args['participants'])
     """
 
+    ingredient = "lemon"
+    simArgs = request.args
+
+    simData = simulation.dynamicSim(simArgs, ingredient)
+
+    return jsonify(results=simData)
+    #render_template('chart.html', allProfits = allProfits, allFreshness = allFreshness, labels=labels)
+    """
     
     controlData = simulation.controlExactNeeds()
     controlProfit = controlData["market"]["Sally's"]["lemon"]["profit"]
@@ -76,6 +84,8 @@ def resimulate():
     # jsonify will do for us all the work, returning the
     # previous data structure in JSON
     return jsonify(results=results)
+    """
+
 
     """
     return render_template('chart.html', controlProfit = controlProfit, experimentProfit = experimentProfit,  
