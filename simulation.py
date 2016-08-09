@@ -136,7 +136,7 @@ def dynamicSim(params, ingrName):
 	ingredientName = ingrName
 	howManyRestaurants = int(params["participants"])
 	duration = int(params["duration"])
-	unpredictability = int(params["unpredictability"])
+	unpredictability = float(params["unpredictability"])
 	expirationTime = int(params["expirationTime"])
 	sellWeight = int(params["sellWeight"])
 	buyWeight = int(params["buyWeight"])

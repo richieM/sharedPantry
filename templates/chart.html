@@ -245,18 +245,18 @@ $(document).ready(function(){
 <br></br>
 
 
-<h2><span id="participantCount">50</span><br>participants</h2> 
-<input id="participants_slider" type="range" min="0" max="100" step="1" value ="50" oninput="updateSliderCount('participantCount', this.value);"/>
+<h2><span id="participantCount">10</span><br>participants</h2> 
+<input id="participants_slider" type="range" min="1" max="50" step="1" value ="10" oninput="updateSliderCount('participantCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>duration: <span id="durationCount">50</span> hours</h2> 
-<input id="duration_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('durationCount', this.value);"/>
+<h2>duration: <span id="durationCount">48</span> hours</h2> 
+<input id="duration_slider" type="range" min="24" max="24*7*30" step="1"  value ="48" oninput="updateSliderCount('durationCount', this.value);"/>
 <br></br>
 <br></br>
 
 <h2>Unpredictability in Demand</h2> 
-<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" />
+<input id="unpredictability_slider" type="range" min="0" max="1" step=".01"  value =".50" />
 <br></br>
 <br></br>
 
@@ -374,7 +374,7 @@ $(document).ready(function(){
 <canvas id="freshnessChartCanvas" width="800" height="600"></canvas>
 <br></br>
 
-<h4>WASTE</h3>
+<h4> WASTE</h3>
 <canvas id="wasteChartCanvas" width="800" height="600"></canvas>
 <br></br>
 
