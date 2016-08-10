@@ -51,7 +51,7 @@ function getChartOptions(xLabel, yLabel) {
     pointLabelFontFamily : "'Helvetica'",
     scaleFontColor : "#000",
     
-    scaleOverride: false,
+    scaleOverride: true,
     scaleSteps: steps,
     scaleStepWidth: Math.ceil(max / steps),
     scaleStartValue: 0,
@@ -60,7 +60,7 @@ function getChartOptions(xLabel, yLabel) {
     scaleShowVerticalLines: false,
     scaleShowGridLines : false,
     barShowStroke : false,
-    scaleShowLabels: false,
+    scaleShowLabels: true,
     bezierCurve: false,
     legendTemplate : false,
 
@@ -110,6 +110,10 @@ function updateChart(response) {
 
     $("#outOfStockChartCanvas").remove();
     $("#charts").append('<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>');
+
+    $("#finalStateChartCanvas").remove();
+    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+
   }
 
   // PROFIT CHART
@@ -118,7 +122,7 @@ function updateChart(response) {
 
   // Draw Chart
   var profitChart = new Chart(profitChartCanvasContainer, {
-    type: 'bar',
+    type: 'line',
     data: getChartData(jsonResponse, "profit", ingredient),
     options: getChartOptions("time (hours)", "profits ($)")
   });
@@ -130,7 +134,7 @@ function updateChart(response) {
 
   // Draw chart
 var freshnessChart = new Chart(freshnessChartCanvasContainer, {
-    type: 'bar',
+    type: 'line',
     data: getChartData(jsonResponse, "avgFreshness", ingredient),
     options: getChartOptions("time (hours)", "freshness")
   });
@@ -140,7 +144,7 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
 
   // Draw Chart
   var wasteChart = new Chart(wasteChartCanvasContainer, {
-    type: 'bar',
+    type: 'line',
     data: getChartData(jsonResponse, "waste", ingredient),
     options: getChartOptions("time (hours)", "waste")
   });
@@ -151,10 +155,22 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
 
   // Draw Chart
   var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
-    type: 'bar',
+    type: 'line',
     data: getChartData(jsonResponse, "hoursWithout", ingredient),
     options: getChartOptions("time (hours)", "net deficit")
   });
+
+// FINAL STATE VALUE PROP CHARTfinalStateChartCanvas
+  finalStateChartCanvasContainer = document.getElementById("finalStateChartCanvas").getContext("2d");
+
+  // Draw Chart
+  var finalStateChart = new Chart(finalStateChartCanvasContainer, {
+    type: 'bar',
+    data: getChartData(jsonResponse, "profit", ingredient),
+    options: getChartOptions("time (hours)", "profits/freshness")
+  });
+
+
 }
 
 function getChartData(simData, chartType, ingrName) {
@@ -166,7 +182,7 @@ function getChartData(simData, chartType, ingrName) {
   for (key in simData.results.market) {
 
 
-    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",1)";
+    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
     datasetArray.push(
       {     lineTension: 0,
             backgroundColor: randomColor,
@@ -350,7 +366,13 @@ $(document).ready(function(){
 
 <h4>HOURS WITH NO INGREDIENTS</h3>
 <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
+
+
+<h4>FINAL STATE VALUE PROPS</h3>
+<canvas id="finalStateChartCanvas" width="600" height="400"></canvas>
 </div>
+
+
 </article>
 
 
@@ -383,6 +405,9 @@ $(document).ready(function(){
   }
 
   #allProfitsChart {
+  }
+
+  #finalStateChart {
   }
 
 aside { display: inline-block;
