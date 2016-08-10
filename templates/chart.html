@@ -3,7 +3,7 @@
 
 <head>
    <meta charset="utf-8" />
-   <title>microMarket</title>
+   <title>sharedPantry</title>
    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.js'></script>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
    <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
@@ -14,7 +14,7 @@
 <div id="controlsDiv">
 
 <aside>
-<h1>microMarket</h1> 
+<h1>sharedPantry</h1> 
 <button type="button" class="simulate">SIMULATE</button>
 
 <script src="./static/jquery-1.11.3.js"></script>
@@ -35,6 +35,7 @@ function setupChartDefaults() {
   Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
   Chart.defaults.global.defaultFontColor = "black";
   Chart.defaults.global.defaultFontSize = 10;
+  Chart.defaults.global.defaultFontStyle = "bold";
   
   Chart.defaults.global.elements.line.tension = 0;
   Chart.defaults.global.elements.line.borderWidth = 1;
@@ -159,7 +160,7 @@ function updateChart(response) {
         }]
     },
 
-    options: getBarChartOptions("RESTAURANTS", "NET WASTE(LBS)")
+    options: getBarChartOptions("RESTAURANTS", "NET WASTE (LBS)")
   });
 
 
@@ -171,7 +172,7 @@ function updateChart(response) {
   var profitChart = new Chart(profitChartCanvasContainer, {
     type: 'line',
     data: getChartData(jsonResponse, "profit", ingredient),
-    options: getChartOptions("TIME (HOURS)", "PROFITS($)")
+    options: getChartOptions("TIME (HOURS)", "PROFITS ($)")
   });
 
 
@@ -193,7 +194,7 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
   var wasteChart = new Chart(wasteChartCanvasContainer, {
     type: 'line',
     data: getChartData(jsonResponse, "waste", ingredient),
-    options: getChartOptions("TIME (HOURS)", "NET WASTE(LBS)")
+    options: getChartOptions("TIME (HOURS)", "NET WASTE (LBS)")
   });
 
 
@@ -204,7 +205,7 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
   var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
     type: 'line',
     data: getChartData(jsonResponse, "hoursWithout", ingredient),
-    options: getChartOptions("TIME (HOURS)", "NET DEFICIT(LBS)"),
+    options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
 
   });
 
@@ -491,37 +492,37 @@ $(document).ready(function(){
 
 
 <input id="expiration_slider" type="range" min="0" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);"/>
-<h2><span id="expirationCount">7</span> days til expiration</h2> 
-
-<input id="consume_slider" type="range" min="0" max="20" step="1" value ="5" oninput="updateSliderCount('consumeCount', this.value);"/>
-<h2><span id="consumeCount">5</span> units consumed per hour</h2> 
-
-<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
-<h2><span id="predictCount">50</span>% unpredictable</h2> 
+<h2><span id="expirationCount">7</span> day expiration</h2> 
 
 <input id="price_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('priceCount', this.value);"/>
-<h2><span id="priceCount">10</span> dollars per unit</h2> 
+<h2>$<span id="priceCount">10</span> / lb</h2> 
+
+<input id="consume_slider" type="range" min="0" max="20" step="1" value ="5" oninput="updateSliderCount('consumeCount', this.value);"/>
+<h2><span id="consumeCount">5</span> lbs consumed / hour</h2> 
+
+<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
+<h2><span id="predictCount">50</span>% unpredictable demand</h2> 
 
 </section>
 <br></br>
 
 <section>
 <h3>TRANSACTION SETTINGS</h3> 
-<h2>buy <span id="buy_weightCount">10</span> lb</h2> 
+
 <input id="buy_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('buy_weightCount', this.value);"/>
+<h2>buy <span id="buy_weightCount">10</span> lb</h2> 
 
 
-<h2><span id="buy_amountCount">6</span> dollars per lb</h2> 
 <input id="buy_amount_slider" type="range" min="0" max="20" step="1" value ="6" oninput="updateSliderCount('buy_amountCount', this.value);"/>
+<h2>$<span id="buy_amountCount">6</span> / lb</h2> 
 
 
-<h2>sell <span id="sell_weightCount">10</span> lb</h2> 
 <input id="sell_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('sell_weightCount', this.value);"/>
+<h2>sell <span id="sell_weightCount">10</span> lb</h2> 
 
 
-<h2><span id="sell_amountCount">8</span> dollars per lb</h2> 
 <input id="sell_amount_slider" type="range" min="0" max="20" step="1" value ="8" oninput="updateSliderCount('sell_amountCount', this.value);"/>
-<br></br>
+<h2>$<span id="sell_amountCount">8</span> / lb</h2> 
 
 </section>
 <br></br>
