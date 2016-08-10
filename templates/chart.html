@@ -107,7 +107,7 @@ function updateChart(response) {
         }]
     },
 
-    options: getBarChartOptions("restaurants", "net profits ($)")
+    options: getBarChartOptions("RESTAURANTS", "NET PROFITS ($)")
   });
 
 
@@ -204,7 +204,8 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
   var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
     type: 'line',
     data: getChartData(jsonResponse, "hoursWithout", ingredient),
-    options: getChartOptions("time (hours)", "net deficit (lbs)")
+    options: getChartOptions("time (hours)", "net deficit (lbs)"),
+
   });
 
 }
@@ -254,8 +255,8 @@ function getChartOptions(xLabel, yLabel) {
   chartOptions = {     
     scaleFontFamily : "'He'",
     pointLabelFontFamily : "'Helvetica'",
-    scaleFontColor : "#000",
-    
+    scaleFontColor : "#ffff00",
+
     scaleOverride: true,
     scaleSteps: steps,
     scaleStepWidth: Math.ceil(max / steps),
@@ -269,14 +270,15 @@ function getChartOptions(xLabel, yLabel) {
     bezierCurve: false,
     legendTemplate : false,
 
-    tooltipsEnabled : true,
-    tooltipsBackgroundColor : 'rgba(0,0,0,1)',
+    tooltipsEnabled : false,
+    tooltipsBackgroundColor : "#fff",
     tooltipsTitleFontColor : 'rgba(255,255,255,1)',
     tooltipsCornerRadius : 0,
 
      scales: {
       xAxes: [{
         scaleLabel: {
+
           display: true,
           labelString: xLabel,
         }
@@ -285,6 +287,7 @@ function getChartOptions(xLabel, yLabel) {
         scaleLabel: {
           display: true,
           labelString: yLabel,
+
         }
       }]
 
@@ -358,7 +361,7 @@ function getBarChartOptions(xLabel, yLabel) {
     bezierCurve: false,
     legendTemplate : false,
 
-    tooltipsEnabled : true,
+    tooltipsEnabled : false,
     tooltipsBackgroundColor : 'rgba(0,0,0,1)',
     tooltipsTitleFontColor : 'rgba(255,255,255,1)',
     tooltipsCornerRadius : 0,
