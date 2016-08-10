@@ -150,7 +150,7 @@ function getChartData(simData, chartType, ingrName) {
   for (key in simData.results.market) {
 
 
-    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.5)";
+    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.1)";
     datasetArray.push(
       {     lineTension: 0,
             backgroundColor: randomColor,
@@ -378,8 +378,8 @@ $(document).ready(function(){
                 width: 20%;
   }
 
-  #charts {float: right;
-           width: 80%;
+  #charts {float: left;
+           width: 60%;
   }
 
   #profitChart {  
@@ -421,7 +421,7 @@ h2 {font-family: 'Helvetica';
     text-align: center;
     vertical-align: top;
     font-size: .6em;
-    color: blue;
+    color: black;
 }
 
 h3 {font-family: 'Helvetica';
@@ -434,7 +434,7 @@ h3 {font-family: 'Helvetica';
 h4 {font-family: 'Helvetica';
     font-size: 1em;
     text-align: left;
-    color: blue;
+    color: black;
     letter-spacing: .5px;
     padding-top: 0px;
     padding-left: 140px;
@@ -584,14 +584,14 @@ button {
 }
 
 button:hover {
-    background-color: blue; 
+    background-color: black; 
     color: white;
 }
 
 button:active {
     background-color: white; 
     border-color: black;
-    color: blue;
+    color: black;
 }
 
 
