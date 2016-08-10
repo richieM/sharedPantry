@@ -161,15 +161,15 @@ class Marketplace:
 
 		amountOfGoods = self.calculateHowMuchToTransact(ingrChunk, buyReq)
 		pricePerUnit = self.calculatePriceForTransaction(ingrChunk, buyReq)
+		deliveryCost = 2.5 + 0.1 * amountOfGoods
 		totalPrice = pricePerUnit * amountOfGoods
-        deliveryCost = 2.5 + 0.1*amountOfGoods      # $2.5 static cost plus 10% of goods delivered
 
 		print " ** Transaction occuring **"
 		print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellerIngr.restaurant.name)
 		print "Amount of goods: %f -- Price per unit: %f -- Total price: $ %f" % (amountOfGoods, pricePerUnit, totalPrice)
 		print
 
-        # these are not used
+		# these are not used
 		escrowMoney = 0
 		escrowGoods = 0
 
@@ -177,7 +177,7 @@ class Marketplace:
 		##### Put money and goods in escrow, simulating delivery pickup
 		# Pull funds from buyer
 		buyerIngr.profit -= totalPrice
-        buyerIngr.profit -= deliveryCost
+		buyerIngr.profit -= deliveryCost
 		escrowMoney = totalPrice
 		# Pull goods from seller
 		ingrChunk.weight -= amountOfGoods
