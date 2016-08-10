@@ -92,7 +92,7 @@ function updateChart(response) {
   var finalStateProfitChart = new Chart(finalStateProfitChartCanvasContainer, {
     type: 'bar',
     data: {
-        labels: ["Sally's", "Market & Rye", "Holy Grill", "Wolfes", "Crepe Cone", "Brazilian Cafe", "Dos Pinas"],
+        labels: ["sally's", "market & rye", "holy grill", "wolfes", "crepe cone", "brazilian cafe", "dos pinas"],
         
         datasets: [{
           //control data
@@ -119,7 +119,7 @@ function updateChart(response) {
   var finalStateFreshnessChart = new Chart(finalStateFreshnessChartCanvasContainer, {
     type: 'bar',
     data: {
-        labels: ["Sally's", "Market & Rye", "Holy Grill", "Wolfes", "Crepe Cone", "Brazilian Cafe", "Dos Pinas"],
+        labels: ["sally's", "market & rye", "holy grill", "wolfes", "crepe cone", "brazilian cafe", "dos pinas"],
         
         datasets: [{
           //control data
@@ -129,12 +129,12 @@ function updateChart(response) {
         },{
           //actual data
             data: [238, 553, 746, 884, 903, 1200, 800],
-            backgroundColor: "rgba(0,180,0,.5)",
-            hoverBackgroundColor: "rgba(0,180,0,1)"
+            backgroundColor: "rgba(0,0,255,.5)",
+            hoverBackgroundColor: "rgba(0,0,255,1)",
         }]
     },
 
-    options: getBarChartOptions("restaurants", "average freshness")
+    options: getBarChartOptions("RESTAURANTS", "AVERAGE FRESHNESS")
   });
 
  // FINAL STATE WASTE BAR CHARTfinalStateWasteChartCanvas
@@ -154,12 +154,12 @@ function updateChart(response) {
         },{
           //actual data
             data: [238, 553, 746, 884, 903, 1200, 800],
-            backgroundColor: "rgba(255,0,0,.5)",
-            hoverBackgroundColor: "rgba(255,0,0,1)"
+            backgroundColor: "rgba(0,0,255,.5)",
+            hoverBackgroundColor: "rgba(0,0,255,1)"
         }]
     },
 
-    options: getBarChartOptions("restaurants", "net waste")
+    options: getBarChartOptions("RESTAURANTS", "NET WASTE(LBS)")
   });
 
 
@@ -171,7 +171,7 @@ function updateChart(response) {
   var profitChart = new Chart(profitChartCanvasContainer, {
     type: 'line',
     data: getChartData(jsonResponse, "profit", ingredient),
-    options: getChartOptions("time (hours)", "profits ($)")
+    options: getChartOptions("TIME (HOURS)", "PROFITS($)")
   });
 
 
@@ -183,7 +183,7 @@ function updateChart(response) {
 var freshnessChart = new Chart(freshnessChartCanvasContainer, {
     type: 'line',
     data: getChartData(jsonResponse, "avgFreshness", ingredient),
-    options: getChartOptions("time (hours)", "freshness")
+    options: getChartOptions("TIME (HOURS)", "FRESHNESS")
   });
 
   // WASTE CHART
@@ -193,7 +193,7 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
   var wasteChart = new Chart(wasteChartCanvasContainer, {
     type: 'line',
     data: getChartData(jsonResponse, "waste", ingredient),
-    options: getChartOptions("time (hours)", "net waste (lbs)")
+    options: getChartOptions("TIME (HOURS)", "NET WASTE(LBS)")
   });
 
 
@@ -204,7 +204,7 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
   var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
     type: 'line',
     data: getChartData(jsonResponse, "hoursWithout", ingredient),
-    options: getChartOptions("time (hours)", "net deficit (lbs)"),
+    options: getChartOptions("TIME (HOURS)", "NET DEFICIT(LBS)"),
 
   });
 
@@ -222,7 +222,7 @@ function getChartData(simData, chartType, ingrName) {
     randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
     datasetArray.push(
       {     lineTension: 0,
-            backgroundColor: randomColor,
+            backgroundColor: "rgba(0,0,255,.1)",
             borderColor: "rgba(0,0,0,1)",
             borderCapStyle: 'butt',
             borderDash: [],
@@ -314,7 +314,7 @@ function getChartOptions(xLabel, yLabel) {
     randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
     datasetBarArray.push(
       {     lineTension: 0,
-            backgroundColor: randomColor,
+            backgroundColor: "rgba(0,0,255,.5)",
             borderColor: "rgba(0,0,0,1)",
             borderCapStyle: 'butt',
             borderDash: [],
