@@ -15,7 +15,6 @@
 
 <aside>
 <h1>sharedPantry</h1> 
-<button type="button" class="simulate">SIMULATE</button>
 
 <script src="./static/jquery-1.11.3.js"></script>
 
@@ -313,6 +312,8 @@ function getChartOptions(xLabel, yLabel) {
     allTheDataArray = simData.results.market[key][ingrName][chartType]
 
     randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
+
+
     datasetBarArray.push(
       {     lineTension: 0,
             backgroundColor: "rgba(0,0,255,.5)",
@@ -471,7 +472,7 @@ $(document).ready(function(){
 });
 </script>
 
-<br></br>
+
 
 <section>
 <h3>GENERAL SETTINGS</h3> 
@@ -485,7 +486,7 @@ $(document).ready(function(){
 <h2><span id="durationCount">32</span> hours</h2> 
 
 </section>
-<br></br>
+
 
 <section>
 <h3>ITEM PROPERTIES</h3> 
@@ -504,8 +505,9 @@ $(document).ready(function(){
 <h2><span id="predictCount">50</span>% unpredictable demand</h2> 
 
 </section>
-<br></br>
 
+<button type="button" class="simulate">SIMULATE</button>
+<br></br>
 <section>
 <h3>TRANSACTION SETTINGS</h3> 
 
@@ -523,10 +525,7 @@ $(document).ready(function(){
 
 <input id="sell_amount_slider" type="range" min="0" max="20" step="1" value ="8" oninput="updateSliderCount('sell_amountCount', this.value);"/>
 <h2>$<span id="sell_amountCount">8</span> / lb</h2> 
-
 </section>
-<br></br>
-<button type="button" class="simulate">SIMULATE</button>
 </aside>
 
 </div>
@@ -536,9 +535,8 @@ $(document).ready(function(){
 <!-- bar chart canvas element -->
 <div id="charts">
 
-<h4>NET PROFITS</h3>
+<h4>NET PROFIT</h3>
 <canvas id="finalStateProfitChartCanvas" width="600" height="400"></canvas>
-
 
 <h4>AVERAGE FRESHNESS</h3>
 <canvas id="finalStateFreshnessChartCanvas" width="600" height="400"></canvas>
@@ -546,16 +544,16 @@ $(document).ready(function(){
 <h4>TOTAL WASTE</h3>
 <canvas id="finalStateWasteChartCanvas" width="600" height="400"></canvas>
 
-<h4>SYSTEM WIDE PROFITS / TIME</h4>
+<h4>PROFIT / TIME</h4>
 <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
 
-<h4>SYSTEM WIDE FRESHNESS / TIME</h3>
+<h4>FRESHNESS / TIME</h3>
 <canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
 
-<h4>SYSTEM WIDE WASTE / TIME</h3>
+<h4>WASTE / TIME</h3>
 <canvas id="wasteChartCanvas" width="600" height="400"></canvas>
 
-<h4>SYSTEM WIDE INGREDIENT DEFICITS / TIME</h3>
+<h4>INGREDIENT DEFICIT / TIME</h3>
 <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
 
 </div>
@@ -601,10 +599,12 @@ $(document).ready(function(){
   #finalStateFreshnessChart {
   }
 
+
+
 aside { width: 240px;
         display: absolute;
-        padding-left: 20px;
-        padding-right: 100px;
+        padding-left: 40px;
+        padding-right: 0px;
         text-align: center;
 }
 canvas{ 
@@ -614,12 +614,14 @@ canvas{
         width: 50%;
         height: 50%;
         padding: 20px 20px 20px 20px;
-        margin: 0px 0px 0px 100px;
+        margin: 0px 0px 60px 50px;
         border: 2px solid black;   
 }
 
 section { border: 2px solid black;
           text-align: center;
+          padding: 20px 20px 20px 20px;
+          margin: 0px 0px 40px 0px;
 }
 
 
@@ -649,8 +651,8 @@ h4 {font-family: 'Helvetica';
     text-align: center;
     color: black;
     letter-spacing: .5px;
-    padding-top: 50px;
-    padding-left: 250px;
+    padding-left: 150px;
+    padding-top: 14px;
     
 }
 
@@ -665,7 +667,7 @@ body {width: 100%;
       background-color: rgba(232, 227, 205, .5);
 }  
 
-article {padding-top: 37px;
+article {padding-top: 15px;
 
 }
 
