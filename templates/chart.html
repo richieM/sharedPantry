@@ -118,7 +118,7 @@ function updateChart(response) {
 
   // Draw Chart
   var profitChart = new Chart(profitChartCanvasContainer, {
-    type: 'line',
+    type: 'bar',
     data: getChartData(jsonResponse, "profit", ingredient),
     options: getChartOptions("time (hours)", "profits ($)")
   });
@@ -129,19 +129,18 @@ function updateChart(response) {
   freshnessChartCanvasContainer = document.getElementById("freshnessChartCanvas").getContext("2d");
 
   // Draw chart
-  var freshnessChart = new Chart(freshnessChartCanvasContainer, {
-    type: 'line',
+var freshnessChart = new Chart(freshnessChartCanvasContainer, {
+    type: 'bar',
     data: getChartData(jsonResponse, "avgFreshness", ingredient),
     options: getChartOptions("time (hours)", "freshness")
   });
-
 
   // WASTE CHART
   wasteChartCanvasContainer = document.getElementById("wasteChartCanvas").getContext("2d");
 
   // Draw Chart
   var wasteChart = new Chart(wasteChartCanvasContainer, {
-    type: 'line',
+    type: 'bar',
     data: getChartData(jsonResponse, "waste", ingredient),
     options: getChartOptions("time (hours)", "waste")
   });
@@ -152,7 +151,7 @@ function updateChart(response) {
 
   // Draw Chart
   var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
-    type: 'line',
+    type: 'bar',
     data: getChartData(jsonResponse, "hoursWithout", ingredient),
     options: getChartOptions("time (hours)", "net deficit")
   });
@@ -167,7 +166,7 @@ function getChartData(simData, chartType, ingrName) {
   for (key in simData.results.market) {
 
 
-    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.1)";
+    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",1)";
     datasetArray.push(
       {     lineTension: 0,
             backgroundColor: randomColor,
@@ -279,75 +278,53 @@ $(document).ready(function(){
 
 <section>
 <h3>GENERAL SETTINGS</h3> 
-<br></br>
 
 
+<input id="participants_slider" type="range" min="0" max="50" step="1" value ="7" oninput="updateSliderCount('participantCount', this.value);"/>
+<h2><span id="participantCount">7</span> participants</h2> 
 
-<h2><span id="participantCount">50</span> participants</h2> 
-<input id="participants_slider" type="range" min="0" max="50" step="1" value ="50" oninput="updateSliderCount('participantCount', this.value);"/>
-<br></br>
-<br></br>
 
-<h2><span id="durationCount">24</span> hours</h2> 
-<input id="duration_slider" type="range" min="0" max="168" step="24"  value ="24" oninput="updateSliderCount('durationCount', this.value);"/>
-<br></br>
-<br></br>
-
-<h2><span id="predictCount">50</span>% unpredictable</h2> 
-<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
-
-<br></br>
-<br></br>
+<input id="duration_slider" type="range" min="0" max="448" step="16"  value ="16" oninput="updateSliderCount('durationCount', this.value);"/>
+<h2><span id="durationCount">32</span> hours</h2> 
 
 </section>
 <br></br>
 
 <section>
 <h3>ITEM PROPERTIES</h3> 
-<br></br>
 
 
-<h2><span id="expirationCount">7</span> days til expiration</h2> 
 <input id="expiration_slider" type="range" min="0" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);"/>
-<br></br>
-<br></br>
+<h2><span id="expirationCount">7</span> days til expiration</h2> 
 
-<h2><span id="consumeCount">5</span> units consumed per hour</h2> 
 <input id="consume_slider" type="range" min="0" max="20" step="1" value ="5" oninput="updateSliderCount('consumeCount', this.value);"/>
-<br></br>
-<br></br>
+<h2><span id="consumeCount">5</span> units consumed per hour</h2> 
 
-<h2><span id="priceCount">10</span> dollars per unit</h2> 
+<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
+<h2><span id="predictCount">50</span>% unpredictable</h2> 
+
 <input id="price_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('priceCount', this.value);"/>
-<br></br>
-<br></br>
-
+<h2><span id="priceCount">10</span> dollars per unit</h2> 
 
 </section>
 <br></br>
 
 <section>
 <h3>TRANSACTION SETTINGS</h3> 
-<br></br>
 <h2>buy <span id="buy_weightCount">10</span> units</h2> 
 <input id="buy_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('buy_weightCount', this.value);"/>
-<br></br>
-<br></br>
 
-<h2>for <span id="buy_amountCount">6</span> dollars per unit</h2> 
+
+<h2><span id="buy_amountCount">6</span> dollars per unit</h2> 
 <input id="buy_amount_slider" type="range" min="0" max="20" step="1" value ="6" oninput="updateSliderCount('buy_amountCount', this.value);"/>
-<br></br>
-<br></br>
+
 
 <h2>sell <span id="sell_weightCount">10</span> units</h2> 
 <input id="sell_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('sell_weightCount', this.value);"/>
 
-<br></br>
-<br></br>
 
-<h2>for <span id="sell_amountCount">8</span> dollars per unit</h2> 
+<h2><span id="sell_amountCount">8</span> dollars per unit</h2> 
 <input id="sell_amount_slider" type="range" min="0" max="20" step="1" value ="8" oninput="updateSliderCount('sell_amountCount', this.value);"/>
-<br></br>
 <br></br>
 
 </section>
