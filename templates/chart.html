@@ -54,6 +54,7 @@ function getChartOptions() {
     scaleSteps: steps,
     scaleStepWidth: Math.ceil(max / steps),
     scaleStartValue: 0,
+
     
     scaleShowVerticalLines: false,
     scaleShowGridLines : false,
@@ -149,10 +150,10 @@ function getChartData(simData, chartType, ingrName) {
   for (key in simData.results.market) {
 
 
-  
+    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.5)";
     datasetArray.push(
       {     lineTension: 0,
-            backgroundColor: "rgba(0,0,255,.05)",
+            backgroundColor: randomColor,
             borderColor: "rgba(0,0,0,1)",
             borderCapStyle: 'butt',
             borderDash: [],
@@ -264,6 +265,7 @@ $(document).ready(function(){
 <br></br>
 
 
+
 <h2><span id="participantCount">25</span> participants</h2> 
 <input id="participants_slider" type="range" min="0" max="50" step="1" value ="25" oninput="updateSliderCount('participantCount', this.value);"/>
 <br></br>
@@ -276,6 +278,7 @@ $(document).ready(function(){
 
 <h2><span id="predictCount">50</span>% unpredictable</h2> 
 <input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
+
 <br></br>
 <br></br>
 
@@ -285,6 +288,7 @@ $(document).ready(function(){
 <section>
 <h3>ITEM PROPERTIES</h3> 
 <br></br>
+
 
 <h2><span id="expirationCount">7</span> days til expiration</h2> 
 <input id="expiration_slider" type="range" min="0" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);"/>
@@ -320,6 +324,7 @@ $(document).ready(function(){
 
 <h2>sell <span id="sell_weightCount">10</span> units</h2> 
 <input id="sell_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('sell_weightCount', this.value);"/>
+
 <br></br>
 <br></br>
 
