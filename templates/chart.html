@@ -5,6 +5,7 @@
    <meta charset="utf-8" />
    <title>microMarket</title>
    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
    <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
 </head>
 
@@ -19,19 +20,25 @@
 <script src="./static/jquery-1.11.3.js"></script>
 
 <script>
+
+
 function setupChartDefaults() {
-  Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
   Chart.defaults.global.animationSteps = 50;
-  Chart.defaults.global.tooltipYPadding = 10;
-  Chart.defaults.global.tooltipCornerRadius = 0;
-  Chart.defaults.global.tooltipCaretSize = 2;
-  Chart.defaults.global.tooltipFontSize = 10;
-  Chart.defaults.global.tooltipTitleFontStyle = "normal";
-  Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,1)";
-  Chart.defaults.global.animationEasing = "easeOutBounce";
-  Chart.defaults.global.responsive = false;
-  Chart.defaults.global.scaleLineColor = "black";
-  Chart.defaults.global.scaleFontSize = 10;
+  Chart.defaults.global.animation.duration = 10000;
+
+  Chart.defaults.global.responsive = true;
+  Chart.defaults.global.animationEasing = "easeInBounce";
+
+  Chart.defaults.global.legend.display = false;
+  Chart.defaults.global.defaultLineColor = "black";
+
+  Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
+  Chart.defaults.global.defaultFontColor = "black";
+  Chart.defaults.global.defaultFontSize = 10;
+  
+  Chart.defaults.global.elements.line.tension = 0;
+  Chart.defaults.global.elements.line.borderWidth = 1;
+  Chart.defaults.global.elements.line.capBezierPoints = true;
 
   steps = 10;
   max = 100;
@@ -42,15 +49,24 @@ function getChartOptions() {
     scaleFontFamily : "'He'",
     pointLabelFontFamily : "'Helvetica'",
     scaleFontColor : "#000",
+    
     scaleOverride: false,
     scaleSteps: steps,
     scaleStepWidth: Math.ceil(max / steps),
     scaleStartValue: 0,
-    scaleShowVerticalLines: true,
-    scaleShowGridLines : true,
-    barShowStroke : true,
-    scaleShowLabels: true,
+    
+    scaleShowVerticalLines: false,
+    scaleShowGridLines : false,
+    barShowStroke : false,
+    scaleShowLabels: false,
     bezierCurve: false,
+    legendTemplate : false,
+
+    tooltipsEnabled : true,
+    tooltipsBackgroundColor : 'rgba(0,0,0,1)',
+    tooltipsTitleFontColor : 'rgba(255,255,255,1)',
+    tooltipsCornerRadius : 0
+
   };
 
   return chartOptions
@@ -131,25 +147,28 @@ function getChartData(simData, chartType, ingrName) {
 
   datasetArray = []
   for (key in simData.results.market) {
-    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)"
+
+
+  
     datasetArray.push(
-      {     lineTension: 0.1,
-            backgroundColor: randomColor,
-            borderColor: randomColor,
+      {     lineTension: 0,
+            backgroundColor: "rgba(0,0,255,.05)",
+            borderColor: "rgba(0,0,0,1)",
             borderCapStyle: 'butt',
             borderDash: [],
             borderDashOffset: 0.0,
             borderJoinStyle: 'miter',
-            pointBorderColor: randomColor,
-            pointBackgroundColor: randomColor,
+            pointBorderColor: "rgba(0,0,0,1)",
+            pointBackgroundColor: "rgba(0,0,0,1)",
             pointBorderWidth: 1,
             pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(75,192,192,1)",
-            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBackgroundColor: "rgba(0,0,0,1)",
+            pointHoverBorderColor: "rgba(0,0,0,1)",
             pointHoverBorderWidth: 2,
-            radius: 1, // ?
+            radius: 2, // size of points
             pointHitRadius: 10,
             data : simData.results.market[key][ingrName][chartType],
+
       });
   }
 
@@ -179,8 +198,8 @@ function simulate() {
         sellAmount = $("#sell_amount_slider").val();
         buyWeight = $("#buy_weight_slider").val();
         buyAmount = $("#buy_amount_slider").val();
-        consumptionRate = $("#consumption_rate_slider").val();
-        unitPrice = $("#unit_price_slider").val();
+        consumptionRate = $("#consume_slider").val();
+        unitPrice = $("#price_slider").val();
 
         console.log("Participants: " + participants);
         console.log("Duration: " + duration);
@@ -245,151 +264,104 @@ $(document).ready(function(){
 <br></br>
 
 
-<h2><span id="participantCount">10</span><br>participants</h2> 
-<input id="participants_slider" type="range" min="1" max="50" step="1" value ="10" oninput="updateSliderCount('participantCount', this.value);"/>
+<h2><span id="participantCount">25</span> participants</h2> 
+<input id="participants_slider" type="range" min="0" max="50" step="1" value ="25" oninput="updateSliderCount('participantCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>duration: <span id="durationCount">48</span> hours</h2> 
-<input id="duration_slider" type="range" min="24" max="24*7*30" step="1"  value ="48" oninput="updateSliderCount('durationCount', this.value);"/>
+<h2><span id="durationCount">96</span> hours</h2> 
+<input id="duration_slider" type="range" min="0" max="168" step="24"  value ="96" oninput="updateSliderCount('durationCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Unpredictability in Demand</h2> 
-<input id="unpredictability_slider" type="range" min="0" max="1" step=".01"  value =".50" />
+<h2><span id="predictCount">50</span>% unpredictable</h2> 
+<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
 <br></br>
-<br></br>
-
-<div class="control-group">
-<h2>transactions by</h2>
-<label class="control control--radio">price
-    <input id="price_button" type="radio" name="radio" checked="checked"/>
-    <div class="control__indicator"></div>
-  </label>
-<label class="control control--radio">freshness
-    <input id="freshness_button" type="radio" name="radio"/>
-    <div class="control__indicator"></div>
-  </label>
-</div>
 <br></br>
 
 </section>
 <br></br>
 
 <section>
-<h3>RESTAURANT PROPERTIES</h3> 
+<h3>ITEM PROPERTIES</h3> 
 <br></br>
 
-<h2>Expiration time (days)</h2> 
-<input id="expiration_slider" type="range" min="1" max="14" step="1"  value ="7" />
-<br></br>
-<br></br>
-
-<h2>Sell weight</h2> 
-<input id="sell_weight_slider" type="range" min="1" max="100" step="1"  value ="20" />
+<h2><span id="expirationCount">7</span> days til expiration</h2> 
+<input id="expiration_slider" type="range" min="0" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Sell Amount</h2> 
-<input id="sell_amount_slider" type="range" min="1" max="100" step="1"  value ="20" />
+<h2><span id="consumeCount">5</span> units consumed per hour</h2> 
+<input id="consume_slider" type="range" min="0" max="20" step="1" value ="5" oninput="updateSliderCount('consumeCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Buy Weight</h2> 
-<input id="buy_weight_slider" type="range" min="1" max="100" step="1"  value ="5" />
+<h2><span id="priceCount">10</span> dollars per unit</h2> 
+<input id="price_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('priceCount', this.value);"/>
 <br></br>
 <br></br>
 
-<h2>Buy Amount</h2> 
-<input id="buy_amount_slider" type="range" min="1" max="100" step="1"  value ="10" />
-<br></br>
-<br></br>
-
-<h2>Customer Consumption Rate (Food per hour)</h2> 
-<input id="consumption_rate_slider" type="range" min="1" max="30" step="1"  value ="5" />
-<br></br>
-<br></br>
-
-<h2>Dollars per unit of ingredient</h2> 
-<input id="unit_price_slider" type="range" min="0" max="100" step="1"  value ="50" />
-<br></br>
-<br></br>
 
 </section>
 <br></br>
+
 <section>
-
-<h3>DISPLAY CONTROLS</h3>
+<h3>TRANSACTION SETTINGS</h3> 
+<br></br>
+<h2>buy <span id="buy_weightCount">10</span> units</h2> 
+<input id="buy_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('buy_weightCount', this.value);"/>
+<br></br>
 <br></br>
 
-<div class="control-group">
-<h2>X</h2>
-<label class="control control--radio">time
-    <input type="radio" name="badio" checked="checked"/>
-    <div class="control__indicator"></div>
-</label>
-  <label class="control control--radio">participants
-    <input type="radio" name="badio"/>
-    <div class="control__indicator"></div>
-</label>
-  <label class="control control--radio">transactions
-    <input type="radio" name="badio"/>
-    <div class="control__indicator"></div>
-</label>
-</div>
+<h2>for <span id="buy_amountCount">6</span> dollars per unit</h2> 
+<input id="buy_amount_slider" type="range" min="0" max="20" step="1" value ="6" oninput="updateSliderCount('buy_amountCount', this.value);"/>
+<br></br>
 <br></br>
 
-
-<div class="control-group">
-  <h2>Y</h2>
-  <label class="control control--radio">profit
-    <input type="radio" name="sadio" checked="checked"/>
-    <div class="control__indicator"></div>
-  </label>
-  
-  <label class="control control--radio">freshness
-    <input type="radio" name="sadio"/>
-    <div class="control__indicator"></div>
-  </label>
-  
-  <label class="control control--radio">waste
-    <input type="radio" name="sadio"/>
-    <div class="control__indicator"></div>
-  </label>
-</div>
-
+<h2>sell <span id="sell_weightCount">10</span> units</h2> 
+<input id="sell_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('sell_weightCount', this.value);"/>
 <br></br>
+<br></br>
+
+<h2>for <span id="sell_amountCount">8</span> dollars per unit</h2> 
+<input id="sell_amount_slider" type="range" min="0" max="20" step="1" value ="8" oninput="updateSliderCount('sell_amountCount', this.value);"/>
+<br></br>
+<br></br>
+
 </section>
+<br></br>
+<button type="button" class="simulate">SIMULATE</button>
 </aside>
+
 </div>
 
+
+<article>
 <!-- bar chart canvas element -->
 <div id="charts">
 
 <h4>PROFITS</h4>
-<canvas id="profitChartCanvas" width="800" height="600"></canvas>
-<br></br>
+<canvas id="profitChartCanvas" width= "600" height="400"></canvas>
 
 <h4>FRESHNESS</h3>
-<canvas id="freshnessChartCanvas" width="800" height="600"></canvas>
-<br></br>
+<canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
 
 <h4> WASTE</h3>
-<canvas id="wasteChartCanvas" width="800" height="600"></canvas>
-<br></br>
+<canvas id="wasteChartCanvas" width="600" height="400"></canvas>
 
 <h4>HOURS WITH NO INGREDIENTS</h3>
-<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>
-<br></br>
-
-
+<canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
 </div>
+</article>
+
+
 
 <script>
   function updateSliderCount (id, val) {
     document.getElementById(id).textContent = val;
   }
 </script>
+
 
 </body>
 
@@ -421,7 +393,12 @@ aside { display: inline-block;
 }
 canvas{ vertical-align: top;
         position: inline-block;
-        padding-left: 50px;
+        overflow: hidden;
+        width: 50%;
+        height: 50%;
+        padding-left: 100px;
+        padding-top: 10px; 
+        padding-bottom:100px;   
 }
 
 section { border: 2px solid black;
@@ -433,9 +410,6 @@ h1   {font-family: 'Helvetica';
       font-size: 2em;
       letter-spacing: 2px;
 
-    -webkit-text-fill-color: white; /* Will override color (regardless of order) */
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: black;
       }
 
 h2 {font-family: 'Helvetica';
@@ -454,11 +428,11 @@ h3 {font-family: 'Helvetica';
 
 h4 {font-family: 'Helvetica';
     font-size: 1em;
-    text-align: right;
+    text-align: left;
     color: blue;
     letter-spacing: .5px;
-    padding-right: 200px;
-    padding-top: 80px;
+    padding-top: 0px;
+    padding-left: 140px;
 }
 
 label {font-family: 'Helvetica';
@@ -469,7 +443,12 @@ label {font-family: 'Helvetica';
 
 body {width: 100%;
       font-family: 'Helvetica';
+      background-color: rgba(232, 227, 205, .5);
 }  
+
+article {padding-top: 80px;
+
+}
 
 /* The Slider */
 input[type=range] {
