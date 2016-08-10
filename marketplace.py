@@ -87,14 +87,14 @@ class Marketplace:
 	def anHourPassed(self, hour):
 		self.currentHour = hour
 		print "HOUR %d" % self.currentHour
+
+		self.restockIfNecessary()
+
 		for r in self.restaurants.values():
 			r.anHourPassed(self.currentHour)
 			if (self.currentHour % 1) == 0:
 				r.display()
 		self.matchBuyersAndSellers()
-		self.restockIfNecessary()
-
-		#import pdb; pdb.set_trace()
 
 	def receiveSellRequest(self, restaurant, ingredient):
 		print "** ADDING SELLER REQUEST -- %s wants to sell %s" % (restaurant.name,ingredient.name)
@@ -153,7 +153,6 @@ class Marketplace:
 					currCheapestIngrChunk = currIngrChunk
 
 		return currCheapestIngrChunk
-
 
 
 	def makeATransaction(self, ingrChunk, buyReq):
@@ -227,10 +226,13 @@ class Marketplace:
 		Restock one of the bigger restaurants if a buy Request hasn't been satisfied
 		in like 2 hours...
 		"""
-		for br in self.buyRequests:
-			if self.currentHour > br.hourCreated:
-				self.restockABigSupplier();
-				return
+		if self.currentHour == 0:  # introduce some food off the bat...
+			self.restockABigSupplier();
+		else:
+			for br in self.buyRequests:
+				if self.currentHour > br.hourCreated:
+					self.restockABigSupplier();
+					return
 
 	def calcHowMuchFoodToRestock(self):
 

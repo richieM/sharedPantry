@@ -154,7 +154,7 @@ def dynamicSim(params, ingrName):
 										willingToBuy=True, willingToSell=True,
 										sellWeight=randomVal(sellWeight),
 										buyWeight=randomVal(buyWeight), preferredPurchaseAmount=randomVal(buyAmount),
-										avgPoundsConsumedPerHour=consumptionRate, dollarsPerHourFromIngredient=unitPrice, randomnessInDemand=randomVal(unpredictability))
+										avgPoundsConsumedPerHour=randomVal(consumptionRate), dollarsPerHourFromIngredient=unitPrice, randomnessInDemand=randomVal(unpredictability))
 		
 		#TODO fix this to be smarter. probably put all the restock logic in the marketplace and not in the ingredients...
 		if n < numLargeRestaurants:
