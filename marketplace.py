@@ -21,7 +21,7 @@ Liquidity:
 
 Delivery:
 - sunk cost...
-- dont include it now 
+- dont include it now
 
 Goals of the market:
 Metrics for the restaurants
@@ -42,7 +42,7 @@ TODO:
 - each restaurant gets a dump of item 1x a week probably...
 - delay in delivery...
 
-Experiment 
+Experiment
 7 restaurants, 1 ingredient, 1 shipment each week
 
 Pretty much all the metrics are at the Ingredient level, so just keep it there, and roll it up later.
@@ -162,12 +162,14 @@ class Marketplace:
 		amountOfGoods = self.calculateHowMuchToTransact(ingrChunk, buyReq)
 		pricePerUnit = self.calculatePriceForTransaction(ingrChunk, buyReq)
 		totalPrice = pricePerUnit * amountOfGoods
+        deliveryCost = 2.5 + 0.1*amountOfGoods      # $2.5 static cost plus 10% of goods delivered
 
 		print " ** Transaction occuring **"
 		print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellerIngr.restaurant.name)
 		print "Amount of goods: %f -- Price per unit: %f -- Total price: $ %f" % (amountOfGoods, pricePerUnit, totalPrice)
 		print
 
+        # these are not used
 		escrowMoney = 0
 		escrowGoods = 0
 
@@ -175,6 +177,7 @@ class Marketplace:
 		##### Put money and goods in escrow, simulating delivery pickup
 		# Pull funds from buyer
 		buyerIngr.profit -= totalPrice
+        buyerIngr.profit -= deliveryCost
 		escrowMoney = totalPrice
 		# Pull goods from seller
 		ingrChunk.weight -= amountOfGoods
@@ -247,7 +250,7 @@ class Marketplace:
 		totalFoodNeeded = int(totalFoodPerHourNeeded * foodShouldLastHowManyHours)
 
 		howManyChunksToOrder = int((totalFoodNeeded / self.bulkResupplySize) + 1)
-		
+
 		howMuchFood = howManyChunksToOrder * self.bulkResupplySize
 
 		return howMuchFood
@@ -277,7 +280,7 @@ class Marketplace:
 		for i in restaurantToRestock.ingredients.values():
 			i.restockFood(howMuchFoodToOrder)
 			restaurantToRestock.lastRestockTime = self.currentHour
-				
+
 
 class BuyRequest:
 	def __init__(self, restaurant, ingredient, hourCreated):
