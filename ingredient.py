@@ -1,8 +1,5 @@
 import random
 
-PLACE_BUY_REQUEST = "PLACE_BUY_REQUEST"
-PLACE_SELL_REQUEST = "PLACE_SELL_REQUEST"
-
 base_ingredient_prices = {"lemon": (2.0, 1.0)}
 bulk_lemon_cost = 1
 

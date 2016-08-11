@@ -129,7 +129,8 @@ class Marketplace:
 			if myPreferredSellRequest is not None:
 				self.makeATransaction(myPreferredSellRequest, howMuchFood, cost, br)
 			else:
-				buyRequestsThatWillStay.append(br)
+				if howMuchFood == "NO_MATCH":
+					buyRequestsThatWillStay.append(br)
 
 		self.buyRequests = buyRequestsThatWillStay
 
@@ -144,7 +145,7 @@ class Marketplace:
 		howMuchFoodToBuy = br.ingredient.preferredPurchaseAmount()
 		
 		if howMuchFoodToBuy <= .1:
-			return (None, None, None)
+			return (None, "NO_NEED", None)
 
 		preferredSellerWithEnough = None
 		preferredSellerWithEnoughCost = 0
@@ -186,7 +187,7 @@ class Marketplace:
 		elif preferredSellerNotEnough:
 			return (preferredSellerNotEnough, preferredSellNotEnoughHowMuchWilling, preferredSellerNotEnoughCost)
 		else:
-			return (None, None, None)
+			return (None, "NO_MATCH", None)
 
 
 	def getCheapestIngrChunk(self, br):
@@ -210,7 +211,7 @@ class Marketplace:
 	def makeATransaction(self, sellReq, amountOfGoods, totalPrice, buyReq):
 		buyerIngr = buyReq.ingredient
 		sellerIngr = sellReq.ingredient
-		
+
 		print " ** Transaction occuring **"
 		print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellerIngr.restaurant.name)
 		print "Amount of goods: %f -- Total price: $ %f" % (amountOfGoods, totalPrice)
@@ -304,7 +305,9 @@ class Marketplace:
 
 		- Determine how much we wanna order
 		- Dump that food on the next large restaurant...
-		"""
+		""" 
+		import pdb; pdb.set_trace()
+
 		howMuchFoodToOrder = self.calcHowMuchFoodToRestock()
 
 		print "********** REORDERING FOOD %d lbs" % howMuchFoodToOrder
