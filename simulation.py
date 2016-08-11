@@ -123,7 +123,7 @@ def controlExactNeeds():
 
 	return simData
 
-def dynamicSim(params, ingrName, control=False):
+def dynamicSim(params, ingrName, randomConsumptionRates, control=False):
 	"""
 	Take in params from the frontEnd and passes them to a sim :)
 	"""
@@ -136,10 +136,10 @@ def dynamicSim(params, ingrName, control=False):
 	duration = int(params["duration"])
 	unpredictability = float(params["unpredictability"]) / 100
 	expirationTime = int(params["expirationTime"]) * 24 # expirationTime is in days on the graph
-	consumptionRate = int(params["consumptionRate"])
+	avgConsumptionRate = int(params["consumptionRate"])
 	unitPrice = int(params["unitPrice"])
 
-	totalAmountOfFoodPerDay = consumptionRate * howManyRestaurants
+	totalAmountOfFoodPerDay = avgConsumptionRate * howManyRestaurants
 
 	percentageOfRestaurantsWithStorageSpace = .3
 	numLargeRestaurants = math.ceil(howManyRestaurants * .3)
@@ -147,7 +147,7 @@ def dynamicSim(params, ingrName, control=False):
 	
 	for n in xrange(howManyRestaurants):
 		currRestaurant = restaurant.Restaurant(n, market=market)
-		randomConsumptionRateHourly = randomVal(consumptionRate)
+		randomConsumptionRateHourly = randomConsumptionRates[n]
 
 		if control:
 			sellWeight = 9999999.99 # impossibly high number
@@ -155,10 +155,10 @@ def dynamicSim(params, ingrName, control=False):
 			sellWeight = randomConsumptionRateHourly * 12 # TODO
 
 		buyWeight = randomConsumptionRateHourly * 3
-		currRestaurant.ingredients[ingredientName] = ingredient.Ingredient(name=ingredientName, expirationTime=randomVal(expirationTime), restaurant=currRestaurant,
+		currRestaurant.ingredients[ingredientName] = ingredient.Ingredient(name=ingredientName, expirationTime=expirationTime, restaurant=currRestaurant,
 										willingToBuy=True, willingToSell=True,
 										sellWeight=sellWeight, buyWeight=buyWeight,
-										avgPoundsConsumedPerHour=randomConsumptionRateHourly, dollarsPerHourFromIngredient=unitPrice, randomnessInDemand=randomVal(unpredictability))
+										avgPoundsConsumedPerHour=randomConsumptionRateHourly, dollarsPerHourFromIngredient=unitPrice, randomnessInDemand=unpredictability)
 		
 		#TODO fix this to be smarter. probably put all the restock logic in the marketplace and not in the ingredients...
 		if n < numLargeRestaurants:
@@ -173,11 +173,18 @@ def dynamicSim(params, ingrName, control=False):
 
 	return simData
 
-def randomVal(val):
-	stDev = val/4.0
-	return int(random.gauss(val, stDev))
-	
+def runSims(params, ingrName):
+	consumpRate = float(params["consumptionRate"])
+	howManyRestaurants = int(params["participants"])
+	randomConsumptionRates = []
 
+	while len(randomConsumptionRates) < howManyRestaurants:
+		randomConsumptionRates.append(random.gauss(consumpRate, consumpRate/4.0))
+
+	simData = dynamicSim(params, ingrName, randomConsumptionRates)
+	controlData = dynamicSim(params, ingrName, randomConsumptionRates, control=True)
+
+	return (simData, controlData)
 
 #experiment1()
 #controlExactNeeds()
