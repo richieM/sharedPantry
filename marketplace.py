@@ -306,8 +306,6 @@ class Marketplace:
 		- Determine how much we wanna order
 		- Dump that food on the next large restaurant...
 		""" 
-		import pdb; pdb.set_trace()
-
 		howMuchFoodToOrder = self.calcHowMuchFoodToRestock()
 
 		print "********** REORDERING FOOD %d lbs" % howMuchFoodToOrder
