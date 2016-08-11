@@ -3,12 +3,12 @@
 
 <head>
    <meta charset="utf-8" />
-   <title>sharedPantry</title>
+   <title>microMarket</title>
    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.js'></script>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
    <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
 </head>
-<h1>sharedPantry</h1>
+<h1>microMarket</h1>
 <nav>
     <a href="#">introduction</a>
     <a href="#">prototype</a>
@@ -23,9 +23,8 @@
 <br></br>
 <div id="controlsDiv">
 
-
-
 <aside>
+
 <script src="./static/jquery-1.11.3.js"></script>
 
 <script>
@@ -456,9 +455,6 @@ function simulate() {
                   "&duration=" + duration +
                   "&unpredictability=" + unpredictability +
                   "&expirationTime=" + expirationTime +
-                  "&sellWeight=" + sellWeight +
-                  "&buyWeight=" + buyWeight +
-                  "&buyAmount=" + buyAmount +
                   "&consumptionRate=" + consumptionRate +
                   "&unitPrice=" + unitPrice
 
@@ -516,24 +512,7 @@ $(document).ready(function(){
 <h2><span id="predictCount">50</span>% unpredictable demand</h2> 
 
 </section>
-
-<section>
-<h3>TRANSACTION SETTINGS</h3> 
-
-<input id="buy_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('buy_weightCount', this.value);"/>
-<h2>buy <span id="buy_weightCount">10</span> lb</h2> 
-
-<input id="buy_amount_slider" type="range" min="0" max="20" step="1" value ="6" oninput="updateSliderCount('buy_amountCount', this.value);"/>
-<h2>$<span id="buy_amountCount">6</span> / lb</h2> 
-
-<input id="sell_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('sell_weightCount', this.value);"/>
-<h2>sell <span id="sell_weightCount">10</span> lb</h2> 
-
-<input id="sell_amount_slider" type="range" min="0" max="20" step="1" value ="8" oninput="updateSliderCount('sell_amountCount', this.value);"/>
-<h2>$<span id="sell_amountCount">8</span> / lb</h2> 
-</section>
 </aside>
-
 </div>
 
 <article>

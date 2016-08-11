@@ -25,12 +25,6 @@ class Restaurant:
 		for currIngr in self.ingredients.values():
 			resp = currIngr.anHourPassed(hour)
 
-			if resp == ingredient.PLACE_BUY_REQUEST:
-				self.placeBuyRequest(currIngr)
-			elif resp == ingredient.PLACE_SELL_REQUEST:
-				self.placeSellRequest(currIngr)
-
-
 	def display(self):
 		print self.name
 		

@@ -103,7 +103,7 @@ class Marketplace:
 		self.sellRequests.append(sellRequest)
 
 	def receiveBuyRequest(self, restaurant, ingredient):
-		print "** BUY REQUEST RECEIVED -- %s wants to buy %d lbs of %s" % (restaurant.name, ingredient.preferredPurchaseAmount, ingredient.name)
+		print "** BUY REQUEST RECEIVED -- %s wants to buy %d lbs of %s" % (restaurant.name, ingredient.preferredPurchaseAmount(), ingredient.name)
 		print
 		for br in self.buyRequests:
 			if br.restaurant == restaurant:
@@ -116,34 +116,87 @@ class Marketplace:
 		"""
 		Matching buyers n sellerz, ya'll
 
-		Version 2.0:
-		Find the cheapest possible ingredient.
-		Loop over all the SellRequests and get a IngrChunk from each if possible...
+		Version 3.0
+		-- first try to find seller with all your ingredient at lowest price
+		- else, try to find highest amount
 		"""
-		random.shuffle(self.buyRequests) # shuffle buyRequests for fairness
+		# shuffle buyRequests for fairness
+		random.shuffle(self.buyRequests) 
+		buyRequestsThatWillStay = [] # Delete fulfilled buy requests...
 
 		for br in self.buyRequests:
-			while (br.preferredPurchaseAmount - br.amountFulfilled) > .05:
-				cheapestIngrChunk = self.getCheapestIngrChunk(br)
-				if cheapestIngrChunk is not None:
-					self.makeATransaction(cheapestIngrChunk, br)
-				else:
-					break
-
-		buyRequestsThatWillStay = []
-		for br in self.buyRequests:
-			if br.ingredient.getWeight() < br.ingredient.buyWeight:
-				buyRequestsThatWillStay.append(br)
+			myPreferredSellRequest, howMuchFood, cost = self.getPreferredSellRequest(br)
+			if myPreferredSellRequest is not None:
+				self.makeATransaction(myPreferredSellRequest, howMuchFood, cost, br)
+			else:
+				if howMuchFood == "NO_MATCH":
+					buyRequestsThatWillStay.append(br)
 
 		self.buyRequests = buyRequestsThatWillStay
 
+	def getPreferredSellRequest(self, br):
+		"""
+		Finds a preferred seller, by
+		- 1. Amount
+		- 2. Price
+
+		Returns (sellRequest, howMuchFood, cost)
+		"""
+		howMuchFoodToBuy = br.ingredient.preferredPurchaseAmount()
+		
+		if howMuchFoodToBuy <= .1:
+			return (None, "NO_NEED", None)
+
+		preferredSellerWithEnough = None
+		preferredSellerWithEnoughCost = 0
+
+		preferredSellerNotEnough = None
+		preferredSellNotEnoughHowMuchWilling = 0
+		preferredSellerNotEnoughCost = 0
+
+		for sr in self.sellRequests:
+			howMuchWillingToSell = sr.ingredient.getWeight() - sr.ingredient.sellWeight
+			if (howMuchWillingToSell < 1):
+				continue
+
+			# They have enough...
+			if howMuchWillingToSell > howMuchFoodToBuy:
+				costToBuyThatMuch = sr.ingredient.costToBuyThatMuch(howMuchFoodToBuy, self.currentHour)
+				if preferredSellerWithEnough is None: # first time thru
+					preferredSellerWithEnough = sr
+					preferredSellerWithEnoughCost = costToBuyThatMuch
+				else: # who's better on price?
+					if costToBuyThatMuch < preferredSellerWithEnoughCost:
+						preferredSellerWithEnough = sr
+						preferredSellerWithEnoughCost = costToBuyThatMuch
+			else:
+				# They have some amount
+				costToBuyThatMuch = sr.ingredient.costToBuyThatMuch(howMuchWillingToSell, self.currentHour)
+				if preferredSellerNotEnough is None: # first time thru
+					preferredSellerNotEnough = sr
+					preferredSellNotEnoughHowMuchWilling = howMuchWillingToSell
+					preferredSellerNotEnoughCost = costToBuyThatMuch
+				else: # who's better on price?
+					if howMuchWillingToSell > preferredSellNotEnoughHowMuchWilling:
+						preferredSellerNotEnough = sr
+						preferredSellNotEnoughHowMuchWilling = howMuchWillingToSell
+						preferredSellerNotEnoughCost = costToBuyThatMuch
+
+		if preferredSellerWithEnough:
+			return (preferredSellerWithEnough, howMuchFoodToBuy, preferredSellerWithEnoughCost)
+		elif preferredSellerNotEnough:
+			return (preferredSellerNotEnough, preferredSellNotEnoughHowMuchWilling, preferredSellerNotEnoughCost)
+		else:
+			return (None, "NO_MATCH", None)
+
 
 	def getCheapestIngrChunk(self, br):
+		# TODO delete this code
 		sellRequestsWithIngredient = [sr for sr in self.sellRequests if sr.ingredient.name == br.ingredient.name and sr.restaurant.name != br.restaurant.name]
 
 		currCheapestIngrChunk = None
 		for sr in sellRequestsWithIngredient:
-			currIngrChunk = sr.ingredient.getCheapestIngrChunk(self.currentHour, br.preferredPurchaseAmount)
+			currIngrChunk = sr.ingredient.getCheapestIngrChunk(self.currentHour, br.ingredient.preferredPurchaseAmount())
 			if currIngrChunk is None:
 				continue
 			if currCheapestIngrChunk is None:
@@ -155,54 +208,43 @@ class Marketplace:
 		return currCheapestIngrChunk
 
 
-	def makeATransaction(self, ingrChunk, buyReq):
+	def makeATransaction(self, sellReq, amountOfGoods, totalPrice, buyReq):
 		buyerIngr = buyReq.ingredient
-		sellerIngr = ingrChunk.ingr
-
-		amountOfGoods = self.calculateHowMuchToTransact(ingrChunk, buyReq)
-		pricePerUnit = self.calculatePriceForTransaction(ingrChunk, buyReq)
-		deliveryCost = 2.5 + 0.1 * amountOfGoods
-		totalPrice = pricePerUnit * amountOfGoods
+		sellerIngr = sellReq.ingredient
 
 		print " ** Transaction occuring **"
 		print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellerIngr.restaurant.name)
-		print "Amount of goods: %f -- Price per unit: %f -- Total price: $ %f" % (amountOfGoods, pricePerUnit, totalPrice)
+		print "Amount of goods: %f -- Total price: $ %f" % (amountOfGoods, totalPrice)
 		print
 
-		# these are not used
-		escrowMoney = 0
-		escrowGoods = 0
-
-
-		##### Put money and goods in escrow, simulating delivery pickup
-		# Pull funds from buyer
+		## Transact Money
+		deliveryCost = 2.5 + 0.1 * amountOfGoods
 		buyerIngr.profit -= totalPrice
 		buyerIngr.profit -= deliveryCost
-		escrowMoney = totalPrice
-		# Pull goods from seller
-		ingrChunk.weight -= amountOfGoods
-		escrowGoods = amountOfGoods
-
-
-		##### Deliver money and goods to appropriate parties, simulating delivery complete
-		# Deliver goods to buyer
-		newChunk = ingredient.IngrChunk(weight=amountOfGoods, hourCreated=ingrChunk.hourCreated, ingr=buyerIngr)
-		buyerIngr.ingrChunks.append(newChunk)
-		escrowGoods = 0
-		# Deliver funds to seller
 		sellerIngr.profit += totalPrice
-		escrowMoney = 0
 
+		## Transact Goods
+		howMuchGoodsSoFar = 0
+		sortedChunks = sorted(sellerIngr.ingrChunks, key=lambda ic: ic.hourCreated)
+		for chunk in sortedChunks:
+			howMuchIWant = amountOfGoods - howMuchGoodsSoFar
 
-		###### Transaction complete, update the BuyRequest and SellRequest
-		buyReq.amountFulfilled += amountOfGoods
+			if chunk.weight >= howMuchIWant:
+				howMuchToTransact = howMuchIWant
+			else:
+				howMuchToTransact = chunk.weight
 
-		# Remove ingrChunk if it's spent
-		if ingrChunk.weight < .01:
-			ingrChunk.ingr.ingrChunks.remove(ingrChunk)
+			chunk.subtractWeight(howMuchToTransact)
+			newBuyerChunk = ingredient.IngrChunk(weight=howMuchToTransact, hourCreated=chunk.hourCreated, ingr=buyerIngr)
+			buyerIngr.ingrChunks.append(newBuyerChunk)
+			howMuchGoodsSoFar += howMuchToTransact
 
-	def calculateHowMuchToTransact(self, ingrChunk, buyReq):
-		howMuchToBuy = buyReq.preferredPurchaseAmount - buyReq.amountFulfilled
+			if howMuchGoodsSoFar >= amountOfGoods:
+				break
+
+	def calculateHowMuchToTransact(self, sellReq, buyReq):
+		howMuchToBuy = buyReq.ingredient.preferredPurchaseAmount()
+		howMuchWillingToSell = sellReq.ingredient.getWeight() - sellReq.ingredient.sellWeight
 
 		if ingrChunk.weight >= howMuchToBuy:
 			return howMuchToBuy
@@ -263,7 +305,7 @@ class Marketplace:
 
 		- Determine how much we wanna order
 		- Dump that food on the next large restaurant...
-		"""
+		""" 
 		howMuchFoodToOrder = self.calcHowMuchFoodToRestock()
 
 		print "********** REORDERING FOOD %d lbs" % howMuchFoodToOrder
@@ -286,8 +328,6 @@ class BuyRequest:
 	def __init__(self, restaurant, ingredient, hourCreated):
 		self.restaurant = restaurant
 		self.ingredient = ingredient
-		self.preferredPurchaseAmount = ingredient.preferredPurchaseAmount
-		self.amountFulfilled = 0
 		self.maxPrice = ingredient.maxBuyPrice
 		self.hourCreated = hourCreated
 		# TODO other stuff here, like preferred sellers or something...
