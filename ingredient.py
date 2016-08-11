@@ -64,7 +64,7 @@ class Ingredient:
 		if self.totalFreshness == 0:
 			avgFreshness = 0
 		else:
-			avgFreshness = self.totalFreshness / self.totalFoodConsumed 
+			avgFreshness = self.totalFreshness / self.totalFoodConsumed
 		self.simData["avgFreshness"].append(avgFreshness)
 
 	def anHourPassed(self, hour):
@@ -79,8 +79,13 @@ class Ingredient:
 
 		self.recordSimData()
 
+		#calculate every hour, decrease the sell weight by the average consumption rate of this ingredient. Sell weight is increased when trading.
+		if self.sellWeight - self.avgPoundsConsumedPerHour > self.buyWeight:
+			self.sellWeight -= self.avgPoundsConsumedPerHour
+			print "SUBTRACT sellweight AFTER ONE HOUR by %f" % self.avgPoundsConsumedPerHour
+
 	def restockFood(self, howMuchToRestock):
-		
+
 		restockedFood = IngrChunk(weight=howMuchToRestock, hourCreated=self.currentHour, ingr=self)
 		self.ingrChunks.append(restockedFood)
 
@@ -131,7 +136,7 @@ class Ingredient:
 				self.ingrChunks.remove(currChunk)
 
 		howMuchWeServed = origHowMuchFood - howMuchFood
-		
+
 		return (howMuchWeServed, totalFreshness)
 
 	def display(self):

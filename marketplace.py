@@ -86,7 +86,9 @@ class Marketplace:
 
 	def anHourPassed(self, hour):
 		self.currentHour = hour
+		print "==================================================================="
 		print "HOUR %d" % self.currentHour
+		print "==================================================================="
 
 		self.restockIfNecessary()
 
@@ -121,13 +123,15 @@ class Marketplace:
 		- else, try to find highest amount
 		"""
 		# shuffle buyRequests for fairness
-		random.shuffle(self.buyRequests) 
+		random.shuffle(self.buyRequests)
 		buyRequestsThatWillStay = [] # Delete fulfilled buy requests...
 
 		for br in self.buyRequests:
 			myPreferredSellRequest, howMuchFood, cost = self.getPreferredSellRequest(br)
 			if myPreferredSellRequest is not None:
-				self.makeATransaction(myPreferredSellRequest, howMuchFood, cost, br)
+				amountsOfGoodsTransacted = self.makeATransaction(myPreferredSellRequest, howMuchFood, cost, br)
+				br.ingredient.sellWeight += amountsOfGoodsTransacted
+				print "ADDING sell weight due to transaction by %f" % amountsOfGoodsTransacted
 			else:
 				buyRequestsThatWillStay.append(br)
 
@@ -142,7 +146,7 @@ class Marketplace:
 		Returns (sellRequest, howMuchFood, cost)
 		"""
 		howMuchFoodToBuy = br.ingredient.preferredPurchaseAmount()
-		
+
 		if howMuchFoodToBuy <= .1:
 			return (None, None, None)
 
@@ -210,7 +214,7 @@ class Marketplace:
 	def makeATransaction(self, sellReq, amountOfGoods, totalPrice, buyReq):
 		buyerIngr = buyReq.ingredient
 		sellerIngr = sellReq.ingredient
-		
+
 		print " ** Transaction occuring **"
 		print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellerIngr.restaurant.name)
 		print "Amount of goods: %f -- Total price: $ %f" % (amountOfGoods, totalPrice)
@@ -225,6 +229,7 @@ class Marketplace:
 		## Transact Goods
 		howMuchGoodsSoFar = 0
 		sortedChunks = sorted(sellerIngr.ingrChunks, key=lambda ic: ic.hourCreated)
+		#import pdb; pdb.set_trace()
 		for chunk in sortedChunks:
 			howMuchIWant = amountOfGoods - howMuchGoodsSoFar
 
@@ -240,6 +245,9 @@ class Marketplace:
 
 			if howMuchGoodsSoFar >= amountOfGoods:
 				break
+
+		#return amount of goods transacted
+		return howMuchGoodsSoFar
 
 	def calculateHowMuchToTransact(self, sellReq, buyReq):
 		howMuchToBuy = buyReq.ingredient.preferredPurchaseAmount()
@@ -276,6 +284,7 @@ class Marketplace:
 			for br in self.buyRequests:
 				if self.currentHour > br.hourCreated:
 					self.restockABigSupplier();
+					self.buyRequests.remove(br)
 					return
 
 	def calcHowMuchFoodToRestock(self):
@@ -321,7 +330,8 @@ class Marketplace:
 		for i in restaurantToRestock.ingredients.values():
 			i.restockFood(howMuchFoodToOrder)
 			restaurantToRestock.lastRestockTime = self.currentHour
-
+			i.sellWeight = i.avgPoundsConsumedPerHour * 12
+			print "RESETTING sell weight to %f" % i.sellWeight
 
 class BuyRequest:
 	def __init__(self, restaurant, ingredient, hourCreated):

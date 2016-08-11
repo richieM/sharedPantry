@@ -20,7 +20,7 @@ class Restaurant:
 		self.market.receiveBuyRequest(self, ingr)
 
 	def anHourPassed(self, hour):
-		# An hour passed, so we'll have to ask each ingredient to change, as well as 
+		# An hour passed, so we'll have to ask each ingredient to change, as well as
 		# generate a flow up in revenue from the ingredients
 		for currIngr in self.ingredients.values():
 			resp = currIngr.anHourPassed(hour)
@@ -30,10 +30,9 @@ class Restaurant:
 			elif resp == ingredient.PLACE_SELL_REQUEST:
 				self.placeSellRequest(currIngr)
 
-
 	def display(self):
 		print self.name
-		
+
 		profit = 0
 		amountOfWastedFood = 0
 		hoursWithoutIngredients = 0
@@ -46,7 +45,7 @@ class Restaurant:
 			hoursWithoutIngredients += ingr.hoursWithoutIngredient
 			totalFreshness += ingr.totalFreshness
 			totalFoodConsumed += ingr.totalFoodConsumed
-		
+
 		if totalFoodConsumed == 0:
 			avgFreshness = 0
 		else:
@@ -57,9 +56,7 @@ class Restaurant:
 		print "Hours without ingredients %f" % hoursWithoutIngredients
 		print "avgFreshness %f" % avgFreshness
 		print "totalFoodConsumed %f" % totalFoodConsumed
+		print "average Consumption Rate %f" % self.ingredients["lemon"].avgPoundsConsumedPerHour
+		print "sell weight %f" % self.ingredients["lemon"].sellWeight
 		print
 		print
-
-
-
-
