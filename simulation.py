@@ -129,8 +129,6 @@ def dynamicSim(params, ingrName, randomConsumptionRates, control=False):
 	"""
 	bulkResupplyChunkSize = 100
 
-	market = marketplace.Marketplace(bulkResupplySize=bulkResupplyChunkSize, control=control)
-
 	ingredientName = ingrName
 	howManyRestaurants = int(params["participants"])
 	duration = int(params["duration"])
@@ -144,6 +142,10 @@ def dynamicSim(params, ingrName, randomConsumptionRates, control=False):
 	percentageOfRestaurantsWithStorageSpace = .3
 	numLargeRestaurants = math.ceil(howManyRestaurants * .3)
 	numSmallRestaurants = howManyRestaurants - numLargeRestaurants
+
+	market = marketplace.Marketplace(bulkResupplySize=bulkResupplyChunkSize,
+										expirationTime = expirationTime,
+										control=control)
 	
 	for n in xrange(howManyRestaurants):
 		currRestaurant = restaurant.Restaurant(n, market=market)

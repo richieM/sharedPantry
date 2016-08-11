@@ -75,13 +75,14 @@ class Marketplace:
 	Seller posts a Sell Request
 	Buyer posts a Buy Request
 	"""
-	def __init__(self, bulkResupplySize, control=False):
+	def __init__(self, bulkResupplySize, expirationTime, control=False):
 		self.restaurants = {} # name -> Restaurant
 		self.buyRequests = []
 		self.sellRequests = []
 		self.purchaseRecords = []
 		self.currentHour = -1
 		self.control = control
+		self.expirationTime = expirationTime
 
 		self.bulkResupplySize = bulkResupplySize
 
@@ -274,11 +275,10 @@ class Marketplace:
 		"""
 		
 		if self.control:
-			hoursInAWeek = 168
-			if self.currentHour % hoursInAWeek == 0:
+			if self.currentHour % self.expirationTime == 0:
 				for r in self.restaurants.values():
 					for i in r.ingredients.values():
-						howMuchFood = i.avgPoundsConsumedPerHour * hoursInAWeek
+						howMuchFood = i.avgPoundsConsumedPerHour * self.expirationTime
 						i.restockFood(howMuchFood, control=self.control)
 		else:
 			if self.currentHour == 0:  # introduce some food off the bat...
