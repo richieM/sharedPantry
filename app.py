@@ -43,6 +43,9 @@ def prototypes():
 def insights():
     return render_template('insights.html')
 
+@app.route("/app")
+def app():
+    return render_template('app_prototype.png')
 
 @app.route('/resimulate', methods=['GET', 'POST'])
 def resimulate():
