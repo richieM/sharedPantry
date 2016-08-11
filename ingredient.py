@@ -11,7 +11,8 @@ class Ingredient:
 	Ingredients that a restaurant has that they can buy or sell.
 	Each ingredient at a restaurant has it's own unique instance
 	"""
-	def __init__(self, name=0, expirationTime=48.0, restaurant=None, willingToSell=False, willingToBuy=False, buyWeight=0, sellWeight=0, maxBuyPrice=0, preferredPurchaseAmount=0, dollarsPerHourFromIngredient=1, avgPoundsConsumedPerHour=.1, randomnessInDemand=.1):
+
+	def __init__(self, name=0, expirationTime=48.0, restaurant=None, willingToSell=False, willingToBuy=False, buyWeight=0, sellWeight=0, maxBuyPrice=0, dollarsPerHourFromIngredient=1, avgPoundsConsumedPerHour=.1, randomnessInDemand=.1):
 		self.name = name
 
 		self.expirationTime = expirationTime
@@ -23,7 +24,6 @@ class Ingredient:
 
 		self.buyWeight = buyWeight
 		self.maxBuyPrice = maxBuyPrice
-		self.preferredPurchaseAmount = preferredPurchaseAmount
 
 		self.sellWeight = sellWeight
 
@@ -112,6 +112,7 @@ class Ingredient:
 		Returns:
 			- (howMuchWeServed, totalFreshness)
 		"""
+		print "%s CONSUMING FOOD: %f" % (self.restaurant.name, howMuchFood)
 
 		origHowMuchFood = howMuchFood
 		totalFreshness = 0
@@ -161,6 +162,25 @@ class Ingredient:
 
 		return None
 
+	def preferredPurchaseAmount(self):
+		return self.avgPoundsConsumedPerHour * 24 - self.getWeight()
+
+	def costToBuyThatMuch(self, howMuch, currHour):
+		"""
+		Calculate and return the cost to buy 'howMuch' food
+		"""
+		# TODO should this reverse be false? wtff
+		sortedIngrChunks = sorted(self.ingrChunks, key=lambda ic: ic.hourCreated, reverse=False)
+		howMuchMoreFood = howMuch
+		costSoFar = 0
+		for chunk in sortedIngrChunks:
+			if chunk.weight > howMuchMoreFood: # buy alot of it
+				costSoFar += howMuchMoreFood * chunk.getCurrentPrice(currHour)
+				return costSoFar
+			else:
+				costSoFar += chunk.weight * chunk.getCurrentPrice(currHour)
+				howMuchMoreFood -= chunk.weight
+
 
 class IngrChunk:
 	def __init__(self, weight, hourCreated, ingr):
@@ -182,4 +202,4 @@ class IngrChunk:
 		# Called by market.makeATransaction to remove a record if we use all the ingredient
 		self.weight -= amountToSubtract
 		if self.weight <= .05: # fudge factor
-			self.ingr.ingrChunks.remove(this)
+			self.ingr.ingrChunks.remove(self)

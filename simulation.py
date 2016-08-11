@@ -134,11 +134,8 @@ def dynamicSim(params, ingrName):
 	ingredientName = ingrName
 	howManyRestaurants = int(params["participants"])
 	duration = int(params["duration"])
-	unpredictability = float(params["unpredictability"])
+	unpredictability = float(params["unpredictability"]) / 100
 	expirationTime = int(params["expirationTime"]) * 24 # expirationTime is in days on the graph
-	sellWeight = int(params["sellWeight"])
-	buyWeight = int(params["buyWeight"])
-	buyAmount = int(params["buyAmount"])
 	consumptionRate = int(params["consumptionRate"])
 	unitPrice = int(params["unitPrice"])
 
@@ -150,11 +147,13 @@ def dynamicSim(params, ingrName):
 	
 	for n in xrange(howManyRestaurants):
 		currRestaurant = restaurant.Restaurant(n, market=market)
+		randomConsumptionRateHourly = randomVal(consumptionRate)
+		sellWeight = randomConsumptionRateHourly * 12 # TODO
+		buyWeight = randomConsumptionRateHourly * 3
 		currRestaurant.ingredients[ingredientName] = ingredient.Ingredient(name=ingredientName, expirationTime=randomVal(expirationTime), restaurant=currRestaurant,
 										willingToBuy=True, willingToSell=True,
-										sellWeight=randomVal(sellWeight),
-										buyWeight=randomVal(buyWeight), preferredPurchaseAmount=randomVal(buyAmount),
-										avgPoundsConsumedPerHour=randomVal(consumptionRate), dollarsPerHourFromIngredient=unitPrice, randomnessInDemand=randomVal(unpredictability))
+										sellWeight=sellWeight, buyWeight=buyWeight,
+										avgPoundsConsumedPerHour=randomConsumptionRateHourly, dollarsPerHourFromIngredient=unitPrice, randomnessInDemand=randomVal(unpredictability))
 		
 		#TODO fix this to be smarter. probably put all the restock logic in the marketplace and not in the ingredients...
 		if n < numLargeRestaurants:

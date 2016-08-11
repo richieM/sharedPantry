@@ -248,9 +248,6 @@ function simulate() {
                   "&duration=" + duration +
                   "&unpredictability=" + unpredictability +
                   "&expirationTime=" + expirationTime +
-                  "&sellWeight=" + sellWeight +
-                  "&buyWeight=" + buyWeight +
-                  "&buyAmount=" + buyAmount +
                   "&consumptionRate=" + consumptionRate +
                   "&unitPrice=" + unitPrice
 
@@ -307,31 +304,7 @@ $(document).ready(function(){
 <h2><span id="priceCount">10</span> dollars per unit</h2> 
 
 </section>
-<br></br>
-
-<section>
-<h3>TRANSACTION SETTINGS</h3> 
-<h2>buy <span id="buy_weightCount">10</span> units</h2> 
-<input id="buy_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('buy_weightCount', this.value);"/>
-
-
-<h2><span id="buy_amountCount">6</span> dollars per unit</h2> 
-<input id="buy_amount_slider" type="range" min="0" max="20" step="1" value ="6" oninput="updateSliderCount('buy_amountCount', this.value);"/>
-
-
-<h2>sell <span id="sell_weightCount">10</span> units</h2> 
-<input id="sell_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('sell_weightCount', this.value);"/>
-
-
-<h2><span id="sell_amountCount">8</span> dollars per unit</h2> 
-<input id="sell_amount_slider" type="range" min="0" max="20" step="1" value ="8" oninput="updateSliderCount('sell_amountCount', this.value);"/>
-<br></br>
-
-</section>
-<br></br>
-<button type="button" class="simulate">SIMULATE</button>
 </aside>
-
 </div>
 
 
