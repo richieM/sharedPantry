@@ -63,7 +63,7 @@ function updateChart(response) {
 
   // Blow away profitChart if it exists
   // TODO try deleting all the data in the chart ... .destroy()
-  if (typeof profitChart == "object") {
+  if (typeof finalStateProfitChart == "object") {
 
     $("#finalStateProfitChartCanvas").remove();
     $("#charts").append('<canvas id="finalStateProfitChartCanvas" width="800" height="600"></canvas>');
@@ -77,6 +77,8 @@ function updateChart(response) {
     $("#finalStateHoursWithoutChartCanvas").remove();
     $("#charts").append('<canvas id="finalStateHoursWithoutChartCanvas" width="800" height="600"></canvas>');
 
+
+    /*
     $("#profitChartCanvas").remove();
     $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
 
@@ -88,6 +90,7 @@ function updateChart(response) {
 
     $("#outOfStockChartCanvas").remove();
     $("#charts").append('<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>');
+    */
 
   
 
@@ -134,6 +137,8 @@ function updateChart(response) {
   });
 
 
+  /*
+
   // PROFIT CHART
   // Get canvas
   profitChartCanvasContainer = document.getElementById("profitChartCanvas").getContext("2d");
@@ -178,38 +183,13 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
     options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
 
   });
+  */
 
 }
 
 
 function getBarChartData(simData, chartType, ingrName) {
   // Converts simData JSON to chart.js data structure...
-  /*
-  {
-        labels: ['Sally's', "Market & Rye", "Holy Grill", "Wolfes", "Crepe Cone", "Brazilian Cafe", "Dos Pinas"],
-        
-        datasets: [{
-          //control data
-            data: [727, 589, 537, 543, 574, 480, 600],
-            backgroundColor: "rgba(0,0,0,1)",
-            hoverBackgroundColor: "rgba(0,0,0,1)"
-        },{
-          //actual data
-            data: [238, 553, 746, 884, 903, 1200, 800],
-            backgroundColor: "rgba(0,150,0,1)",
-            hoverBackgroundColor: "rgba(0,150,0,.5)",
-        }]
-    }
-  """
-
-  """
-  Pseudocode --
-  - we need one dataset that is all the final values for each restaurant's CONTROL
-  - we need another data that is for all the final values of each restaurant's EXPERIMENT
-
-  maybe get all the restaurant names and then just iterate over each (only other variable is the uhhhh length of the dataset...)
-  """
-  */
 
   numParticipants = parseInt($("#participants_slider").val());
   labelData = Array.apply(null, {length: numParticipants}).map(Number.call, Number)
@@ -523,7 +503,7 @@ $(document).ready(function(){
 <canvas id="finalStateHoursWithoutChartCanvas" width="600" height="400"></canvas>
 <h4>HOURS WITHOUT</h3>
 
-<!-- LINE CHARTS -->
+<!-- LINE CHARTS 
 <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
 <h4>PROFIT / TIME</h4>
 
@@ -535,6 +515,7 @@ $(document).ready(function(){
 
 <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
 <h4>INGREDIENT DEFICIT / TIME</h3>
+  -->
 
 </div>
 
