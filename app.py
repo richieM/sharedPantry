@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask import render_template
 from flask import request
 import simulation
+import random
 app = Flask(__name__)
 
 @app.route("/")
@@ -38,9 +39,8 @@ def resimulate():
     ingredient = "lemon"
     simArgs = request.args
 
-    simData = simulation.dynamicSim(simArgs, ingredient)
-    controlData = simulation.dynamicSim(simArgs, ingredient, control=True)
-
+    simData, controlData = simulation.runSims(simArgs, ingredient)
+    
     return jsonify(results=simData, control=controlData)
 
 @app.route('/testTemplates/<name>')
