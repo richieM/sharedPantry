@@ -21,7 +21,7 @@ Liquidity:
 
 Delivery:
 - sunk cost...
-- dont include it now 
+- dont include it now
 
 Goals of the market:
 Metrics for the restaurants
@@ -42,7 +42,7 @@ TODO:
 - each restaurant gets a dump of item 1x a week probably...
 - delay in delivery...
 
-Experiment 
+Experiment
 7 restaurants, 1 ingredient, 1 shipment each week
 
 Pretty much all the metrics are at the Ingredient level, so just keep it there, and roll it up later.
@@ -210,20 +210,16 @@ class Marketplace:
 	def makeATransaction(self, sellReq, amountOfGoods, totalPrice, buyReq):
 		buyerIngr = buyReq.ingredient
 		sellerIngr = sellReq.ingredient
-
-		if amountOfGoods is None or totalPrice is None:
-			import pdb; pdb.set_trace()
-
+		
 		print " ** Transaction occuring **"
 		print "Buyer: %s   -- Seller: %s" % (buyReq.restaurant.name, sellerIngr.restaurant.name)
 		print "Amount of goods: %f -- Total price: $ %f" % (amountOfGoods, totalPrice)
 		print
 
-		escrowMoney = 0
-		escrowGoods = 0
-
 		## Transact Money
+		deliveryCost = 2.5 + 0.1 * amountOfGoods
 		buyerIngr.profit -= totalPrice
+		buyerIngr.profit -= deliveryCost
 		sellerIngr.profit += totalPrice
 
 		## Transact Goods
@@ -295,7 +291,7 @@ class Marketplace:
 		totalFoodNeeded = int(totalFoodPerHourNeeded * foodShouldLastHowManyHours)
 
 		howManyChunksToOrder = int((totalFoodNeeded / self.bulkResupplySize) + 1)
-		
+
 		howMuchFood = howManyChunksToOrder * self.bulkResupplySize
 
 		return howMuchFood
@@ -325,7 +321,7 @@ class Marketplace:
 		for i in restaurantToRestock.ingredients.values():
 			i.restockFood(howMuchFoodToOrder)
 			restaurantToRestock.lastRestockTime = self.currentHour
-				
+
 
 class BuyRequest:
 	def __init__(self, restaurant, ingredient, hourCreated):
