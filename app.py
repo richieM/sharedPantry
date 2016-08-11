@@ -19,9 +19,30 @@ def graphTest():
     values = [10,9,8,7,6,4,7,8,10,9,8,7,6,4,7,8,10,9,8,7,6,4,7,8,10,9,8,7,6,4,7,8,10,9,8,7,6,4,7,8,10,9,8,7,6,4,7,8,10,9,8,7,6,4,7,8]
     return render_template('chart.html', values=values, labels=labels)
 
+@app.route("/plenty")
+def plenty():
+    return render_template('plenty.html')
+
 @app.route("/runSim")
 def runSim():
     return render_template('chart.html')
+
+@app.route("/intro")
+def intro():
+    return render_template('introduction.html')
+
+@app.route("/about")
+def about():
+    return render_template('about.html')
+
+@app.route("/prototypes")
+def prototypes():
+    return render_template('prototypes.html')
+
+@app.route("/insights")
+def insights():
+    return render_template('insights.html')
+
 
 @app.route('/resimulate', methods=['GET', 'POST'])
 def resimulate():
