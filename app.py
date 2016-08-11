@@ -39,8 +39,9 @@ def resimulate():
     simArgs = request.args
 
     simData = simulation.dynamicSim(simArgs, ingredient)
+    controlData = simulation.dynamicSim(simArgs, ingredient, control=True)
 
-    return jsonify(results=simData)
+    return jsonify(results=simData, control=controlData)
 
 @app.route('/testTemplates/<name>')
 def testTemplates(name):

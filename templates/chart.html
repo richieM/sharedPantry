@@ -217,6 +217,7 @@ function getBarChartData(simData, chartType, ingrName) {
   duration = parseInt($("#duration_slider").val());
 
   experimentDataLastValues = []
+  controlDataLastValues = []
   datasets = []
 
   // Experiment last data values
@@ -225,20 +226,19 @@ function getBarChartData(simData, chartType, ingrName) {
     experimentDataLastValues.push(lastDataVal)
   }
  
+  for (key in simData.control.market) {
+    lastDataVal = simData.control.market[key][ingrName][chartType][duration-1]
+    controlDataLastValues.push(lastDataVal)
+  }
+
   experimentDataSet = {
     data: experimentDataLastValues,
     backgroundColor: "rgba(0,150,0,1)",
     hoverBackgroundColor: "rgba(0,150,0,.5)"
   };
 
-  // TODO get the control data
-  randomControlData = [];
-  while (randomControlData.length < duration) {
-    randomControlData.push(Math.random()*2)
-  }
-
   controlDataSet = {
-    data: randomControlData,
+    data: controlDataLastValues,
     backgroundColor: "rgba(0,0,0,1)",
     hoverBackgroundColor: "rgba(0,0,0,1)"
   };
@@ -248,10 +248,8 @@ function getBarChartData(simData, chartType, ingrName) {
   chartData = {
     labels: labelData,
     datasets : datasetArray
-  };
-
-  debugger;
-
+  }
+  
   return chartData;
 }
 

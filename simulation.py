@@ -123,13 +123,13 @@ def controlExactNeeds():
 
 	return simData
 
-def dynamicSim(params, ingrName):
+def dynamicSim(params, ingrName, control=False):
 	"""
 	Take in params from the frontEnd and passes them to a sim :)
 	"""
 	bulkResupplyChunkSize = 100
 
-	market = marketplace.Marketplace(bulkResupplySize=bulkResupplyChunkSize)
+	market = marketplace.Marketplace(bulkResupplySize=bulkResupplyChunkSize, control=control)
 
 	ingredientName = ingrName
 	howManyRestaurants = int(params["participants"])
@@ -148,7 +148,12 @@ def dynamicSim(params, ingrName):
 	for n in xrange(howManyRestaurants):
 		currRestaurant = restaurant.Restaurant(n, market=market)
 		randomConsumptionRateHourly = randomVal(consumptionRate)
-		sellWeight = randomConsumptionRateHourly * 12 # TODO
+
+		if control:
+			sellWeight = 9999999.99 # impossibly high number
+		else:
+			sellWeight = randomConsumptionRateHourly * 12 # TODO
+
 		buyWeight = randomConsumptionRateHourly * 3
 		currRestaurant.ingredients[ingredientName] = ingredient.Ingredient(name=ingredientName, expirationTime=randomVal(expirationTime), restaurant=currRestaurant,
 										willingToBuy=True, willingToSell=True,
