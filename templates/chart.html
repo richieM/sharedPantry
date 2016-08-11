@@ -66,16 +66,16 @@ function updateChart(response) {
   if (typeof profitChart == "object") {
 
     $("#finalStateProfitChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+    $("#charts").append('<canvas id="finalStateProfitChartCanvas" width="800" height="600"></canvas>');
 
     $("#finalStateFreshnessChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+    $("#charts").append('<canvas id="finalStateFreshnessChartCanvas" width="800" height="600"></canvas>');
 
     $("#finalStateWasteChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+    $("#charts").append('<canvas id="finalStateWasteChartCanvas" width="800" height="600"></canvas>');
 
-    $("#finalStateChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+    $("#finalStateHoursWithoutChartCanvas").remove();
+    $("#charts").append('<canvas id="finalStateHoursWithoutChartCanvas" width="800" height="600"></canvas>');
 
     $("#profitChartCanvas").remove();
     $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
@@ -93,81 +93,44 @@ function updateChart(response) {
 
   }
 
-  // FINAL STATE PROFIT BAR CHARTfinalStateChartCanvas
+  // BAR CHART -- PROFIT
   finalStateProfitChartCanvasContainer = document.getElementById("finalStateProfitChartCanvas").getContext("2d");
-
-  // Draw Chart
+  
   var finalStateProfitChart = new Chart(finalStateProfitChartCanvasContainer, {
     type: 'bar',
-    data: {
-        labels: ["sally's", "market & rye", "holy grill", "wolfes", "crepe cone", "brazilian cafe", "dos pinas"],
-        
-        datasets: [{
-          //control data
-            data: [727, 589, 537, 543, 574, 480, 600],
-            backgroundColor: "rgba(0,0,0,1)",
-            hoverBackgroundColor: "rgba(0,0,0,1)"
-        },{
-          //actual data
-            data: [238, 553, 746, 884, 903, 1200, 800],
-            backgroundColor: "rgba(0,150,0,1)",
-            hoverBackgroundColor: "rgba(0,150,0,.5)",
-        }]
-    },
-
+    data: getBarChartData(jsonResponse, "profit", ingredient),
     options: getBarChartOptions("RESTAURANTS", "NET PROFITS ($)")
   });
 
 
-
-  // FINAL STATE FRESHNESS BAR CHARTfinalStateFreshnessChartCanvas
+  // BAR CHART -- FRESHNESS
   finalStateFreshnessChartCanvasContainer = document.getElementById("finalStateFreshnessChartCanvas").getContext("2d");
 
-  // Draw Chart
   var finalStateFreshnessChart = new Chart(finalStateFreshnessChartCanvasContainer, {
     type: 'bar',
-    data: {
-        labels: ["sally's", "market & rye", "holy grill", "wolfes", "crepe cone", "brazilian cafe", "dos pinas"],
-        
-        datasets: [{
-          //control data
-            data: [727, 589, 537, 543, 574, 480, 600],
-            backgroundColor: "rgba(0,0,0,1)",
-            hoverBackgroundColor: "rgba(0,0,0,1)"
-        },{
-          //actual data
-            data: [238, 553, 746, 884, 903, 1200, 800],
-            backgroundColor: "rgba(0,150,0,1)",
-            hoverBackgroundColor: "rgba(0,150,0,.5)",
-        }]
-    },
-
+    data: getBarChartData(jsonResponse, "avgFreshness", ingredient),
     options: getBarChartOptions("RESTAURANTS", "AVERAGE FRESHNESS")
   });
 
- // FINAL STATE WASTE BAR CHARTfinalStateWasteChartCanvas
+
+ // BAR CHART -- WASTE
   finalStateWasteChartCanvasContainer = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
 
   // Draw Chart
   var finalStateWasteChart = new Chart(finalStateWasteChartCanvasContainer, {
     type: 'bar',
-    data: {
-        labels: ["Sally's", "Market & Rye", "Holy Grill", "Wolfes", "Crepe Cone", "Brazilian Cafe", "Dos Pinas"],
-        
-        datasets: [{
-          //control data
-            data: [727, 589, 537, 543, 574, 480, 600],
-            backgroundColor: "rgba(0,0,0,1)",
-            hoverBackgroundColor: "rgba(0,0,0,1)"
-        },{
-          //actual data
-            data: [238, 553, 746, 884, 903, 1200, 800],
-            backgroundColor: "rgba(0,150,0,1)",
-            hoverBackgroundColor: "rgba(0,150,0,.5)",
-        }]
-    },
-
+    data: getBarChartData(jsonResponse, "waste", ingredient),
     options: getBarChartOptions("RESTAURANTS", "NET WASTE (LBS)")
+  });
+
+   // BAR CHART -- HOURS WITHOUT
+  finalStateHoursWithoutChartCanvasContainer = document.getElementById("finalStateHoursWithoutChartCanvas").getContext("2d");
+
+  // Draw Chart
+  var finalStateHoursChart = new Chart(finalStateHoursWithoutChartCanvasContainer, {
+    type: 'bar',
+    data: getBarChartData(jsonResponse, "hoursWithout", ingredient),
+    options: getBarChartOptions("RESTAURANTS", "HOURS WITHOUT")
   });
 
 
@@ -178,7 +141,7 @@ function updateChart(response) {
   // Draw Chart
   var profitChart = new Chart(profitChartCanvasContainer, {
     type: 'line',
-    data: getChartData(jsonResponse, "profit", ingredient),
+    data: getLineChartData(jsonResponse, "profit", ingredient),
     options: getChartOptions("TIME (HOURS)", "PROFITS ($)")
   });
 
@@ -190,7 +153,7 @@ function updateChart(response) {
   // Draw chart
 var freshnessChart = new Chart(freshnessChartCanvasContainer, {
     type: 'line',
-    data: getChartData(jsonResponse, "avgFreshness", ingredient),
+    data: getLineChartData(jsonResponse, "avgFreshness", ingredient),
     options: getChartOptions("TIME (HOURS)", "FRESHNESS")
   });
 
@@ -200,7 +163,7 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
   // Draw Chart
   var wasteChart = new Chart(wasteChartCanvasContainer, {
     type: 'line',
-    data: getChartData(jsonResponse, "waste", ingredient),
+    data: getLineChartData(jsonResponse, "waste", ingredient),
     options: getChartOptions("TIME (HOURS)", "NET WASTE (LBS)")
   });
 
@@ -211,14 +174,87 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
   // Draw Chart
   var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
     type: 'line',
-    data: getChartData(jsonResponse, "hoursWithout", ingredient),
+    data: getLineChartData(jsonResponse, "hoursWithout", ingredient),
     options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
 
   });
 
 }
 
-function getChartData(simData, chartType, ingrName) {
+
+function getBarChartData(simData, chartType, ingrName) {
+  // Converts simData JSON to chart.js data structure...
+  /*
+  {
+        labels: ['Sally's', "Market & Rye", "Holy Grill", "Wolfes", "Crepe Cone", "Brazilian Cafe", "Dos Pinas"],
+        
+        datasets: [{
+          //control data
+            data: [727, 589, 537, 543, 574, 480, 600],
+            backgroundColor: "rgba(0,0,0,1)",
+            hoverBackgroundColor: "rgba(0,0,0,1)"
+        },{
+          //actual data
+            data: [238, 553, 746, 884, 903, 1200, 800],
+            backgroundColor: "rgba(0,150,0,1)",
+            hoverBackgroundColor: "rgba(0,150,0,.5)",
+        }]
+    }
+  """
+
+  """
+  Pseudocode --
+  - we need one dataset that is all the final values for each restaurant's CONTROL
+  - we need another data that is for all the final values of each restaurant's EXPERIMENT
+
+  maybe get all the restaurant names and then just iterate over each (only other variable is the uhhhh length of the dataset...)
+  """
+  */
+
+  numParticipants = parseInt($("#participants_slider").val());
+  labelData = Array.apply(null, {length: numParticipants}).map(Number.call, Number)
+
+  duration = parseInt($("#duration_slider").val());
+
+  experimentDataLastValues = []
+  controlDataLastValues = []
+  datasets = []
+
+  // Experiment last data values
+  for (key in simData.results.market) {
+    lastDataVal = simData.results.market[key][ingrName][chartType][duration-1]
+    experimentDataLastValues.push(lastDataVal)
+  }
+ 
+  for (key in simData.control.market) {
+    lastDataVal = simData.control.market[key][ingrName][chartType][duration-1]
+    controlDataLastValues.push(lastDataVal)
+  }
+
+  experimentDataSet = {
+    data: experimentDataLastValues,
+    backgroundColor: "rgba(0,150,0,1)",
+    hoverBackgroundColor: "rgba(0,150,0,.5)"
+  };
+
+  controlDataSet = {
+    data: controlDataLastValues,
+    backgroundColor: "rgba(0,0,0,1)",
+    hoverBackgroundColor: "rgba(0,0,0,1)"
+  };
+
+  datasetArray = [controlDataSet, experimentDataSet];
+
+  chartData = {
+    labels: labelData,
+    datasets : datasetArray
+  }
+  
+  return chartData;
+}
+
+
+function getLineChartData(simData, chartType, ingrName) {
   // Converts simData JSON to chart.js data structure...
   duration = parseInt($("#duration_slider").val());
   labelData = Array.apply(null, {length: duration}).map(Number.call, Number)
@@ -257,6 +293,7 @@ function getChartData(simData, chartType, ingrName) {
 
   return chartData;
 }
+
 
 
 function getChartOptions(xLabel, yLabel) {
@@ -304,53 +341,6 @@ function getChartOptions(xLabel, yLabel) {
   };
 
   return chartOptions;
-}
-
-
-  function getBarChartData(simData, chartType, ingrName) {
-  // Converts simData JSON to chart.js data structure...
-  participants = parseInt($("#participants_slider").val());
-  labelBarData = Array.apply(null, {length: participants}).map(Number.call, Number)
-
-  debugger;
-
-  datasetBarArray = []
-  for (key in simData.results.market) {
-
-    allTheDataArray = simData.results.market[key][ingrName][chartType]
-
-    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
-
-
-    datasetBarArray.push(
-      {     lineTension: 0,
-            backgroundColor: "rgba(0,0,255,.5)",
-            borderColor: "rgba(0,0,0,1)",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(0,0,0,1)",
-            pointBackgroundColor: "rgba(0,0,0,1)",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(0,0,0,1)",
-            pointHoverBorderColor: "rgba(0,0,0,1)",
-            pointHoverBorderWidth: 2,
-            radius: 2, // size of points
-            pointHitRadius: 10,
-            data : [allTheDataArray[allTheDataArray.length-1]],
-
-      });
-  }
-
- 
-  barChartData = {
-    labels: [],
-    datasets : datasetBarArray
-  };
-
-  return barChartData;
 }
 
 function getBarChartOptions(xLabel, yLabel) {
@@ -520,18 +510,20 @@ $(document).ready(function(){
 <!-- bar chart canvas element -->
 <div id="charts">
 
+<!-- BAR CHARTS -->
 <canvas id="finalStateProfitChartCanvas" width="600" height="400"></canvas>
 <h4>NET PROFIT</h3>
-
 
 <canvas id="finalStateFreshnessChartCanvas" width="600" height="400"></canvas>
 <h4>AVERAGE FRESHNESS</h3>
 
-
 <canvas id="finalStateWasteChartCanvas" width="600" height="400"></canvas>
 <h4>TOTAL WASTE</h3>
 
+<canvas id="finalStateHoursWithoutChartCanvas" width="600" height="400"></canvas>
+<h4>HOURS WITHOUT</h3>
 
+<!-- LINE CHARTS -->
 <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
 <h4>PROFIT / TIME</h4>
 
