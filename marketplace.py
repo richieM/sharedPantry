@@ -75,12 +75,13 @@ class Marketplace:
 	Seller posts a Sell Request
 	Buyer posts a Buy Request
 	"""
-	def __init__(self, bulkResupplySize):
+	def __init__(self, bulkResupplySize, control=False):
 		self.restaurants = {} # name -> Restaurant
 		self.buyRequests = []
 		self.sellRequests = []
 		self.purchaseRecords = []
 		self.currentHour = -1
+		self.control = control
 
 		self.bulkResupplySize = bulkResupplySize
 
@@ -133,7 +134,8 @@ class Marketplace:
 				br.ingredient.sellWeight += amountsOfGoodsTransacted
 				print "ADDING sell weight due to transaction by %f" % amountsOfGoodsTransacted
 			else:
-				buyRequestsThatWillStay.append(br)
+				if howMuchFood == "NO_MATCH":
+					buyRequestsThatWillStay.append(br)
 
 		self.buyRequests = buyRequestsThatWillStay
 
@@ -148,7 +150,7 @@ class Marketplace:
 		howMuchFoodToBuy = br.ingredient.preferredPurchaseAmount()
 
 		if howMuchFoodToBuy <= .1:
-			return (None, None, None)
+			return (None, "NO_NEED", None)
 
 		preferredSellerWithEnough = None
 		preferredSellerWithEnoughCost = 0
@@ -190,7 +192,7 @@ class Marketplace:
 		elif preferredSellerNotEnough:
 			return (preferredSellerNotEnough, preferredSellNotEnoughHowMuchWilling, preferredSellerNotEnoughCost)
 		else:
-			return (None, None, None)
+			return (None, "NO_MATCH", None)
 
 
 	def getCheapestIngrChunk(self, br):
@@ -278,14 +280,23 @@ class Marketplace:
 		Restock one of the bigger restaurants if a buy Request hasn't been satisfied
 		in like 2 hours...
 		"""
-		if self.currentHour == 0:  # introduce some food off the bat...
-			self.restockABigSupplier();
+
+		if self.control:
+			hoursInAWeek = 168
+			if self.currentHour % hoursInAWeek == 0:
+				for r in self.restaurants.values():
+					for i in r.ingredients.values():
+						howMuchFood = i.avgPoundsConsumedPerHour * hoursInAWeek
+						i.restockFood(howMuchFood, control=self.control)
 		else:
-			for br in self.buyRequests:
-				if self.currentHour > br.hourCreated:
-					self.restockABigSupplier();
-					self.buyRequests.remove(br)
-					return
+			if self.currentHour == 0:  # introduce some food off the bat...
+				self.restockABigSupplier();
+			else:
+				for br in self.buyRequests:
+					if self.currentHour > br.hourCreated:
+						self.restockABigSupplier();
+						return
+
 
 	def calcHowMuchFoodToRestock(self):
 
@@ -328,7 +339,7 @@ class Marketplace:
 						restaurantToRestock = currRest
 
 		for i in restaurantToRestock.ingredients.values():
-			i.restockFood(howMuchFoodToOrder)
+			i.restockFood(howMuchFoodToOrder, control=self.control)
 			restaurantToRestock.lastRestockTime = self.currentHour
 			i.sellWeight = i.avgPoundsConsumedPerHour * 12
 			print "RESETTING sell weight to %f" % i.sellWeight

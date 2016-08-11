@@ -1,8 +1,5 @@
 import random
 
-PLACE_BUY_REQUEST = "PLACE_BUY_REQUEST"
-PLACE_SELL_REQUEST = "PLACE_SELL_REQUEST"
-
 base_ingredient_prices = {"lemon": (2.0, 1.0)}
 bulk_lemon_cost = 1
 
@@ -84,14 +81,21 @@ class Ingredient:
 			self.sellWeight -= self.avgPoundsConsumedPerHour
 			print "SUBTRACT sellweight AFTER ONE HOUR by %f" % self.avgPoundsConsumedPerHour
 
-	def restockFood(self, howMuchToRestock):
+	def restockFood(self, howMuchToRestock, control=False):
 
 		restockedFood = IngrChunk(weight=howMuchToRestock, hourCreated=self.currentHour, ingr=self)
 		self.ingrChunks.append(restockedFood)
 
 		# subtract the cost of the restock from revenue
-		highPrice, unused = base_ingredient_prices[self.name]
-		costOfRestock = howMuchToRestock * bulk_lemon_cost # you buy at bulk cost...
+
+
+		if control:
+			highPrice, unused = base_ingredient_prices[self.name]
+			ingrPrice = highPrice
+		else:
+			ingrPrice = bulk_lemon_cost
+
+		costOfRestock = howMuchToRestock * ingrPrice # you buy at bulk cost...
 		self.profit -= costOfRestock
 
 	def feedCustomers(self, originalWeight):

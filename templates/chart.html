@@ -3,20 +3,27 @@
 
 <head>
    <meta charset="utf-8" />
-   <title>sharedPantry</title>
+   <title>PLENTY</title>
    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.js'></script>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
    <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
 </head>
-
 <body>
-<br></br>
+  <nav>
+<li>
+<a href="plenty">PLENTY</a>
+<a href="intro">INTRODUCTION</a>
+<a href="prototypes">PROTOTYPES</a>
+<a href="runSim">SIMULATION</a>
+<a href="insights">INSIGHTS</a>
+<a href="about">ABOUT</a>
+</li>
+</nav>
+
 <div id="controlsDiv">
 
 <aside>
-<h1>sharedPantry</h1> 
-<button type="button" class="simulate">SIMULATE</button>
-<br></br>
+
 <script src="./static/jquery-1.11.3.js"></script>
 
 <script>
@@ -59,16 +66,16 @@ function updateChart(response) {
   if (typeof profitChart == "object") {
 
     $("#finalStateProfitChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+    $("#charts").append('<canvas id="finalStateProfitChartCanvas" width="800" height="600"></canvas>');
 
     $("#finalStateFreshnessChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+    $("#charts").append('<canvas id="finalStateFreshnessChartCanvas" width="800" height="600"></canvas>');
 
     $("#finalStateWasteChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+    $("#charts").append('<canvas id="finalStateWasteChartCanvas" width="800" height="600"></canvas>');
 
-    $("#finalStateChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+    $("#finalStateHoursWithoutChartCanvas").remove();
+    $("#charts").append('<canvas id="finalStateHoursWithoutChartCanvas" width="800" height="600"></canvas>');
 
     $("#profitChartCanvas").remove();
     $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
@@ -86,81 +93,44 @@ function updateChart(response) {
 
   }
 
-  // FINAL STATE PROFIT BAR CHARTfinalStateChartCanvas
+  // BAR CHART -- PROFIT
   finalStateProfitChartCanvasContainer = document.getElementById("finalStateProfitChartCanvas").getContext("2d");
-
-  // Draw Chart
+  
   var finalStateProfitChart = new Chart(finalStateProfitChartCanvasContainer, {
     type: 'bar',
-    data: {
-        labels: ["sally's", "market & rye", "holy grill", "wolfes", "crepe cone", "brazilian cafe", "dos pinas"],
-        
-        datasets: [{
-          //control data
-            data: [727, 589, 537, 543, 574, 480, 600],
-            backgroundColor: "rgba(0,0,0,1)",
-            hoverBackgroundColor: "rgba(0,0,0,1)"
-        },{
-          //actual data
-            data: [238, 553, 746, 884, 903, 1200, 800],
-            backgroundColor: "rgba(0,150,0,1)",
-            hoverBackgroundColor: "rgba(0,150,0,.5)",
-        }]
-    },
-
+    data: getBarChartData(jsonResponse, "profit", ingredient),
     options: getBarChartOptions("RESTAURANTS", "NET PROFITS ($)")
   });
 
 
-
-  // FINAL STATE FRESHNESS BAR CHARTfinalStateFreshnessChartCanvas
+  // BAR CHART -- FRESHNESS
   finalStateFreshnessChartCanvasContainer = document.getElementById("finalStateFreshnessChartCanvas").getContext("2d");
 
-  // Draw Chart
   var finalStateFreshnessChart = new Chart(finalStateFreshnessChartCanvasContainer, {
     type: 'bar',
-    data: {
-        labels: ["sally's", "market & rye", "holy grill", "wolfes", "crepe cone", "brazilian cafe", "dos pinas"],
-        
-        datasets: [{
-          //control data
-            data: [727, 589, 537, 543, 574, 480, 600],
-            backgroundColor: "rgba(0,0,0,1)",
-            hoverBackgroundColor: "rgba(0,0,0,1)"
-        },{
-          //actual data
-            data: [238, 553, 746, 884, 903, 1200, 800],
-            backgroundColor: "rgba(0,150,0,1)",
-            hoverBackgroundColor: "rgba(0,150,0,.5)",
-        }]
-    },
-
+    data: getBarChartData(jsonResponse, "avgFreshness", ingredient),
     options: getBarChartOptions("RESTAURANTS", "AVERAGE FRESHNESS")
   });
 
- // FINAL STATE WASTE BAR CHARTfinalStateWasteChartCanvas
+
+ // BAR CHART -- WASTE
   finalStateWasteChartCanvasContainer = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
 
   // Draw Chart
   var finalStateWasteChart = new Chart(finalStateWasteChartCanvasContainer, {
     type: 'bar',
-    data: {
-        labels: ["Sally's", "Market & Rye", "Holy Grill", "Wolfes", "Crepe Cone", "Brazilian Cafe", "Dos Pinas"],
-        
-        datasets: [{
-          //control data
-            data: [727, 589, 537, 543, 574, 480, 600],
-            backgroundColor: "rgba(0,0,0,1)",
-            hoverBackgroundColor: "rgba(0,0,0,1)"
-        },{
-          //actual data
-            data: [238, 553, 746, 884, 903, 1200, 800],
-            backgroundColor: "rgba(0,150,0,1)",
-            hoverBackgroundColor: "rgba(0,150,0,.5)",
-        }]
-    },
-
+    data: getBarChartData(jsonResponse, "waste", ingredient),
     options: getBarChartOptions("RESTAURANTS", "NET WASTE (LBS)")
+  });
+
+   // BAR CHART -- HOURS WITHOUT
+  finalStateHoursWithoutChartCanvasContainer = document.getElementById("finalStateHoursWithoutChartCanvas").getContext("2d");
+
+  // Draw Chart
+  var finalStateHoursChart = new Chart(finalStateHoursWithoutChartCanvasContainer, {
+    type: 'bar',
+    data: getBarChartData(jsonResponse, "hoursWithout", ingredient),
+    options: getBarChartOptions("RESTAURANTS", "HOURS WITHOUT")
   });
 
 
@@ -171,7 +141,7 @@ function updateChart(response) {
   // Draw Chart
   var profitChart = new Chart(profitChartCanvasContainer, {
     type: 'line',
-    data: getChartData(jsonResponse, "profit", ingredient),
+    data: getLineChartData(jsonResponse, "profit", ingredient),
     options: getChartOptions("TIME (HOURS)", "PROFITS ($)")
   });
 
@@ -183,7 +153,7 @@ function updateChart(response) {
   // Draw chart
 var freshnessChart = new Chart(freshnessChartCanvasContainer, {
     type: 'line',
-    data: getChartData(jsonResponse, "avgFreshness", ingredient),
+    data: getLineChartData(jsonResponse, "avgFreshness", ingredient),
     options: getChartOptions("TIME (HOURS)", "FRESHNESS")
   });
 
@@ -193,7 +163,7 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
   // Draw Chart
   var wasteChart = new Chart(wasteChartCanvasContainer, {
     type: 'line',
-    data: getChartData(jsonResponse, "waste", ingredient),
+    data: getLineChartData(jsonResponse, "waste", ingredient),
     options: getChartOptions("TIME (HOURS)", "NET WASTE (LBS)")
   });
 
@@ -204,14 +174,87 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
   // Draw Chart
   var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
     type: 'line',
-    data: getChartData(jsonResponse, "hoursWithout", ingredient),
+    data: getLineChartData(jsonResponse, "hoursWithout", ingredient),
     options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
 
   });
 
 }
 
-function getChartData(simData, chartType, ingrName) {
+
+function getBarChartData(simData, chartType, ingrName) {
+  // Converts simData JSON to chart.js data structure...
+  /*
+  {
+        labels: ['Sally's', "Market & Rye", "Holy Grill", "Wolfes", "Crepe Cone", "Brazilian Cafe", "Dos Pinas"],
+        
+        datasets: [{
+          //control data
+            data: [727, 589, 537, 543, 574, 480, 600],
+            backgroundColor: "rgba(0,0,0,1)",
+            hoverBackgroundColor: "rgba(0,0,0,1)"
+        },{
+          //actual data
+            data: [238, 553, 746, 884, 903, 1200, 800],
+            backgroundColor: "rgba(0,150,0,1)",
+            hoverBackgroundColor: "rgba(0,150,0,.5)",
+        }]
+    }
+  """
+
+  """
+  Pseudocode --
+  - we need one dataset that is all the final values for each restaurant's CONTROL
+  - we need another data that is for all the final values of each restaurant's EXPERIMENT
+
+  maybe get all the restaurant names and then just iterate over each (only other variable is the uhhhh length of the dataset...)
+  """
+  */
+
+  numParticipants = parseInt($("#participants_slider").val());
+  labelData = Array.apply(null, {length: numParticipants}).map(Number.call, Number)
+
+  duration = parseInt($("#duration_slider").val());
+
+  experimentDataLastValues = []
+  controlDataLastValues = []
+  datasets = []
+
+  // Experiment last data values
+  for (key in simData.results.market) {
+    lastDataVal = simData.results.market[key][ingrName][chartType][duration-1]
+    experimentDataLastValues.push(lastDataVal)
+  }
+ 
+  for (key in simData.control.market) {
+    lastDataVal = simData.control.market[key][ingrName][chartType][duration-1]
+    controlDataLastValues.push(lastDataVal)
+  }
+
+  experimentDataSet = {
+    data: experimentDataLastValues,
+    backgroundColor: "rgba(0,150,0,1)",
+    hoverBackgroundColor: "rgba(0,150,0,.5)"
+  };
+
+  controlDataSet = {
+    data: controlDataLastValues,
+    backgroundColor: "rgba(0,0,0,1)",
+    hoverBackgroundColor: "rgba(0,0,0,1)"
+  };
+
+  datasetArray = [controlDataSet, experimentDataSet];
+
+  chartData = {
+    labels: labelData,
+    datasets : datasetArray
+  }
+  
+  return chartData;
+}
+
+
+function getLineChartData(simData, chartType, ingrName) {
   // Converts simData JSON to chart.js data structure...
   duration = parseInt($("#duration_slider").val());
   labelData = Array.apply(null, {length: duration}).map(Number.call, Number)
@@ -250,6 +293,7 @@ function getChartData(simData, chartType, ingrName) {
 
   return chartData;
 }
+
 
 
 function getChartOptions(xLabel, yLabel) {
@@ -297,53 +341,6 @@ function getChartOptions(xLabel, yLabel) {
   };
 
   return chartOptions;
-}
-
-
-  function getBarChartData(simData, chartType, ingrName) {
-  // Converts simData JSON to chart.js data structure...
-  participants = parseInt($("#participants_slider").val());
-  labelBarData = Array.apply(null, {length: participants}).map(Number.call, Number)
-
-  debugger;
-
-  datasetBarArray = []
-  for (key in simData.results.market) {
-
-    allTheDataArray = simData.results.market[key][ingrName][chartType]
-
-    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
-
-
-    datasetBarArray.push(
-      {     lineTension: 0,
-            backgroundColor: "rgba(0,0,255,.5)",
-            borderColor: "rgba(0,0,0,1)",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(0,0,0,1)",
-            pointBackgroundColor: "rgba(0,0,0,1)",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(0,0,0,1)",
-            pointHoverBorderColor: "rgba(0,0,0,1)",
-            pointHoverBorderWidth: 2,
-            radius: 2, // size of points
-            pointHitRadius: 10,
-            data : [allTheDataArray[allTheDataArray.length-1]],
-
-      });
-  }
-
- 
-  barChartData = {
-    labels: [],
-    datasets : datasetBarArray
-  };
-
-  return barChartData;
 }
 
 function getBarChartOptions(xLabel, yLabel) {
@@ -471,7 +468,8 @@ $(document).ready(function(){
 </script>
 
 
-
+<button type="button" class="simulate">SIMULATE</button>
+<br></br>
 <section>
 <h3>GENERAL SETTINGS</h3> 
 
@@ -508,29 +506,35 @@ $(document).ready(function(){
 
 
 <article>
+
 <!-- bar chart canvas element -->
 <div id="charts">
 
-<h4>NET PROFIT</h3>
+<!-- BAR CHARTS -->
 <canvas id="finalStateProfitChartCanvas" width="600" height="400"></canvas>
+<h4>NET PROFIT</h3>
 
-<h4>AVERAGE FRESHNESS</h3>
 <canvas id="finalStateFreshnessChartCanvas" width="600" height="400"></canvas>
+<h4>AVERAGE FRESHNESS</h3>
 
-<h4>TOTAL WASTE</h3>
 <canvas id="finalStateWasteChartCanvas" width="600" height="400"></canvas>
+<h4>TOTAL WASTE</h3>
 
-<h4>PROFIT / TIME</h4>
+<canvas id="finalStateHoursWithoutChartCanvas" width="600" height="400"></canvas>
+<h4>HOURS WITHOUT</h3>
+
+<!-- LINE CHARTS -->
 <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
+<h4>PROFIT / TIME</h4>
 
-<h4>FRESHNESS / TIME</h3>
 <canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
+<h4>FRESHNESS / TIME</h3>
 
-<h4>WASTE / TIME</h3>
 <canvas id="wasteChartCanvas" width="600" height="400"></canvas>
+<h4>WASTE / TIME</h3>
 
-<h4>INGREDIENT DEFICIT / TIME</h3>
 <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
+<h4>INGREDIENT DEFICIT / TIME</h3>
 
 </div>
 
@@ -577,11 +581,39 @@ $(document).ready(function(){
 
 
 
+body {width: 100%;
+      font-family: 'Helvetica';
+      font-size: 100%;
+      line-height: 1.6875;
+      background-color: rgba(255, 255, 255, 1);
+}  
+nav {font-family: 'Helvetica';
+      color: black;
+      font-weight: bold;
+      font-size: 1vw;
+      letter-spacing: 2px;
+      vertical-align: bottom;
+      text-align: center;
+      word-spacing: 4em;
+      padding:40px 0px 80px 0px;
+     
+
+}
+article {padding-top: 0px;
+          position:block;
+          padding-left: 17em;
+}
 aside { width: 240px;
         display: absolute;
         padding-left: 40px;
         padding-right: 0px;
+        padding-top: 0px;
         text-align: center;
+}
+section { border: 2px solid black;
+          text-align: center;
+          padding: 20px 20px 20px 20px;
+          margin: 0px 0px 20px 0px;
 }
 canvas{ 
         vertical-align: top;
@@ -590,22 +622,16 @@ canvas{
         width: 50%;
         height: 50%;
         padding: 20px 20px 20px 20px;
-        margin: 0px 0px 60px 50px;
+        margin: 0px 0px 0px 50px;
         border: 2px solid black;   
 }
 
-section { border: 2px solid black;
-          text-align: center;
-          padding: 20px 20px 20px 20px;
-          margin: 0px 0px 40px 0px;
-}
-
-
 h1   {font-family: 'Helvetica';
-      text-align: center;
+      text-align: left;
+      padding-left: 55px;
+      padding-top: 0px;
       font-size: 2em;
       letter-spacing: 2px;
-
       }
 
 h2 {font-family: 'Helvetica';
@@ -620,17 +646,26 @@ h3 {font-family: 'Helvetica';
     text-align: center;
     color: black;
     letter-spacing: .5px;
+
 }
 
 h4 {font-family: 'Helvetica';
     font-size: 1em;
-    text-align: center;
+    text-align: left;
     color: black;
     letter-spacing: .5px;
-    padding-left: 150px;
-    padding-top: 14px;
-    
+    padding-left: 50px;
+    padding-top: 0px;
+    margin: 10px 0px 40px 0px;
 }
+
+a{color:black;
+  text-decoration: none;
+}
+
+a:hover{color:green;}
+
+a:active{color:green;}
 
 label {font-family: 'Helvetica';
         font-size: .8em;
@@ -638,13 +673,18 @@ label {font-family: 'Helvetica';
         color: black;
 }
 
-body {width: 100%;
-      font-family: 'Helvetica';
-      background-color: rgba(232, 227, 205, .5);
-}  
+/*Nav*/
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 25%;RE
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scrolling if the sidenav has too much content */
+}
 
-article {padding-top: 15px;
-
+li {
+    display: inline;
 }
 
 /* The Slider */
@@ -772,18 +812,23 @@ button {
     text-decoration: none;
     display: inline-block;
     font-size: 10px;
+    outline: none;
+   
 
 }
 
 button:hover {
-    background-color: black; 
+    background-color: green; 
     color: white;
+    outline: none;
+    border: none;
 }
 
 button:active {
-    background-color: white; 
-    border-color: black;
+    background-color: green; 
     color: black;
+    outline: none;
+    border: none;
 }
 
 
