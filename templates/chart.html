@@ -3,7 +3,7 @@
 
 <head>
    <meta charset="utf-8" />
-   <title>microMarket</title>
+   <title>sharedPantry</title>
    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.js'></script>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
    <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
@@ -14,8 +14,7 @@
 <div id="controlsDiv">
 
 <aside>
-<h1>microMarket</h1> 
-<button type="button" class="simulate">SIMULATE</button>
+<h1>sharedPantry</h1> 
 
 <script src="./static/jquery-1.11.3.js"></script>
 
@@ -23,8 +22,8 @@
 
 
 function setupChartDefaults() {
-  Chart.defaults.global.animationSteps = 50;
-  Chart.defaults.global.animation.duration = 10000;
+  Chart.defaults.global.animationSteps = 200;
+  Chart.defaults.global.animation.duration = 5000;
 
   Chart.defaults.global.responsive = true;
   Chart.defaults.global.animationEasing = "easeInBounce";
@@ -35,6 +34,7 @@ function setupChartDefaults() {
   Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
   Chart.defaults.global.defaultFontColor = "black";
   Chart.defaults.global.defaultFontSize = 10;
+  Chart.defaults.global.defaultFontStyle = "bold";
   
   Chart.defaults.global.elements.line.tension = 0;
   Chart.defaults.global.elements.line.borderWidth = 1;
@@ -45,50 +45,6 @@ function setupChartDefaults() {
   max = 100;
 }
 
-function getChartOptions(xLabel, yLabel) {
-  chartOptions = {     
-    scaleFontFamily : "'He'",
-    pointLabelFontFamily : "'Helvetica'",
-    scaleFontColor : "#000",
-    
-    scaleOverride: false,
-    scaleSteps: steps,
-    scaleStepWidth: Math.ceil(max / steps),
-    scaleStartValue: 0,
-
-    
-    scaleShowVerticalLines: false,
-    scaleShowGridLines : false,
-    barShowStroke : false,
-    scaleShowLabels: false,
-    bezierCurve: false,
-    legendTemplate : false,
-
-    tooltipsEnabled : true,
-    tooltipsBackgroundColor : 'rgba(0,0,0,1)',
-    tooltipsTitleFontColor : 'rgba(255,255,255,1)',
-    tooltipsCornerRadius : 0,
-
-     scales: {
-      xAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: xLabel,
-        }
-      }],
-      yAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: yLabel,
-        }
-      }]
-
-    }
-
-  };
-
-  return chartOptions
-}
 
 function updateChart(response) {
   ingredient = "lemon"
@@ -98,7 +54,21 @@ function updateChart(response) {
   var jsonResponse = JSON.parse(response.responseText);
 
   // Blow away profitChart if it exists
+  // TODO try deleting all the data in the chart ... .destroy()
   if (typeof profitChart == "object") {
+
+    $("#finalStateProfitChartCanvas").remove();
+    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+
+    $("#finalStateFreshnessChartCanvas").remove();
+    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+
+    $("#finalStateWasteChartCanvas").remove();
+    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+
+    $("#finalStateChartCanvas").remove();
+    $("#charts").append('<canvas id="finalStateChartCanvas" width="800" height="600"></canvas>');
+
     $("#profitChartCanvas").remove();
     $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
 
@@ -110,7 +80,88 @@ function updateChart(response) {
 
     $("#outOfStockChartCanvas").remove();
     $("#charts").append('<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>');
+
+  
+
   }
+
+  // FINAL STATE PROFIT BAR CHARTfinalStateChartCanvas
+  finalStateProfitChartCanvasContainer = document.getElementById("finalStateProfitChartCanvas").getContext("2d");
+
+  // Draw Chart
+  var finalStateProfitChart = new Chart(finalStateProfitChartCanvasContainer, {
+    type: 'bar',
+    data: {
+        labels: ["sally's", "market & rye", "holy grill", "wolfes", "crepe cone", "brazilian cafe", "dos pinas"],
+        
+        datasets: [{
+          //control data
+            data: [727, 589, 537, 543, 574, 480, 600],
+            backgroundColor: "rgba(0,0,0,1)",
+            hoverBackgroundColor: "rgba(0,0,0,1)"
+        },{
+          //actual data
+            data: [238, 553, 746, 884, 903, 1200, 800],
+            backgroundColor: "rgba(0,150,0,1)",
+            hoverBackgroundColor: "rgba(0,150,0,.5)",
+        }]
+    },
+
+    options: getBarChartOptions("RESTAURANTS", "NET PROFITS ($)")
+  });
+
+
+
+  // FINAL STATE FRESHNESS BAR CHARTfinalStateFreshnessChartCanvas
+  finalStateFreshnessChartCanvasContainer = document.getElementById("finalStateFreshnessChartCanvas").getContext("2d");
+
+  // Draw Chart
+  var finalStateFreshnessChart = new Chart(finalStateFreshnessChartCanvasContainer, {
+    type: 'bar',
+    data: {
+        labels: ["sally's", "market & rye", "holy grill", "wolfes", "crepe cone", "brazilian cafe", "dos pinas"],
+        
+        datasets: [{
+          //control data
+            data: [727, 589, 537, 543, 574, 480, 600],
+            backgroundColor: "rgba(0,0,0,1)",
+            hoverBackgroundColor: "rgba(0,0,0,1)"
+        },{
+          //actual data
+            data: [238, 553, 746, 884, 903, 1200, 800],
+            backgroundColor: "rgba(0,150,0,1)",
+            hoverBackgroundColor: "rgba(0,150,0,.5)",
+        }]
+    },
+
+    options: getBarChartOptions("RESTAURANTS", "AVERAGE FRESHNESS")
+  });
+
+ // FINAL STATE WASTE BAR CHARTfinalStateWasteChartCanvas
+  finalStateWasteChartCanvasContainer = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
+
+  // Draw Chart
+  var finalStateWasteChart = new Chart(finalStateWasteChartCanvasContainer, {
+    type: 'bar',
+    data: {
+        labels: ["Sally's", "Market & Rye", "Holy Grill", "Wolfes", "Crepe Cone", "Brazilian Cafe", "Dos Pinas"],
+        
+        datasets: [{
+          //control data
+            data: [727, 589, 537, 543, 574, 480, 600],
+            backgroundColor: "rgba(0,0,0,1)",
+            hoverBackgroundColor: "rgba(0,0,0,1)"
+        },{
+          //actual data
+            data: [238, 553, 746, 884, 903, 1200, 800],
+            backgroundColor: "rgba(0,150,0,1)",
+            hoverBackgroundColor: "rgba(0,150,0,.5)",
+        }]
+    },
+
+    options: getBarChartOptions("RESTAURANTS", "NET WASTE (LBS)")
+  });
+
 
   // PROFIT CHART
   // Get canvas
@@ -118,9 +169,9 @@ function updateChart(response) {
 
   // Draw Chart
   var profitChart = new Chart(profitChartCanvasContainer, {
-    type: 'bar',
+    type: 'line',
     data: getChartData(jsonResponse, "profit", ingredient),
-    options: getChartOptions("time (hours)", "profits ($)")
+    options: getChartOptions("TIME (HOURS)", "PROFITS ($)")
   });
 
 
@@ -130,9 +181,9 @@ function updateChart(response) {
 
   // Draw chart
 var freshnessChart = new Chart(freshnessChartCanvasContainer, {
-    type: 'bar',
+    type: 'line',
     data: getChartData(jsonResponse, "avgFreshness", ingredient),
-    options: getChartOptions("time (hours)", "freshness")
+    options: getChartOptions("TIME (HOURS)", "FRESHNESS")
   });
 
   // WASTE CHART
@@ -140,9 +191,9 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
 
   // Draw Chart
   var wasteChart = new Chart(wasteChartCanvasContainer, {
-    type: 'bar',
+    type: 'line',
     data: getChartData(jsonResponse, "waste", ingredient),
-    options: getChartOptions("time (hours)", "waste")
+    options: getChartOptions("TIME (HOURS)", "NET WASTE (LBS)")
   });
 
 
@@ -151,10 +202,12 @@ var freshnessChart = new Chart(freshnessChartCanvasContainer, {
 
   // Draw Chart
   var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
-    type: 'bar',
+    type: 'line',
     data: getChartData(jsonResponse, "hoursWithout", ingredient),
-    options: getChartOptions("time (hours)", "net deficit")
+    options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
+
   });
+
 }
 
 function getChartData(simData, chartType, ingrName) {
@@ -166,10 +219,10 @@ function getChartData(simData, chartType, ingrName) {
   for (key in simData.results.market) {
 
 
-    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",1)";
+    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
     datasetArray.push(
       {     lineTension: 0,
-            backgroundColor: randomColor,
+            backgroundColor: "rgba(0,150,0,.1)",
             borderColor: "rgba(0,0,0,1)",
             borderCapStyle: 'butt',
             borderDash: [],
@@ -189,13 +242,158 @@ function getChartData(simData, chartType, ingrName) {
       });
   }
 
-  chartData = {
+   chartData = {
     labels: labelData,
     datasets : datasetArray
   };
 
   return chartData;
 }
+
+
+function getChartOptions(xLabel, yLabel) {
+  chartOptions = {     
+    scaleFontFamily : "'He'",
+    pointLabelFontFamily : "'Helvetica'",
+    scaleFontColor : "#ffff00",
+
+    scaleOverride: true,
+    scaleSteps: steps,
+    scaleStepWidth: Math.ceil(max / steps),
+    scaleStartValue: 0,
+
+    
+    scaleShowVerticalLines: false,
+    scaleShowGridLines : false,
+    barShowStroke : false,
+    scaleShowLabels: true,
+    bezierCurve: false,
+    legendTemplate : false,
+
+    tooltipsEnabled : false,
+    tooltipsBackgroundColor : "#fff",
+    tooltipsTitleFontColor : 'rgba(255,255,255,1)',
+    tooltipsCornerRadius : 0,
+
+     scales: {
+      xAxes: [{
+        scaleLabel: {
+
+          display: true,
+          labelString: xLabel,
+        }
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: yLabel,
+
+        }
+      }]
+
+    }
+
+  };
+
+  return chartOptions;
+}
+
+
+  function getBarChartData(simData, chartType, ingrName) {
+  // Converts simData JSON to chart.js data structure...
+  participants = parseInt($("#participants_slider").val());
+  labelBarData = Array.apply(null, {length: participants}).map(Number.call, Number)
+
+  debugger;
+
+  datasetBarArray = []
+  for (key in simData.results.market) {
+
+    allTheDataArray = simData.results.market[key][ingrName][chartType]
+
+    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
+
+
+    datasetBarArray.push(
+      {     lineTension: 0,
+            backgroundColor: "rgba(0,0,255,.5)",
+            borderColor: "rgba(0,0,0,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(0,0,0,1)",
+            pointBackgroundColor: "rgba(0,0,0,1)",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(0,0,0,1)",
+            pointHoverBorderColor: "rgba(0,0,0,1)",
+            pointHoverBorderWidth: 2,
+            radius: 2, // size of points
+            pointHitRadius: 10,
+            data : [allTheDataArray[allTheDataArray.length-1]],
+
+      });
+  }
+
+ 
+  barChartData = {
+    labels: [],
+    datasets : datasetBarArray
+  };
+
+  return barChartData;
+}
+
+function getBarChartOptions(xLabel, yLabel) {
+  barChartOptions = {     
+    scaleFontFamily : "'He'",
+    pointLabelFontFamily : "'Helvetica'",
+    scaleFontColor : "#000",
+    
+    scaleOverride: true,
+    scaleSteps: steps,
+    scaleStepWidth: Math.ceil(max / steps),
+    scaleStartValue: 0,
+    
+    scaleShowVerticalLines: false,
+    scaleShowGridLines : false,
+    barShowStroke : false,
+    scaleShowLabels: true,
+    bezierCurve: false,
+    legendTemplate : false,
+
+    tooltipsEnabled : false,
+    tooltipsBackgroundColor : 'rgba(0,0,0,1)',
+    tooltipsTitleFontColor : 'rgba(255,255,255,1)',
+    tooltipsCornerRadius : 0,
+
+     scales: {
+      xAxes: [{
+        stacked:false,
+        scaleLabel: {
+          display: true,
+          labelString: xLabel,
+          
+        }
+      }],
+      yAxes: [{
+        stacked:false,
+        scaleLabel: {
+          display: true,
+          labelString: yLabel,
+          
+        }
+      }]
+
+    }
+
+  };
+
+  return barChartOptions;
+}
+
+
 
 function simulate() {
   // Collect all the data we need from sliders and shit
@@ -271,7 +469,7 @@ $(document).ready(function(){
 });
 </script>
 
-<br></br>
+
 
 <section>
 <h3>GENERAL SETTINGS</h3> 
@@ -285,27 +483,26 @@ $(document).ready(function(){
 <h2><span id="durationCount">32</span> hours</h2> 
 
 </section>
-<br></br>
+
 
 <section>
 <h3>ITEM PROPERTIES</h3> 
 
 
 <input id="expiration_slider" type="range" min="0" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);"/>
-<h2><span id="expirationCount">7</span> days til expiration</h2> 
-
-<input id="consume_slider" type="range" min="0" max="20" step="1" value ="5" oninput="updateSliderCount('consumeCount', this.value);"/>
-<h2><span id="consumeCount">5</span> units consumed per hour</h2> 
-
-<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
-<h2><span id="predictCount">50</span>% unpredictable</h2> 
+<h2><span id="expirationCount">7</span> day expiration</h2> 
 
 <input id="price_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('priceCount', this.value);"/>
-<h2><span id="priceCount">10</span> dollars per unit</h2> 
+<h2>$<span id="priceCount">10</span> / lb</h2> 
+
+<input id="consume_slider" type="range" min="0" max="20" step="1" value ="5" oninput="updateSliderCount('consumeCount', this.value);"/>
+<h2><span id="consumeCount">5</span> lbs consumed / hour</h2> 
+
+<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
+<h2><span id="predictCount">50</span>% unpredictable demand</h2> 
 
 </section>
 </aside>
-
 </div>
 
 
@@ -313,18 +510,30 @@ $(document).ready(function(){
 <!-- bar chart canvas element -->
 <div id="charts">
 
-<h4>PROFITS</h4>
+<h4>NET PROFIT</h3>
+<canvas id="finalStateProfitChartCanvas" width="600" height="400"></canvas>
+
+<h4>AVERAGE FRESHNESS</h3>
+<canvas id="finalStateFreshnessChartCanvas" width="600" height="400"></canvas>
+
+<h4>TOTAL WASTE</h3>
+<canvas id="finalStateWasteChartCanvas" width="600" height="400"></canvas>
+
+<h4>PROFIT / TIME</h4>
 <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
 
-<h4>FRESHNESS</h3>
+<h4>FRESHNESS / TIME</h3>
 <canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
 
-<h4> WASTE</h3>
+<h4>WASTE / TIME</h3>
 <canvas id="wasteChartCanvas" width="600" height="400"></canvas>
 
-<h4>HOURS WITH NO INGREDIENTS</h3>
+<h4>INGREDIENT DEFICIT / TIME</h3>
 <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
+
 </div>
+
+
 </article>
 
 
@@ -359,24 +568,37 @@ $(document).ready(function(){
   #allProfitsChart {
   }
 
-aside { display: inline-block;
-        padding-left: 20px;
-        padding-right: 100px;
+  #finalStateProfitChart {
+  }
+
+  #finalStateFreshnessChart {
+  }
+
+
+
+aside { width: 240px;
+        display: absolute;
+        padding-left: 40px;
+        padding-right: 0px;
         text-align: center;
 }
-canvas{ vertical-align: top;
+canvas{ 
+        vertical-align: top;
         position: inline-block;
         overflow: hidden;
         width: 50%;
         height: 50%;
-        padding-left: 100px;
-        padding-top: 10px; 
-        padding-bottom:100px;   
+        padding: 20px 20px 20px 20px;
+        margin: 0px 0px 60px 50px;
+        border: 2px solid black;   
 }
 
 section { border: 2px solid black;
           text-align: center;
+          padding: 20px 20px 20px 20px;
+          margin: 0px 0px 40px 0px;
 }
+
 
 h1   {font-family: 'Helvetica';
       text-align: center;
@@ -387,7 +609,7 @@ h1   {font-family: 'Helvetica';
 
 h2 {font-family: 'Helvetica';
     text-align: center;
-    vertical-align: top;
+    
     font-size: .6em;
     color: black;
 }
@@ -401,11 +623,12 @@ h3 {font-family: 'Helvetica';
 
 h4 {font-family: 'Helvetica';
     font-size: 1em;
-    text-align: left;
+    text-align: center;
     color: black;
     letter-spacing: .5px;
-    padding-top: 0px;
-    padding-left: 140px;
+    padding-left: 150px;
+    padding-top: 14px;
+    
 }
 
 label {font-family: 'Helvetica';
@@ -419,7 +642,7 @@ body {width: 100%;
       background-color: rgba(232, 227, 205, .5);
 }  
 
-article {padding-top: 80px;
+article {padding-top: 15px;
 
 }
 
