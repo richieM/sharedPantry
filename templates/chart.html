@@ -8,19 +8,17 @@
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
    <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
 </head>
-<h1>microMarket</h1>
-<nav>
-    <a href="#">introduction</a>
-    <a href="#">prototype</a>
-    <a href="#">simulation</a>
-    <a href="#">insights</a>
-    <a href="#">about</a>
-   
-    
+<body>
+  <nav>
+<li>
+<a href>INTRODUCTION</a>
+<a href>PROTOTYPE</a>
+<a href>SIMULATION</a>
+<a href>INSIGHTS</a>
+<a href>ABOUT</a>
+</li>
 </nav>
 
-<body>
-<br></br>
 <div id="controlsDiv">
 
 <aside>
@@ -515,8 +513,9 @@ $(document).ready(function(){
 </aside>
 </div>
 
+
 <article>
-  
+
 <!-- bar chart canvas element -->
 <div id="charts">
 
@@ -589,12 +588,37 @@ $(document).ready(function(){
 
 
 
+body {width: 100%;
+      font-family: 'Helvetica';
+      background-color: rgba(255, 255, 255, 1);
+}  
+nav {font-family: 'Helvetica';
+      color: black;
+      font-weight: bold;
+      font-size: .8em;
+      letter-spacing: 2px;
+      vertical-align: bottom;
+      text-align: center;
+      word-spacing: 6em;
+      padding-top:40px;
+      padding-bottom:75px;
+
+}
+article {padding-top: 0px;
+          position:block;
+          padding-left: 17em;
+}
 aside { width: 240px;
         display: absolute;
         padding-left: 40px;
         padding-right: 0px;
-        padding-top: 90px;
+        padding-top: 0px;
         text-align: center;
+}
+section { border: 2px solid black;
+          text-align: center;
+          padding: 20px 20px 20px 20px;
+          margin: 0px 0px 20px 0px;
 }
 canvas{ 
         vertical-align: top;
@@ -607,23 +631,9 @@ canvas{
         border: 2px solid black;   
 }
 
-section { border: 2px solid black;
-          text-align: center;
-          padding: 20px 20px 20px 20px;
-          margin: 0px 0px 40px 0px;
-}
-
-nav {font-family: 'Helvetica';
-      text-align: center;
-      font-size: .8em;
-      letter-spacing: 2px;
-      position: inline-block;
-      
-}
-
 h1   {font-family: 'Helvetica';
-      text-align: center;
-      padding-left: 0px;
+      text-align: left;
+      padding-left: 55px;
       padding-top: 0px;
       font-size: 2em;
       letter-spacing: 2px;
@@ -654,19 +664,32 @@ h4 {font-family: 'Helvetica';
     margin: 10px 0px 40px 0px;
 }
 
+a{color:black;
+  text-decoration: none;
+}
+
+a:hover{color:green;}
+
+a:active{color:blue;}
+
 label {font-family: 'Helvetica';
         font-size: .8em;
         font-weight: bold;
         color: black;
 }
 
-body {width: 100%;
-      font-family: 'Helvetica';
-      background-color: rgba(232, 227, 205, .5);
-}  
+/*Nav*/
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 25%;RE
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scrolling if the sidenav has too much content */
+}
 
-article {padding-top: 90px;
-
+li {
+    display: inline;
 }
 
 /* The Slider */
@@ -794,18 +817,23 @@ button {
     text-decoration: none;
     display: inline-block;
     font-size: 10px;
+    outline: none;
+   
 
 }
 
 button:hover {
     background-color: green; 
     color: white;
+    outline: none;
+    border: none;
 }
 
 button:active {
     background-color: green; 
-    border-color: green;
     color: black;
+    outline: none;
+    border: none;
 }
 
 
