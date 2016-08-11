@@ -8,14 +8,24 @@
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
    <!-- <link rel="stylesheet" type="text/css" href="styles.css"> -->
 </head>
+<h1>sharedPantry</h1>
+<nav>
+    <a href="#">introduction</a>
+    <a href="#">prototype</a>
+    <a href="#">simulation</a>
+    <a href="#">insights</a>
+    <a href="#">about</a>
+   
+    
+</nav>
 
 <body>
 <br></br>
 <div id="controlsDiv">
 
-<aside>
-<h1>sharedPantry</h1> 
 
+
+<aside>
 <script src="./static/jquery-1.11.3.js"></script>
 
 <script>
@@ -473,7 +483,8 @@ $(document).ready(function(){
 </script>
 
 
-
+<button type="button" class="simulate">SIMULATE</button>
+<br></br>
 <section>
 <h3>GENERAL SETTINGS</h3> 
 
@@ -506,22 +517,17 @@ $(document).ready(function(){
 
 </section>
 
-<button type="button" class="simulate">SIMULATE</button>
-<br></br>
 <section>
 <h3>TRANSACTION SETTINGS</h3> 
 
 <input id="buy_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('buy_weightCount', this.value);"/>
 <h2>buy <span id="buy_weightCount">10</span> lb</h2> 
 
-
 <input id="buy_amount_slider" type="range" min="0" max="20" step="1" value ="6" oninput="updateSliderCount('buy_amountCount', this.value);"/>
 <h2>$<span id="buy_amountCount">6</span> / lb</h2> 
 
-
 <input id="sell_weight_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('sell_weightCount', this.value);"/>
 <h2>sell <span id="sell_weightCount">10</span> lb</h2> 
-
 
 <input id="sell_amount_slider" type="range" min="0" max="20" step="1" value ="8" oninput="updateSliderCount('sell_amountCount', this.value);"/>
 <h2>$<span id="sell_amountCount">8</span> / lb</h2> 
@@ -530,31 +536,34 @@ $(document).ready(function(){
 
 </div>
 
-
 <article>
+  
 <!-- bar chart canvas element -->
 <div id="charts">
 
-<h4>NET PROFIT</h3>
 <canvas id="finalStateProfitChartCanvas" width="600" height="400"></canvas>
+<h4>NET PROFIT</h3>
 
-<h4>AVERAGE FRESHNESS</h3>
+
 <canvas id="finalStateFreshnessChartCanvas" width="600" height="400"></canvas>
+<h4>AVERAGE FRESHNESS</h3>
 
-<h4>TOTAL WASTE</h3>
+
 <canvas id="finalStateWasteChartCanvas" width="600" height="400"></canvas>
+<h4>TOTAL WASTE</h3>
 
-<h4>PROFIT / TIME</h4>
+
 <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
+<h4>PROFIT / TIME</h4>
 
-<h4>FRESHNESS / TIME</h3>
 <canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
+<h4>FRESHNESS / TIME</h3>
 
-<h4>WASTE / TIME</h3>
 <canvas id="wasteChartCanvas" width="600" height="400"></canvas>
+<h4>WASTE / TIME</h3>
 
-<h4>INGREDIENT DEFICIT / TIME</h3>
 <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
+<h4>INGREDIENT DEFICIT / TIME</h3>
 
 </div>
 
@@ -605,6 +614,7 @@ aside { width: 240px;
         display: absolute;
         padding-left: 40px;
         padding-right: 0px;
+        padding-top: 90px;
         text-align: center;
 }
 canvas{ 
@@ -614,7 +624,7 @@ canvas{
         width: 50%;
         height: 50%;
         padding: 20px 20px 20px 20px;
-        margin: 0px 0px 60px 50px;
+        margin: 0px 0px 0px 50px;
         border: 2px solid black;   
 }
 
@@ -624,12 +634,20 @@ section { border: 2px solid black;
           margin: 0px 0px 40px 0px;
 }
 
+nav {font-family: 'Helvetica';
+      text-align: center;
+      font-size: .8em;
+      letter-spacing: 2px;
+      position: inline-block;
+      
+}
 
 h1   {font-family: 'Helvetica';
       text-align: center;
+      padding-left: 0px;
+      padding-top: 0px;
       font-size: 2em;
       letter-spacing: 2px;
-
       }
 
 h2 {font-family: 'Helvetica';
@@ -644,16 +662,17 @@ h3 {font-family: 'Helvetica';
     text-align: center;
     color: black;
     letter-spacing: .5px;
+
 }
 
 h4 {font-family: 'Helvetica';
     font-size: 1em;
-    text-align: center;
+    text-align: left;
     color: black;
     letter-spacing: .5px;
-    padding-left: 150px;
-    padding-top: 14px;
-    
+    padding-left: 50px;
+    padding-top: 0px;
+    margin: 10px 0px 40px 0px;
 }
 
 label {font-family: 'Helvetica';
@@ -667,7 +686,7 @@ body {width: 100%;
       background-color: rgba(232, 227, 205, .5);
 }  
 
-article {padding-top: 15px;
+article {padding-top: 90px;
 
 }
 
@@ -800,13 +819,13 @@ button {
 }
 
 button:hover {
-    background-color: black; 
+    background-color: green; 
     color: white;
 }
 
 button:active {
-    background-color: white; 
-    border-color: black;
+    background-color: green; 
+    border-color: green;
     color: black;
 }
 
