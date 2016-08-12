@@ -391,8 +391,8 @@ function simulate() {
         sellAmount = $("#sell_amount_slider").val();
         buyWeight = $("#buy_weight_slider").val();
         buyAmount = $("#buy_amount_slider").val();
-        consumptionRate = $("#consume_slider").val();
-        unitPrice = $("#price_slider").val();
+        consumptionRate = 5 //$("#consume_slider").val();
+        unitPrice = 10 //$("#price_slider").val();
 
         console.log("Participants: " + participants);
         console.log("Duration: " + duration);
@@ -468,14 +468,16 @@ $(document).ready(function(){
 <h3>ITEM PROPERTIES</h3> 
 
 
-<input id="expiration_slider" type="range" min="0" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);"/>
+<input id="expiration_slider" type="range" min="1" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);"/>
 <h2><span id="expirationCount">7</span> day expiration</h2> 
 
+<!--
 <input id="price_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('priceCount', this.value);"/>
 <h2>$<span id="priceCount">10</span> / lb</h2> 
 
 <input id="consume_slider" type="range" min="0" max="20" step="1" value ="5" oninput="updateSliderCount('consumeCount', this.value);"/>
 <h2><span id="consumeCount">5</span> lbs consumed / hour</h2> 
+-->
 
 <input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
 <h2><span id="predictCount">50</span>% unpredictable demand</h2> 
