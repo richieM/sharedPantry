@@ -446,8 +446,7 @@ $(document).ready(function(){
 </script>
 
 
-<button type="button" class="simulate" id="gradient">SIMULATE</button>
-<div id="gradient" />
+
 <section>
 <h3>GENERAL SETTINGS</h3> 
 
@@ -481,6 +480,7 @@ $(document).ready(function(){
 <h2><span id="predictCount">50</span>% unpredictable demand</h2> 
 
 </section>
+<button type="button" class="simulate" >SIMULATE</button>
 </aside>
 </div>
 
@@ -604,14 +604,19 @@ $("a").hover(function(){
     $(this).css("color", randomColor);
     }, function(){
     $(this).css("color", "black");
+
+
 randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.5)";
   });
 </script>
 
 <style>
-  #barGraphArea{width:79%;
-              padding-left: 1px;
+  #barGraphArea{width:100%;
               float: right;
+              margin-top:-37px;
+              margin-left: 300px;
+              display:block;
+              position: fixed;
   }
 
   #controlsDiv {float: left;
@@ -624,7 +629,7 @@ randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math
 
 
 
-body {
+body {width:100%;
       font-family: 'Helvetica';
       font-size: 100%;
       line-height: 1.6875;
@@ -643,7 +648,7 @@ nav {font-family: 'Helvetica';
 article {
           width: 25%;
           float: left;
-          margin:60px;
+          margin:20px;
           display:inline;
 }
 
@@ -652,12 +657,12 @@ aside { width: 240px;
         display: absolute;
         padding-left: 40px;
         padding-right: 0px;
-        padding-top: 0px;
+        padding-top: 20px;
         text-align: center;
 }
 section { border: 2px solid black;
           text-align: center;
-          padding: 20px 20px 20px 20px;
+          padding: 10px 10px 10px 10px;
           margin: 0px 0px 20px 0px;
 }
  
@@ -665,9 +670,9 @@ section { border: 2px solid black;
 canvas{ 
         overflow: hidden;
         position:inline-block;
-        width: 40%;
-        padding: 20px 20px 20px 20px;
-        margin: 0px 0px 0px 0px;
+        width: 50%;
+        padding: 10px 10px 10px 10px;
+        margin-right: 40px;
         border: 2px solid black;   
 }
 
@@ -700,7 +705,7 @@ h4 {font-family: 'Helvetica';
     color: black;
     letter-spacing: .5px;
     padding-left: 50px;
-    padding-top: 40px;
+    padding-top: 10px;
     margin: 0px 0px 0px 0px;
 }
 
@@ -858,7 +863,7 @@ button {
     color: white;
     text-decoration: none;
     display: inline-block;
-    font-size: 10px;
+    font-size: 1em;
     outline: none;
     margin-bottom: 20px;
    
@@ -866,15 +871,15 @@ button {
 }
 
 button:hover {
-    background-color: white; 
+    background-color: green; 
     color: white;
     outline: none;
     border: none;
 }
 
 button:active {
-    background-color: green; 
-    color: black;
+    background-color: black; 
+    color: white;
     outline: none;
     border: none;
 }
