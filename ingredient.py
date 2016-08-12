@@ -1,6 +1,6 @@
 import random
 
-base_ingredient_prices = {"lemon": (2.0, 1.0)}
+base_ingredient_prices = {"lemon": (1.2, 1.0)}
 bulk_lemon_cost = 1
 
 class Ingredient:
@@ -61,7 +61,7 @@ class Ingredient:
 		if self.totalFreshness == 0:
 			avgFreshness = 0
 		else:
-			avgFreshness = self.totalFreshness / self.totalFoodConsumed 
+			avgFreshness = self.totalFreshness / self.totalFoodConsumed
 		self.simData["avgFreshness"].append(avgFreshness)
 
 	def anHourPassed(self, hour):
@@ -76,13 +76,18 @@ class Ingredient:
 
 		self.recordSimData()
 
+		#calculate every hour, decrease the sell weight by the average consumption rate of this ingredient. Sell weight is increased when trading.
+		if self.sellWeight - self.avgPoundsConsumedPerHour > self.buyWeight:
+			self.sellWeight -= self.avgPoundsConsumedPerHour
+			print "SUBTRACT sellweight AFTER ONE HOUR by %f" % self.avgPoundsConsumedPerHour
+
 	def restockFood(self, howMuchToRestock, control=False):
-		
+
 		restockedFood = IngrChunk(weight=howMuchToRestock, hourCreated=self.currentHour, ingr=self)
 		self.ingrChunks.append(restockedFood)
 
 		# subtract the cost of the restock from revenue
-		
+
 
 		if control:
 			highPrice, unused = base_ingredient_prices[self.name]
@@ -135,7 +140,7 @@ class Ingredient:
 				self.ingrChunks.remove(currChunk)
 
 		howMuchWeServed = origHowMuchFood - howMuchFood
-		
+
 		return (howMuchWeServed, totalFreshness)
 
 	def display(self):
