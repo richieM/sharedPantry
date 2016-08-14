@@ -1,29 +1,4 @@
 """
-TODO:
-
-
-Pricing Models:
-- dynamic but trivial: find middle ground between buyer and seller
-- static: set by supermarkets / Instacart / doesnt fluctuate
-- dynamic based on supply and demand
-- Dutch auction -- starts high and lowers as time goes on
-
-Matching Models:
-- item
-- time
-- proximity
-- price
-- preferred vendors
-
-Liquidity:
-- Test: When do we order more from supplier?
-- Test: Is it acceptable to not be able to fill a demand?
-
-Delivery:
-- sunk cost...
-- dont include it now
-
-Goals of the market:
 Metrics for the restaurants
 - Saving money for restaurants --- I'll have to simulate out them buying food from vertical, wasting some of it, and then sporadically buying extra supply from Whole Foods when they run out
 - Time saved?
@@ -34,33 +9,6 @@ Metrics for the restaurants
  	- Stress -- Running out incidents of running out (low stock incidents) -- amount of time when you can't feed demand
  	- Waste -- how much waste
  	- Freshness / Food Quality -- based on freshness  Average Freshness of ingredients (in days...)
-
-TODO:
-- ingredients turning into revenue through time so that the values drop (in)consistently
-	- each restaurant has a different rate at which they churn thru stuff
-	- larger randomness value for larger restaurants
-- each restaurant gets a dump of item 1x a week probably...
-- delay in delivery...
-
-Experiment
-7 restaurants, 1 ingredient, 1 shipment each week
-
-Pretty much all the metrics are at the Ingredient level, so just keep it there, and roll it up later.
-
-Profit -- revenue += ingr.profit
-Stress -- hoursWithoutIngredients += ingr.hoursWithoutIngredient
-Waste -- amountOfWastedFood += ingr.amountOfWastedFood
-Freshness -- totalFreshness += ingr.totalFreshness; avgFreshness = totalFreshness / totalFoodConsumed
-	Total Food Consumed -- totalFoodConsumed += ingr.totalFoodConsumed
-
-market
-	restaurant
-		ingredient
-			ingr.profit
-			ingr.hoursWithoutIngredient
-			ingr.amountOfWastedFood
-			ingr.totalFreshness
-			ingr.totalFoodConsumed
 """
 
 
