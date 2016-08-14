@@ -143,3 +143,88 @@ button:active {
     outline: none;
     border: none;
 }
+
+/* The Slider */
+input[type=range] {
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+    
+    /*fix for FF unable to apply focus style bug */
+    border: 1px solid white;
+    
+    /*required for proper track sizing in FF*/
+    width: 200px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 200px;
+    height: 3px;
+    background: black;
+    border: none;
+    border-radius: 0px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: black;
+    margin-top: -6px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: black;
+}
+
+input[type=range]::-moz-range-track {
+    width: 200px;
+    height: 3px;
+    background: black;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: black;
+}
+
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+input[type=range]::-ms-track {
+    width: 200px;
+    height: 3px;
+    background: transparent;
+    border-color: transparent;
+    border-width: 6px 0;
+    color: transparent;
+}
+
+input[type=range]::-ms-fill-lower {
+    background: black;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: black;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: black;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: black;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: black;
+}
