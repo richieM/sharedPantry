@@ -28,9 +28,9 @@ def plenty():
 def runSim():
     return render_template('chart.html')
 
-@app.route("/intro")
-def intro():
-    return render_template('introduction.html')
+@app.route("/brief")
+def brief():
+    return render_template('brief.html')
 
 @app.route("/about")
 def about():
