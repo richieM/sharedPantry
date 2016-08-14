@@ -19,3 +19,15 @@ To run the app:
 python app.py
 Visit in browser--  localhost:5000/runSim 
 
+----
+
+Heroku stuff:
+
+# virtualenv
+
+source plenty/vin/activate 
+
+pip freeze > requirements.txt
+
+git push heroku master
+
