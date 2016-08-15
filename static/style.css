@@ -21,7 +21,7 @@ nav { color: white;
       letter-spacing: 2px;
       vertical-align: bottom;
       text-align: center;
-      word-spacing: 4em;
+      word-spacing: 2em;
       padding:40px 0px 80px 0px;
 }
 
@@ -65,6 +65,7 @@ canvas {
 
 h1   {text-align: center;
       padding: 0px 0px 0px 0px;
+      margin-bottom: -232px;
       font-size: 10em;
       letter-spacing: .1em;
       color:white;
@@ -82,22 +83,25 @@ h3 {font-size: 1em;
 
 }
 
-h4 {font-size: 1em;
-    text-align: left;
-    color: black;
-    letter-spacing: .5px;
-    padding-left: 50px;
-    padding-top: 0px;
-    margin: 10px 0px 10px 0px;
+h4 {
+font-size: 1em;
+text-align: left;
+color: black;
+letter-spacing: .5px;
+padding-left: 50px;
+padding-top: 0px;
+margin: 10px 0px 10px 0px;
 }
 
 h5{   text-align: center;
       padding-left: 0px;
       padding-top: 0px;
-      font-size: 1em;
+      font-size: 2.6em;
       letter-spacing: 2px;
       word-spacing: 10px;
-      color:black;}
+      color:black;
+      font-style:italic;
+  }
 
 h6{   vertical-align: text-top;
       font-size: 1em;
@@ -107,7 +111,7 @@ h6{   vertical-align: text-top;
 
 a{color:black;
   text-decoration: none;
-  padding:40px;
+  padding: 40px 30px 0px 30px;
 }
 
 a:hover{color:white;}
