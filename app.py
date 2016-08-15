@@ -17,8 +17,8 @@ def runSim():
 def brief():
     return render_template('brief.html')
 
-@app.route("/about")
-def about():
+@app.route("/team")
+def team():
     return render_template('about.html')
 
 @app.route("/prototypes")
