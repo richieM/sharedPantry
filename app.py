@@ -29,6 +29,10 @@ def prototypes():
 def insights():
     return render_template('insights.html')
 
+@app.route("/research")
+def research():
+    return render_template('research.html')
+
 @app.route('/resimulate', methods=['GET', 'POST'])
 def resimulate():
     """
