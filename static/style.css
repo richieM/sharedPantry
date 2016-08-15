@@ -1,257 +1,276 @@
-img {margin:1em 1em 1em 1em;
-    border:2px solid black;
-    box-shadow: 8px 8px 0px black;
-}
+    img {margin:1em 1em 1em 1em;
+        border:2px solid black;
+        box-shadow: 8px 8px 0px black;
+    }
 
-p{position: inline-block;
-  margin: 10px 200px 10px 200px;
+    p{position: inline-block;
+      margin: 10px 200px 10px 200px;
 
-}
-body {width: 100%;
-	   height: 100%;
-     margin-top:0px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 100%;
-      line-height: 1.6875;
-      background-color: rgba(255, 255, 255, 1);
-}  
-nav { color: white;
-      font-weight: bold;
-      font-size: 1vw;
-      letter-spacing: 2px;
-      vertical-align: bottom;
-      text-align: center;
-      word-spacing: 2em;
-      padding:40px 0px 80px 0px;
-}
+    }
+    body {width: 100%;
+    	   height: 100%;
+         margin-top:0px;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 100%;
+          line-height: 1.6875;
+          background-color: rgba(255, 255, 255, 1);
+    }  
 
-.divSlide {
-  width: 100%;
-  height: 800px;
-}
+    nav { color: white;
+          font-weight: bold;
+          font-size: 1vw;
+          letter-spacing: 2px;
+          vertical-align: bottom;
+          text-align: center;
+          word-spacing: 4em;
+          padding:40px 0px 20px 0px;
+          position: fixed;
+          width: 100%;
+          top: 0;
+          background-color: rgba(255, 255, 255, 1);
+    }
 
-#chartMenu {
-    margin: 0em 0em 0em 20em;
-    position: absolute;
-    /*width:900px;*/
-}
+    .content {
+      margin: 100px 0 0 0;
+    }
 
-.chartHeader {
-    float:left;
-    padding:10px;
-    border: 2px solid black;
-    margin: 0px 40px 0px 0px;
-}
+    .divSlide {
+      width: 100%;
+      height: 800px;
+    }
 
-#barGraphArea {width:60%;
-    margin: 4.5em 0em 0em 20em;
-    position: inline-block;
-}
+    #chartMenu {
+        margin: 0em 0em 0em 20em;
+        position: absolute;
+        /*width:900px;*/
+    }
 
-aside { width: 240px;
-      padding-left: 40px;
-      padding-right: 0px;
-      padding-top: 0px;
-      text-align: center;
-      float:left;
-}
-section { border: 2px solid black;
-      text-align: center;
-      padding: 20px 20px 20px 20px;
-      margin: 0px 0px 20px 0px;
-}
-canvas { 
-      overflow: hidden;
-      padding: 20px 20px 20px 20px;
-      border: 2px solid black;   
-      width: 862px;
-      height: 431px;
-}
+    .chartHeader {
+        float:left;
+        padding:10px;
+        border: 2px solid black;
+        margin: 0px 40px 0px 0px;
+    }
 
-h1   {text-align: center;
-      padding: 0px 0px 0px 0px;
-      margin-bottom: 0px;
-      font-size: 10em;
-      letter-spacing: .1em;
-      color:white;
-      }
+    #barGraphArea {width:60%;
+        margin: 4.5em 0em 0em 20em;
+        position: inline-block;
+    }
 
-h2 {text-align: center;
-    font-size: 1em;
-    color: black;
-}
-
-h3 {font-size: 1em;
-    text-align: center;
-    color: black;
-    letter-spacing: .5px;
-
-}
-
-h4 {
-font-size: 1em;
-text-align: left;
-color: black;
-letter-spacing: .5px;
-padding-left: 50px;
-padding-top: 0px;
-margin: 10px 0px 10px 0px;
-}
-
-h5{   
-      padding-left: 0px;
-      padding-top: 0px;
-      font-size: 1em;
-      letter-spacing: 1px;
-      word-spacing: 10px;
-      color:black;
-      font-style:italic;
+    aside { width: 240px;
+          padding-left: 40px;
+          padding-right: 0px;
+          padding-top: 0px;
+          text-align: center;
+          float:left;
+    }
+    section { border: 2px solid black;
+          text-align: center;
+          padding: 20px 20px 20px 20px;
+          margin: 0px 0px 20px 0px;
+    }
+    
+  canvas { 
+        overflow: hidden;
+        padding: 20px 20px 20px 20px;
+        border: 2px solid black;   
+        width: 862px;
+        height: 431px;
   }
 
-h6{   vertical-align: text-top;
+  h1   {text-align: center;
+        padding: 0px 0px 0px 0px;
+        margin-bottom: 0px;
+        font-size: 10em;
+        letter-spacing: .1em;
+        color:white;
+        }
+
+  h2 {text-align: center;
       font-size: 1em;
-      margin:1em 1em 1em 1em;
-      color:black;}
+      color: black;
+  }
+
+  h3 {font-size: 1em;
+      text-align: center;
+      color: black;
+      letter-spacing: .5px;
+
+  }
+
+  h4 {
+  font-size: 1em;
+  text-align: left;
+  color: black;
+  letter-spacing: .5px;
+  padding-left: 50px;
+  padding-top: 0px;
+  margin: 10px 0px 10px 0px;
+  }
+
+  h5{   
+        padding-left: 0px;
+        padding-top: 0px;
+        font-size: 1em;
+        letter-spacing: 1px;
+        word-spacing: 10px;
+        color:black;
+        font-style:italic;
+  >>>>>>> fdb4f3dceb9d0c4224d500479a76656dcd0ee617
+    }
+
+    h5{   text-align: center;
+          padding-left: 0px;
+          padding-top: 0px;
+          font-size: 1em;
+          letter-spacing: 2px;
+          word-spacing: 10px;
+          color:black;}
+
+    h6{   vertical-align: text-top;
+          font-size: 1em;
+          margin:1em 1em 1em 1em;
+          color:black;}
 
 
-a{color:black;
-  text-decoration: none;
-  padding: 40px 30px 0px 30px;
-}
+    a{color:black;
+      text-decoration: none;
+      padding:40px;
+    }
 
-a:hover{color:white;}
+    a:hover{color:white;}
 
-a:active{color:black;}
+    a:active{color:black;}
 
-.activePage{border-top:10px solid black;}
+    .activePage{border-top:10px solid black;}
 
-label { font-size: .8em;
-        font-weight: bold;
+    label { font-size: .8em;
+            font-weight: bold;
+            color: black;
+    }
+
+    /*Nav*/
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 25%;
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scrolling if the sidenav has too much content */
+    }
+
+    li {
+        display: inline;
+    }
+
+    button {
+        font-family: 'Montserrat', sans-serif;
+        width: 240px;
+        height: 50px;
+        margin-bottom: 20px;
+        background-color: black; 
+        border: none;
+        color: white;
+        display: inline-block;
+        font-size: 1em;
+        outline: none;
+    }
+
+    button:hover {
+        background-color: green; 
+        color: white;
+        outline: none;
+        border: none;
+    }
+
+    button:active {
+        background-color: green; 
         color: black;
-}
+        outline: none;
+        border: none;
+    }
 
-/*Nav*/
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    width: 25%;RE
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scrolling if the sidenav has too much content */
-}
+    /* The Slider */
+    input[type=range] {
+        /*removes default webkit styles*/
+        -webkit-appearance: none;
+        
+        /*fix for FF unable to apply focus style bug */
+        border: 1px solid white;
+        
+        /*required for proper track sizing in FF*/
+        width: 200px;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+        width: 200px;
+        height: 3px;
+        background: black;
+        border: none;
+        border-radius: 0px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: black;
+        margin-top: -6px;
+    }
+    input[type=range]:focus {
+        outline: none;
+    }
+    input[type=range]:focus::-webkit-slider-runnable-track {
+        background: black;
+    }
 
-li {
-    display: inline;
-}
+    input[type=range]::-moz-range-track {
+        width: 200px;
+        height: 3px;
+        background: black;
+        border: none;
+        border-radius: 3px;
+    }
+    input[type=range]::-moz-range-thumb {
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: black;
+    }
 
-button {
-    font-family: 'Montserrat', sans-serif;
-    width: 240px;
-    height: 50px;
-    margin-bottom: 20px;
-    background-color: black; 
-    border: none;
-    color: white;
-    display: inline-block;
-    font-size: 1em;
-    outline: none;
-}
+    input[type=range]:-moz-focusring{
+        outline: 1px solid white;
+        outline-offset: -1px;
+    }
 
-button:hover {
-    background-color: green; 
-    color: white;
-    outline: none;
-    border: none;
-}
+    input[type=range]::-ms-track {
+        width: 200px;
+        height: 3px;
+        background: transparent;
+        border-color: transparent;
+        border-width: 6px 0;
+        color: transparent;
+    }
 
-button:active {
-    background-color: green; 
-    color: black;
-    outline: none;
-    border: none;
-}
-
-/* The Slider */
-input[type=range] {
-    /*removes default webkit styles*/
-    -webkit-appearance: none;
-    
-    /*fix for FF unable to apply focus style bug */
-    border: 1px solid white;
-    
-    /*required for proper track sizing in FF*/
-    width: 200px;
-}
-input[type=range]::-webkit-slider-runnable-track {
-    width: 200px;
-    height: 3px;
-    background: black;
-    border: none;
-    border-radius: 0px;
-}
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    border: none;
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    background: black;
-    margin-top: -6px;
-}
-input[type=range]:focus {
-    outline: none;
-}
-input[type=range]:focus::-webkit-slider-runnable-track {
-    background: black;
-}
-
-input[type=range]::-moz-range-track {
-    width: 200px;
-    height: 3px;
-    background: black;
-    border: none;
-    border-radius: 3px;
-}
-input[type=range]::-moz-range-thumb {
-    border: none;
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    background: black;
-}
-
-input[type=range]:-moz-focusring{
-    outline: 1px solid white;
-    outline-offset: -1px;
-}
-
-input[type=range]::-ms-track {
-    width: 200px;
-    height: 3px;
-    background: transparent;
-    border-color: transparent;
-    border-width: 6px 0;
-    color: transparent;
-}
-
-input[type=range]::-ms-fill-lower {
-    background: black;
-    border-radius: 10px;
-}
-input[type=range]::-ms-fill-upper {
-    background: black;
-    border-radius: 10px;
-}
-input[type=range]::-ms-thumb {
-    border: none;
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    background: black;
-}
-input[type=range]:focus::-ms-fill-lower {
-    background: black;
-}
-input[type=range]:focus::-ms-fill-upper {
-    background: black;
-}
+    input[type=range]::-ms-fill-lower {
+        background: black;
+        border-radius: 10px;
+    }
+    input[type=range]::-ms-fill-upper {
+        background: black;
+        border-radius: 10px;
+    }
+    input[type=range]::-ms-thumb {
+        border: none;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        background: black;
+    }
+    input[type=range]:focus::-ms-fill-lower {
+        background: black;
+    }
+    input[type=range]:focus::-ms-fill-upper {
+        background: black;
+    }
