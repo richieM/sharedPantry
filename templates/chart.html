@@ -49,6 +49,7 @@ function setupChartDefaults() {
   Chart.defaults.global.elements.line.borderWidth = 1;
   Chart.defaults.global.elements.line.capBezierPoints = true;
 
+  Chart.defaults.global.showTooltips = false;
 
   steps = 10;
   max = 100;
@@ -78,7 +79,6 @@ function updateChart(response) {
     $("#finalStateHoursWithoutChartCanvas").remove();
     $("#charts").append('<canvas id="finalStateHoursWithoutChartCanvas" width="800" height="600"></canvas>');
 
-
     /*
     $("#profitChartCanvas").remove();
     $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
@@ -93,19 +93,16 @@ function updateChart(response) {
     $("#charts").append('<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>');
     */
 
-  
-
   }
 
   // BAR CHART -- PROFIT
   finalStateProfitChartCanvasContainer = document.getElementById("finalStateProfitChartCanvas").getContext("2d");
-  
+
   var finalStateProfitChart = new Chart(finalStateProfitChartCanvasContainer, {
     type: 'bar',
     data: getBarChartData(jsonResponse, "profit", ingredient),
     options: getBarChartOptions("RESTAURANTS", "NET PROFITS ($)")
   });
-
 
   // BAR CHART -- FRESHNESS
   finalStateFreshnessChartCanvasContainer = document.getElementById("finalStateFreshnessChartCanvas").getContext("2d");
@@ -215,14 +212,20 @@ function getBarChartData(simData, chartType, ingrName) {
   ctx = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
 
   var gradient = ctx.createLinearGradient(0, 0, 0, 400);
-  gradient.addColorStop(0, 'rgba(0,0,255,1)');   
-  gradient.addColorStop(0.5, 'rgba(0,255,255,1)');
-  gradient.addColorStop(1, 'rgba(250,174,50,0)');
+  gradient.addColorStop(0, 'rgba(0,200,0,1)');   
+  gradient.addColorStop(0.9, 'rgba(255,255,0,1)');
+  gradient.addColorStop(1, 'rgba(255,255,0,.5)');
+
+  var gradient2 = ctx.createLinearGradient(0, 0, 0, 400);
+  gradient2.addColorStop(0, 'rgba(0,200,0,.5)');   
+  gradient2.addColorStop(0.9, 'rgba(255,255,0,.5)');
+  gradient2.addColorStop(1, 'rgba(255,255,0,.1)');
+
 
   experimentDataSet = {
     data: experimentDataLastValues,
     backgroundColor: gradient,
-    hoverBackgroundColor: "rgba(255,255,255,.5)"
+    hoverBackgroundColor: gradient2
   };
 
   controlDataSet = {
@@ -284,55 +287,55 @@ function getLineChartData(simData, chartType, ingrName) {
 
 
 
-function getChartOptions(xLabel, yLabel) {
-  chartOptions = {     
-    scaleFontFamily : "'He'",
-    pointLabelFontFamily : "'Helvetica'",
-    scaleFontColor : "#ffff00",
+// function getChartOptions(xLabel, yLabel) {
+//   chartOptions = {     
+//     scaleFontFamily : "'He'",
+//     pointLabelFontFamily : "'Helvetica'",
+//     scaleFontColor : "#ffff00",
 
-    scaleOverride: true,
-    scaleSteps: steps,
-    scaleStepWidth: Math.ceil(max / steps),
-    scaleStartValue: 0,
+//     scaleOverride: true,
+//     scaleSteps: steps,
+//     scaleStepWidth: Math.ceil(max / steps),
+//     scaleStartValue: 0,
 
     
-    scaleShowVerticalLines: false,
-    scaleShowGridLines : false,
-    barShowStroke : false,
-    scaleShowLabels: true,
-    bezierCurve: false,
-    legendTemplate : false,
+//     scaleShowVerticalLines: false,
+//     scaleShowGridLines : false,
+//     barShowStroke : false,
+//     scaleShowLabels: true,
+//     bezierCurve: false,
+//     legendTemplate : false,
 
-    tooltipsEnabled : false,
-    tooltipsBackgroundColor : "#fff",
-    tooltipsTitleFontColor : 'rgba(255,255,255,1)',
-    tooltipsCornerRadius : 0,
+//     tooltipsEnabled : false,
+//     tooltipsBackgroundColor : "#fff",
+//     tooltipsTitleFontColor : 'rgba(255,255,255,1)',
+//     tooltipsCornerRadius : 0,
 
-     scales: {
-      xAxes: [{
-        scaleLabel: {
+//      scales: {
+//       xAxes: [{
+//         scaleLabel: {
 
-          display: true,
-          labelString: xLabel,
-        }
-      }],
-      yAxes: [{
-        scaleLabel: {
-          display: true,
-          labelString: yLabel,
+//           display: true,
+//           labelString: xLabel,
+//         }
+//       }],
+//       yAxes: [{
+//         scaleLabel: {
+//           display: true,
+//           labelString: yLabel,
 
-        }
-      }]
+//         }
+//       }]
 
-    }
+//     }
 
-  };
+//   };
 
-  return chartOptions;
-}
+//   return chartOptions;
+// }
 
 function getBarChartOptions(xLabel, yLabel) {
-  barChartOptions = {     
+    barChartOptions = {     
     scaleFontFamily : "'He'",
     pointLabelFontFamily : "'Helvetica'",
     scaleFontColor : "#000",
@@ -348,9 +351,6 @@ function getBarChartOptions(xLabel, yLabel) {
     scaleShowLabels: true,
     bezierCurve: false,
     legendTemplate : false,
-
-    tooltipsEnabled : false,
-   
 
      scales: {
       xAxes: [{
@@ -377,6 +377,10 @@ function getBarChartOptions(xLabel, yLabel) {
   return barChartOptions;
 }
 
+
+function updateSliderCount (id, val) {
+    document.getElementById(id).textContent = val;
+}
 
 
 function simulate() {
@@ -481,16 +485,16 @@ $("#" + charts[0]).hide();
 </script>
 
 
-
+<!-- <button type="button" class="simulate" >SIMULATE</button> -->
 <section>
 <h3>GENERAL SETTINGS</h3> 
 
 
-<input id="participants_slider" type="range" min="0" max="50" step="1" value ="7" oninput="updateSliderCount('participantCount', this.value);"/>
+<input id="participants_slider" type="range" min="0" max="50" step="1" value ="7" oninput="updateSliderCount('participantCount', this.value);" onmouseup="simulate();" />
 <h2><span id="participantCount">7</span> participants</h2> 
 
 
-<input id="duration_slider" type="range" min="0" max="3360" step="25"  value ="1683" oninput="updateSliderCount('durationCount', this.value);"/>
+<input id="duration_slider" type="range" min="0" max="3360" step="25"  value ="1683" oninput="updateSliderCount('durationCount', this.value);" onmouseup="simulate();" />
 <h2><span id="durationCount">1683</span> hours</h2> 
 
 </section>
@@ -500,7 +504,7 @@ $("#" + charts[0]).hide();
 <h3>ITEM PROPERTIES</h3> 
 
 
-<input id="expiration_slider" type="range" min="1" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);"/>
+<input id="expiration_slider" type="range" min="1" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);" onmouseup="simulate();" />
 <h2><span id="expirationCount">7</span> day expiration</h2> 
 
 <!--
@@ -511,11 +515,10 @@ $("#" + charts[0]).hide();
 <h2><span id="consumeCount">5</span> lbs consumed / hour</h2> 
 -->
 
-<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);"/>
+<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);" onmouseup="simulate();" />
 <h2><span id="predictCount">50</span>% unpredictable demand</h2> 
 
 </section>
-<button type="button" class="simulate" >SIMULATE</button>
 </aside>
 </div>
 
@@ -524,7 +527,7 @@ $("#" + charts[0]).hide();
   <a href="javascript:showChart(0);"><div class="chartHeader" id="chart0">NET PROFIT</div></a>
   <a href="javascript:showChart(1);"><div class="chartHeader" id="chart1">AVERAGE FRESHNESS</div></a>
   <a href="javascript:showChart(2);"><div class="chartHeader" id="chart2">TOTAL WASTE (LBS)</div></a>
-  <a href="javascript:showChart(3);"><div class="chartHeader" id="chart3">TIME WITHOUT ITEM</div></a>
+  <a href="javascript:showChart(3);"><div class="chartHeader" id="chart3">TIME WITHOUT ITEM (HOURS)</div></a>
 </div>
 
 <div id="barGraphArea">
@@ -565,7 +568,7 @@ $("#" + charts[0]).hide();
 <script>
 
 randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.5)";
-  });
+
 </script>
 
 </html>
