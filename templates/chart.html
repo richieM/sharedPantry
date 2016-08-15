@@ -1,538 +1,538 @@
-<!DOCTYPE html>
-<html lang="en">
+  <!DOCTYPE html>
+  <html lang="en">
 
-<head>
+  <head>
    <meta charset="utf-8" />
    <title>plenty</title>
    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.js'></script>
-    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="static/style.css">
-</head>
-<body>
-  <nav>
-<li>
-<a href="/">plenty</a>
-<a href="brief">BRIEF</a>
-<a href="research">RESEARCH</a>
-<a href="prototypes">PROTOTYPES</a>
-<a href="runSim" class="activePage">SIMULATION</a>
-<a href="insights">INSIGHTS</a>
-<a href="team">TEAM</a>
-</li>
-</nav>
-
-<div id="controlsDiv">
-
-<aside>
-
-<script src="./static/jquery-1.11.3.js"></script>
-
-<script>
-
-
-function setupChartDefaults() {
-  Chart.defaults.global.animationSteps = 200;
-  Chart.defaults.global.animation.duration = 5000;
-
-  Chart.defaults.global.responsive = true;
-  Chart.defaults.global.animationEasing = "easeInBounce";
-
-  Chart.defaults.global.legend.display = false;
-  Chart.defaults.global.defaultLineColor = "black";
-
-  Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
-  Chart.defaults.global.defaultFontColor = "black";
-  Chart.defaults.global.defaultFontSize = 10;
-  Chart.defaults.global.defaultFontStyle = "bold";
-  
-  Chart.defaults.global.elements.line.tension = 0;
-  Chart.defaults.global.elements.line.borderWidth = 1;
-  Chart.defaults.global.elements.line.capBezierPoints = true;
-
-  Chart.defaults.global.showTooltips = false;
-
-  steps = 10;
-  max = 100;
-}
-
-
-function updateChart(response) {
-  ingredient = "lemon"
-  // allProfitsChartThingy
-  newData = [];
-
-  var jsonResponse = JSON.parse(response.responseText);
-
-  // Blow away profitChart if it exists
-  // TODO try deleting all the data in the chart ... .destroy()
-  if (typeof finalStateProfitChart == "object") {
-
-    $("#finalStateProfitChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateProfitChartCanvas" width="800" height="600"></canvas>');
-
-    $("#finalStateFreshnessChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateFreshnessChartCanvas" width="800" height="600"></canvas>');
-
-    $("#finalStateWasteChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateWasteChartCanvas" width="800" height="600"></canvas>');
-
-    $("#finalStateHoursWithoutChartCanvas").remove();
-    $("#charts").append('<canvas id="finalStateHoursWithoutChartCanvas" width="800" height="600"></canvas>');
-
-    /*
-    $("#profitChartCanvas").remove();
-    $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
-
-    $("#freshnessChartCanvas").remove();
-    $("#charts").append('<canvas id="freshnessChartCanvas" width="800" height="600"></canvas>');
-
-    $("#wasteChartCanvas").remove();
-    $("#charts").append('<canvas id="wasteChartCanvas" width="800" height="600"></canvas>');
-
-    $("#outOfStockChartCanvas").remove();
-    $("#charts").append('<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>');
-    */
-
-  }
-
-  // BAR CHART -- PROFIT
-  finalStateProfitChartCanvasContainer = document.getElementById("finalStateProfitChartCanvas").getContext("2d");
-
-  var finalStateProfitChart = new Chart(finalStateProfitChartCanvasContainer, {
-    type: 'bar',
-    data: getBarChartData(jsonResponse, "profit", ingredient),
-    options: getBarChartOptions("RESTAURANTS", "NET PROFITS ($)")
-  });
-
-  // BAR CHART -- FRESHNESS
-  finalStateFreshnessChartCanvasContainer = document.getElementById("finalStateFreshnessChartCanvas").getContext("2d");
-
-  var finalStateFreshnessChart = new Chart(finalStateFreshnessChartCanvasContainer, {
-    type: 'bar',
-    data: getBarChartData(jsonResponse, "avgFreshness", ingredient),
-    options: getBarChartOptions("RESTAURANTS", "AVERAGE FRESHNESS")
-  });
-
-
- // BAR CHART -- WASTE
-  finalStateWasteChartCanvasContainer = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
-
-  // Draw Chart
-  var finalStateWasteChart = new Chart(finalStateWasteChartCanvasContainer, {
-    type: 'bar',
-    data: getBarChartData(jsonResponse, "waste", ingredient),
-    options: getBarChartOptions("RESTAURANTS", "NET WASTE (LBS)")
-  });
-
-   // BAR CHART -- HOURS WITHOUT
-  finalStateHoursWithoutChartCanvasContainer = document.getElementById("finalStateHoursWithoutChartCanvas").getContext("2d");
-
-  // Draw Chart
-  var finalStateHoursChart = new Chart(finalStateHoursWithoutChartCanvasContainer, {
-    type: 'bar',
-    data: getBarChartData(jsonResponse, "hoursWithout", ingredient),
-    options: getBarChartOptions("RESTAURANTS", "HOURS WITHOUT")
-  });
-
-
-  /*
-
-  // PROFIT CHART
-  // Get canvas
-  profitChartCanvasContainer = document.getElementById("profitChartCanvas").getContext("2d");
-
-  // Draw Chart
-  var profitChart = new Chart(profitChartCanvasContainer, {
-    type: 'line',
-    data: getLineChartData(jsonResponse, "profit", ingredient),
-    options: getChartOptions("TIME (HOURS)", "PROFITS ($)")
-  });
-
-
-  // FRESHNESS CHART
-  // Get canvas
-  freshnessChartCanvasContainer = document.getElementById("freshnessChartCanvas").getContext("2d");
-
-  // Draw chart
-var freshnessChart = new Chart(freshnessChartCanvasContainer, {
-    type: 'line',
-    data: getLineChartData(jsonResponse, "avgFreshness", ingredient),
-    options: getChartOptions("TIME (HOURS)", "FRESHNESS")
-  });
-
-  // WASTE CHART
-  wasteChartCanvasContainer = document.getElementById("wasteChartCanvas").getContext("2d");
-
-  // Draw Chart
-  var wasteChart = new Chart(wasteChartCanvasContainer, {
-    type: 'line',
-    data: getLineChartData(jsonResponse, "waste", ingredient),
-    options: getChartOptions("TIME (HOURS)", "NET WASTE (LBS)")
-  });
-
-
-  // OUT OF STOCK CHARToutOfStockChartCanvas
-  outOfStockChartCanvasContainer = document.getElementById("outOfStockChartCanvas").getContext("2d");
-
-  // Draw Chart
-  var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
-    type: 'line',
-    data: getLineChartData(jsonResponse, "hoursWithout", ingredient),
-    options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
-
-  });
-  */
-
-}
-
-
-function getBarChartData(simData, chartType, ingrName) {
-  // Converts simData JSON to chart.js data structure...
-
-  numParticipants = parseInt($("#participants_slider").val());
-  labelData = Array.apply(null, {length: numParticipants}).map(Number.call, Number)
-
-  duration = parseInt($("#duration_slider").val());
-
-  experimentDataLastValues = []
-  controlDataLastValues = []
-  datasets = []
-
-  // Experiment last data values
-  for (key in simData.results.market) {
-    lastDataVal = simData.results.market[key][ingrName][chartType][duration-1]
-    experimentDataLastValues.push(lastDataVal)
-  }
- 
-  for (key in simData.control.market) {
-    lastDataVal = simData.control.market[key][ingrName][chartType][duration-1]
-    controlDataLastValues.push(lastDataVal)
-  }
-
-  ctx = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
-
-  var gradient = ctx.createLinearGradient(0, 0, 0, 400);
-  gradient.addColorStop(0, 'rgba(0,200,0,1)');   
-  gradient.addColorStop(0.9, 'rgba(255,255,0,1)');
-  gradient.addColorStop(1, 'rgba(255,255,0,.5)');
-
-  var gradient2 = ctx.createLinearGradient(0, 0, 0, 400);
-  gradient2.addColorStop(0, 'rgba(0,200,0,.5)');   
-  gradient2.addColorStop(0.9, 'rgba(255,255,0,.5)');
-  gradient2.addColorStop(1, 'rgba(255,255,0,.1)');
-
-
-  experimentDataSet = {
-    data: experimentDataLastValues,
-    backgroundColor: gradient,
-    hoverBackgroundColor: gradient2
-  };
-
-  controlDataSet = {
-    data: controlDataLastValues,
-    backgroundColor: "rgba(0,0,0,1)",
-    hoverBackgroundColor: "rgba(0,0,0,1)"
-  };
-
-  datasetArray = [controlDataSet, experimentDataSet];
-
-  chartData = {
-    labels: labelData,
-    datasets : datasetArray
-  }
-
-  return chartData;
-}
-
-
-function getLineChartData(simData, chartType, ingrName) {
-  // Converts simData JSON to chart.js data structure...
-  duration = parseInt($("#duration_slider").val());
-  labelData = Array.apply(null, {length: duration}).map(Number.call, Number)
-
-  datasetArray = []
-  for (key in simData.results.market) {
-
-
-    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
-    datasetArray.push(
-      {     lineTension: 0,
-            backgroundColor: "rgba(0,150,0,.1)",
-            borderColor: "rgba(0,0,0,1)",
-            borderCapStyle: 'butt',
-            borderDash: [],
-            borderDashOffset: 0.0,
-            borderJoinStyle: 'miter',
-            pointBorderColor: "rgba(0,0,0,1)",
-            pointBackgroundColor: "rgba(0,0,0,1)",
-            pointBorderWidth: 1,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: "rgba(0,0,0,1)",
-            pointHoverBorderColor: "rgba(0,0,0,1)",
-            pointHoverBorderWidth: 2,
-            radius: 2, // size of points
-            pointHitRadius: 10,
-            data : simData.results.market[key][ingrName][chartType],
-
-      });
-  }
-
-   chartData = {
-    labels: labelData,
-    datasets : datasetArray
-  };
-
-  return chartData;
-}
-
-
-
-// function getChartOptions(xLabel, yLabel) {
-//   chartOptions = {     
-//     scaleFontFamily : "'He'",
-//     pointLabelFontFamily : "'Helvetica'",
-//     scaleFontColor : "#ffff00",
-
-//     scaleOverride: true,
-//     scaleSteps: steps,
-//     scaleStepWidth: Math.ceil(max / steps),
-//     scaleStartValue: 0,
-
-    
-//     scaleShowVerticalLines: false,
-//     scaleShowGridLines : false,
-//     barShowStroke : false,
-//     scaleShowLabels: true,
-//     bezierCurve: false,
-//     legendTemplate : false,
-
-//     tooltipsEnabled : false,
-//     tooltipsBackgroundColor : "#fff",
-//     tooltipsTitleFontColor : 'rgba(255,255,255,1)',
-//     tooltipsCornerRadius : 0,
-
-//      scales: {
-//       xAxes: [{
-//         scaleLabel: {
-
-//           display: true,
-//           labelString: xLabel,
-//         }
-//       }],
-//       yAxes: [{
-//         scaleLabel: {
-//           display: true,
-//           labelString: yLabel,
-
-//         }
-//       }]
-
-//     }
-
-//   };
-
-//   return chartOptions;
-// }
-
-function getBarChartOptions(xLabel, yLabel) {
-    barChartOptions = {     
-    scaleFontFamily : "'He'",
-    pointLabelFontFamily : "'Helvetica'",
-    scaleFontColor : "#000",
-    
-    scaleOverride: true,
-    scaleSteps: steps,
-    scaleStepWidth: Math.ceil(max / steps),
-    scaleStartValue: 0,
-    
-    scaleShowVerticalLines: false,
-    scaleShowGridLines : false,
-    barShowStroke : false,
-    scaleShowLabels: true,
-    bezierCurve: false,
-    legendTemplate : false,
-
-     scales: {
-      xAxes: [{
-        stacked:false,
-        scaleLabel: {
-          display: true,
-          labelString: xLabel,
+   <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+   <link href="https://fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet">
+   <link rel="stylesheet" type="text/css" href="static/style.css">
+  </head>
+  <body>
+    <nav>
+      <li>
+        <a href="/">plenty</a>
+        <a href="brief">BRIEF</a>
+        <a href="research">RESEARCH</a>
+        <a href="prototypes">PROTOTYPES</a>
+        <a href="runSim" class="activePage">SIMULATION</a>
+        <a href="insights">INSIGHTS</a>
+        <a href="team">TEAM</a>
+      </li>
+    </nav>
+
+    <div id="controlsDiv">
+
+      <aside>
+
+        <script src="./static/jquery-1.11.3.js"></script>
+
+        <script>
+
+
+        function setupChartDefaults() {
+          Chart.defaults.global.animationSteps = 200;
+          Chart.defaults.global.animation.duration = 5000;
+
+          Chart.defaults.global.responsive = true;
+          Chart.defaults.global.animationEasing = "easeInBounce";
+
+          Chart.defaults.global.legend.display = false;
+          Chart.defaults.global.defaultLineColor = "black";
+
+          Chart.defaults.global.defaultFontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
+          Chart.defaults.global.defaultFontColor = "black";
+          Chart.defaults.global.defaultFontSize = 10;
+          Chart.defaults.global.defaultFontStyle = "bold";
           
+          Chart.defaults.global.elements.line.tension = 0;
+          Chart.defaults.global.elements.line.borderWidth = 1;
+          Chart.defaults.global.elements.line.capBezierPoints = true;
+
+          Chart.defaults.global.showTooltips = false;
+
+          steps = 10;
+          max = 100;
         }
-      }],
-      yAxes: [{
-        stacked:false,
-        scaleLabel: {
-          display: true,
-          labelString: yLabel,
-          
-        }
-      }]
+
+
+        function updateChart(response) {
+          ingredient = "lemon"
+    // allProfitsChartThingy
+    newData = [];
+
+    var jsonResponse = JSON.parse(response.responseText);
+
+    // Blow away profitChart if it exists
+    // TODO try deleting all the data in the chart ... .destroy()
+    if (typeof finalStateProfitChart == "object") {
+
+      $("#finalStateProfitChartCanvas").remove();
+      $("#charts").append('<canvas id="finalStateProfitChartCanvas" width="800" height="600"></canvas>');
+
+      $("#finalStateFreshnessChartCanvas").remove();
+      $("#charts").append('<canvas id="finalStateFreshnessChartCanvas" width="800" height="600"></canvas>');
+
+      $("#finalStateWasteChartCanvas").remove();
+      $("#charts").append('<canvas id="finalStateWasteChartCanvas" width="800" height="600"></canvas>');
+
+      $("#finalStateHoursWithoutChartCanvas").remove();
+      $("#charts").append('<canvas id="finalStateHoursWithoutChartCanvas" width="800" height="600"></canvas>');
+
+      /*
+      $("#profitChartCanvas").remove();
+      $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
+
+      $("#freshnessChartCanvas").remove();
+      $("#charts").append('<canvas id="freshnessChartCanvas" width="800" height="600"></canvas>');
+
+      $("#wasteChartCanvas").remove();
+      $("#charts").append('<canvas id="wasteChartCanvas" width="800" height="600"></canvas>');
+
+      $("#outOfStockChartCanvas").remove();
+      $("#charts").append('<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>');
+      */
 
     }
 
-  };
+    // BAR CHART -- PROFIT
+    finalStateProfitChartCanvasContainer = document.getElementById("finalStateProfitChartCanvas").getContext("2d");
 
-  return barChartOptions;
-}
+    var finalStateProfitChart = new Chart(finalStateProfitChartCanvasContainer, {
+      type: 'bar',
+      data: getBarChartData(jsonResponse, "profit", ingredient),
+      options: getBarChartOptions("RESTAURANTS", "NET PROFITS ($)")
+    });
 
+    // BAR CHART -- FRESHNESS
+    finalStateFreshnessChartCanvasContainer = document.getElementById("finalStateFreshnessChartCanvas").getContext("2d");
 
-function updateSliderCount (id, val) {
-    document.getElementById(id).textContent = val;
-}
-
-
-function simulate() {
-  // Collect all the data we need from sliders and shit
-        // call the simulator with those parameters
-        // get data back and then replace the chart with stuff
-        participants = $("#participants_slider").val();
-        duration = $("#duration_slider").val();
-        unpredictability = $("#unpredictability_slider").val();
-
-        // TODO how to do buttons wtf?!?
-        priceButton = $("#price_button").data("clicked");
-        freshnessButton = $("#freshness_button").val();
-        // END TODO
-
-        expirationTime = $("#expiration_slider").val();
-        sellWeight = $("#sell_weight_slider").val();
-        sellAmount = $("#sell_amount_slider").val();
-        buyWeight = $("#buy_weight_slider").val();
-        buyAmount = $("#buy_amount_slider").val();
-        consumptionRate = 5 //$("#consume_slider").val();
-        unitPrice = 10 //$("#price_slider").val();
-
-        console.log("Participants: " + participants);
-        console.log("Duration: " + duration);
-        console.log("Unpredictability: " + unpredictability);
-        console.log("price_button: " + priceButton);
-        console.log("freshness_button: " + freshnessButton);
-        console.log("expirationTime: " + expirationTime);
-        console.log("sellWeight: " + sellWeight);
-        console.log("sellAmount: " + sellAmount);
-        console.log("buyWeight: " + buyWeight);
-        console.log("buyAmount: " + buyAmount);
-        console.log("consumptionRate: " + consumptionRate);
-        console.log("unitPrice: " + unitPrice);
+    var finalStateFreshnessChart = new Chart(finalStateFreshnessChartCanvasContainer, {
+      type: 'bar',
+      data: getBarChartData(jsonResponse, "avgFreshness", ingredient),
+      options: getBarChartOptions("RESTAURANTS", "AVERAGE FRESHNESS")
+    });
 
 
-        /*
-        Vars not included:
-          priceButton
-          freshnessButton
-          sellAmount
+   // BAR CHART -- WASTE
+   finalStateWasteChartCanvasContainer = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
 
-        Vars that *should* be included...
-          - ... maybe anything for restock params, but it seems like that will be automated...
+    // Draw Chart
+    var finalStateWasteChart = new Chart(finalStateWasteChartCanvasContainer, {
+      type: 'bar',
+      data: getBarChartData(jsonResponse, "waste", ingredient),
+      options: getBarChartOptions("RESTAURANTS", "NET WASTE (LBS)")
+    });
 
-        */
+     // BAR CHART -- HOURS WITHOUT
+     finalStateHoursWithoutChartCanvasContainer = document.getElementById("finalStateHoursWithoutChartCanvas").getContext("2d");
 
-        var url_text = "/resimulate?" +
-                  "participants=" + participants + 
-                  "&duration=" + duration +
-                  "&unpredictability=" + unpredictability +
-                  "&expirationTime=" + expirationTime +
-                  "&consumptionRate=" + consumptionRate +
-                  "&unitPrice=" + unitPrice
-
-        var request = new XMLHttpRequest();
-         request.onload = function() {
-          updateChart(request);
-        };
-        // We point the request at the appropriate command
-        request.open("GET", url_text, true);
-        // and then we send it off
-        request.send();
-}
+    // Draw Chart
+    var finalStateHoursChart = new Chart(finalStateHoursWithoutChartCanvasContainer, {
+      type: 'bar',
+      data: getBarChartData(jsonResponse, "hoursWithout", ingredient),
+      options: getBarChartOptions("RESTAURANTS", "HOURS WITHOUT")
+    });
 
 
-var charts = ["finalStateProfitChartCanvas", "finalStateFreshnessChartCanvas", "finalStateWasteChartCanvas", "finalStateHoursWithoutChartCanvas"];
+    /*
 
-function showChart (n) {
+    // PROFIT CHART
+    // Get canvas
+    profitChartCanvasContainer = document.getElementById("profitChartCanvas").getContext("2d");
 
-  // hide things, reset buttons
-  for (var i=0; i<charts.length; i++) {
-    $("#" + charts[i]).hide();
-    $("#chart" + i).css("background-color", "white");
-    $("#chart" + i).css("color", "black");
+    // Draw Chart
+    var profitChart = new Chart(profitChartCanvasContainer, {
+      type: 'line',
+      data: getLineChartData(jsonResponse, "profit", ingredient),
+      options: getChartOptions("TIME (HOURS)", "PROFITS ($)")
+    });
+
+
+    // FRESHNESS CHART
+    // Get canvas
+    freshnessChartCanvasContainer = document.getElementById("freshnessChartCanvas").getContext("2d");
+
+    // Draw chart
+  var freshnessChart = new Chart(freshnessChartCanvasContainer, {
+      type: 'line',
+      data: getLineChartData(jsonResponse, "avgFreshness", ingredient),
+      options: getChartOptions("TIME (HOURS)", "FRESHNESS")
+    });
+
+    // WASTE CHART
+    wasteChartCanvasContainer = document.getElementById("wasteChartCanvas").getContext("2d");
+
+    // Draw Chart
+    var wasteChart = new Chart(wasteChartCanvasContainer, {
+      type: 'line',
+      data: getLineChartData(jsonResponse, "waste", ingredient),
+      options: getChartOptions("TIME (HOURS)", "NET WASTE (LBS)")
+    });
+
+
+    // OUT OF STOCK CHARToutOfStockChartCanvas
+    outOfStockChartCanvasContainer = document.getElementById("outOfStockChartCanvas").getContext("2d");
+
+    // Draw Chart
+    var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
+      type: 'line',
+      data: getLineChartData(jsonResponse, "hoursWithout", ingredient),
+      options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
+
+    });
+  */
+
   }
 
-  // show things, set buttons
-  $("#" + charts[n]).fadeIn();
-  $("#chart" + n).css("background-color", "black");
-  $("#chart" + n).css("color", "white");
-}
+
+  function getBarChartData(simData, chartType, ingrName) {
+    // Converts simData JSON to chart.js data structure...
+
+    numParticipants = parseInt($("#participants_slider").val());
+    labelData = Array.apply(null, {length: numParticipants}).map(Number.call, Number)
+
+    duration = parseInt($("#duration_slider").val());
+
+    experimentDataLastValues = []
+    controlDataLastValues = []
+    datasets = []
+
+    // Experiment last data values
+    for (key in simData.results.market) {
+      lastDataVal = simData.results.market[key][ingrName][chartType][duration-1]
+      experimentDataLastValues.push(lastDataVal)
+    }
+    
+    for (key in simData.control.market) {
+      lastDataVal = simData.control.market[key][ingrName][chartType][duration-1]
+      controlDataLastValues.push(lastDataVal)
+    }
+
+    ctx = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
+
+    var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(0,200,0,1)');   
+    gradient.addColorStop(0.9, 'rgba(255,255,0,1)');
+    gradient.addColorStop(1, 'rgba(255,255,0,.5)');
+
+    var gradient2 = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient2.addColorStop(0, 'rgba(0,200,0,.5)');   
+    gradient2.addColorStop(0.9, 'rgba(255,255,0,.5)');
+    gradient2.addColorStop(1, 'rgba(255,255,0,.1)');
 
 
-$(document).ready(function(){
+    experimentDataSet = {
+      data: experimentDataLastValues,
+      backgroundColor: gradient,
+      hoverBackgroundColor: gradient2
+    };
+
+    controlDataSet = {
+      data: controlDataLastValues,
+      backgroundColor: "rgba(0,0,0,1)",
+      hoverBackgroundColor: "rgba(0,0,0,1)"
+    };
+
+    datasetArray = [controlDataSet, experimentDataSet];
+
+    chartData = {
+      labels: labelData,
+      datasets : datasetArray
+    }
+
+    return chartData;
+  }
+
+
+  function getLineChartData(simData, chartType, ingrName) {
+    // Converts simData JSON to chart.js data structure...
+    duration = parseInt($("#duration_slider").val());
+    labelData = Array.apply(null, {length: duration}).map(Number.call, Number)
+
+    datasetArray = []
+    for (key in simData.results.market) {
+
+
+      randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.2)";
+      datasetArray.push(
+        {     lineTension: 0,
+          backgroundColor: "rgba(0,150,0,.1)",
+          borderColor: "rgba(0,0,0,1)",
+          borderCapStyle: 'butt',
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: 'miter',
+          pointBorderColor: "rgba(0,0,0,1)",
+          pointBackgroundColor: "rgba(0,0,0,1)",
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: "rgba(0,0,0,1)",
+          pointHoverBorderColor: "rgba(0,0,0,1)",
+          pointHoverBorderWidth: 2,
+              radius: 2, // size of points
+              pointHitRadius: 10,
+              data : simData.results.market[key][ingrName][chartType],
+
+            });
+    }
+
+    chartData = {
+      labels: labelData,
+      datasets : datasetArray
+    };
+
+    return chartData;
+  }
+
+
+
+  // function getChartOptions(xLabel, yLabel) {
+  //   chartOptions = {     
+  //     scaleFontFamily : "'He'",
+  //     pointLabelFontFamily : "'Helvetica'",
+  //     scaleFontColor : "#ffff00",
+
+  //     scaleOverride: true,
+  //     scaleSteps: steps,
+  //     scaleStepWidth: Math.ceil(max / steps),
+  //     scaleStartValue: 0,
+
+
+  //     scaleShowVerticalLines: false,
+  //     scaleShowGridLines : false,
+  //     barShowStroke : false,
+  //     scaleShowLabels: true,
+  //     bezierCurve: false,
+  //     legendTemplate : false,
+
+  //     tooltipsEnabled : false,
+  //     tooltipsBackgroundColor : "#fff",
+  //     tooltipsTitleFontColor : 'rgba(255,255,255,1)',
+  //     tooltipsCornerRadius : 0,
+
+  //      scales: {
+  //       xAxes: [{
+  //         scaleLabel: {
+
+  //           display: true,
+  //           labelString: xLabel,
+  //         }
+  //       }],
+  //       yAxes: [{
+  //         scaleLabel: {
+  //           display: true,
+  //           labelString: yLabel,
+
+  //         }
+  //       }]
+
+  //     }
+
+  //   };
+
+  //   return chartOptions;
+  // }
+
+  function getBarChartOptions(xLabel, yLabel) {
+    barChartOptions = {     
+      scaleFontFamily : "'He'",
+      pointLabelFontFamily : "'Helvetica'",
+      scaleFontColor : "#000",
+      
+      scaleOverride: true,
+      scaleSteps: steps,
+      scaleStepWidth: Math.ceil(max / steps),
+      scaleStartValue: 0,
+      
+      scaleShowVerticalLines: false,
+      scaleShowGridLines : false,
+      barShowStroke : false,
+      scaleShowLabels: true,
+      bezierCurve: false,
+      legendTemplate : false,
+
+      scales: {
+        xAxes: [{
+          stacked:false,
+          scaleLabel: {
+            display: true,
+            labelString: xLabel,
+            
+          }
+        }],
+        yAxes: [{
+          stacked:false,
+          scaleLabel: {
+            display: true,
+            labelString: yLabel,
+            
+          }
+        }]
+
+      }
+
+    };
+
+    return barChartOptions;
+  }
+
+
+  function updateSliderCount (id, val) {
+    document.getElementById(id).textContent = val;
+  }
+
+
+  function simulate() {
+    // Collect all the data we need from sliders and shit
+          // call the simulator with those parameters
+          // get data back and then replace the chart with stuff
+          participants = $("#participants_slider").val();
+          duration = $("#duration_slider").val();
+          unpredictability = $("#unpredictability_slider").val();
+
+          // TODO how to do buttons wtf?!?
+          priceButton = $("#price_button").data("clicked");
+          freshnessButton = $("#freshness_button").val();
+          // END TODO
+
+          expirationTime = $("#expiration_slider").val();
+          sellWeight = $("#sell_weight_slider").val();
+          sellAmount = $("#sell_amount_slider").val();
+          buyWeight = $("#buy_weight_slider").val();
+          buyAmount = $("#buy_amount_slider").val();
+          consumptionRate = 5 //$("#consume_slider").val();
+          unitPrice = 10 //$("#price_slider").val();
+
+          console.log("Participants: " + participants);
+          console.log("Duration: " + duration);
+          console.log("Unpredictability: " + unpredictability);
+          console.log("price_button: " + priceButton);
+          console.log("freshness_button: " + freshnessButton);
+          console.log("expirationTime: " + expirationTime);
+          console.log("sellWeight: " + sellWeight);
+          console.log("sellAmount: " + sellAmount);
+          console.log("buyWeight: " + buyWeight);
+          console.log("buyAmount: " + buyAmount);
+          console.log("consumptionRate: " + consumptionRate);
+          console.log("unitPrice: " + unitPrice);
+
+
+          /*
+          Vars not included:
+            priceButton
+            freshnessButton
+            sellAmount
+
+          Vars that *should* be included...
+            - ... maybe anything for restock params, but it seems like that will be automated...
+
+            */
+
+            var url_text = "/resimulate?" +
+            "participants=" + participants + 
+            "&duration=" + duration +
+            "&unpredictability=" + unpredictability +
+            "&expirationTime=" + expirationTime +
+            "&consumptionRate=" + consumptionRate +
+            "&unitPrice=" + unitPrice
+
+            var request = new XMLHttpRequest();
+            request.onload = function() {
+              updateChart(request);
+            };
+          // We point the request at the appropriate command
+          request.open("GET", url_text, true);
+          // and then we send it off
+          request.send();
+        }
+
+
+        var charts = ["finalStateProfitChartCanvas", "finalStateFreshnessChartCanvas", "finalStateWasteChartCanvas", "finalStateHoursWithoutChartCanvas"];
+
+        function showChart (n) {
+
+    // hide things, reset buttons
+    for (var i=0; i<charts.length; i++) {
+      $("#" + charts[i]).hide();
+      $("#chart" + i).css("background-color", "white");
+      $("#chart" + i).css("color", "black");
+    }
+
+    // show things, set buttons
+    $("#" + charts[n]).fadeIn();
+    $("#chart" + n).css("background-color", "black");
+    $("#chart" + n).css("color", "white");
+  }
+
+
+  $(document).ready(function(){
     setupChartDefaults();
     simulate();
 
     showChart(0);
 
     $(".simulate").click(function(){
-        simulate();
+      simulate();
     });
-});
+  });
 
-// hide the thing I hate
-$("#" + charts[0]).hide();
-
-
-
-</script>
+  // hide the thing I hate
+  $("#" + charts[0]).hide();
 
 
-<!-- <button type="button" class="simulate" >SIMULATE</button> -->
-<section>
-<h3>GENERAL SETTINGS</h3> 
+
+  </script>
 
 
-<input id="participants_slider" type="range" min="0" max="50" step="1" value ="7" oninput="updateSliderCount('participantCount', this.value);" onmouseup="simulate();" />
-<h2><span id="participantCount">7</span> participants</h2> 
+  <!-- <button type="button" class="simulate" >SIMULATE</button> -->
+  <section>
+    <h3>GENERAL SETTINGS</h3> 
 
 
-<input id="duration_slider" type="range" min="0" max="1680" step="5"  value ="167" oninput="updateSliderCount('durationCount', this.value);" onmouseup="simulate();" />
-<h2><span id="durationCount">1683</span> hours</h2> 
-
-</section>
+    <input id="participants_slider" type="range" min="0" max="50" step="1" value ="7" oninput="updateSliderCount('participantCount', this.value);" onmouseup="simulate();" />
+    <h2><span id="participantCount">7</span> participants</h2> 
 
 
-<section>
-<h3>ITEM PROPERTIES</h3> 
+    <input id="duration_slider" type="range" min="0" max="1680" step="5"  value ="167" oninput="updateSliderCount('durationCount', this.value);" onmouseup="simulate();" />
+    <h2><span id="durationCount">1683</span> hours</h2> 
+
+  </section>
 
 
-<input id="expiration_slider" type="range" min="1" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);" onmouseup="simulate();" />
-<h2><span id="expirationCount">7</span> day expiration</h2> 
-
-<!--
-<input id="price_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('priceCount', this.value);"/>
-<h2>$<span id="priceCount">10</span> / lb</h2> 
-
-<input id="consume_slider" type="range" min="0" max="20" step="1" value ="5" oninput="updateSliderCount('consumeCount', this.value);"/>
-<h2><span id="consumeCount">5</span> lbs consumed / hour</h2> 
--->
-
-<input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);" onmouseup="simulate();" />
-<h2><span id="predictCount">50</span>% unpredictable demand</h2> 
-
-</section>
-</aside>
-</div>
+  <section>
+    <h3>ITEM PROPERTIES</h3> 
 
 
-<div id="chartMenu">
-  <a href="javascript:showChart(0);"><div class="chartHeader" id="chart0">NET PROFIT</div></a>
-  <a href="javascript:showChart(1);"><div class="chartHeader" id="chart1">AVERAGE FRESHNESS</div></a>
-  <a href="javascript:showChart(2);"><div class="chartHeader" id="chart2">TOTAL WASTE (LBS)</div></a>
-  <a href="javascript:showChart(3);"><div class="chartHeader" id="chart3">TIME WITHOUT ITEM (HOURS)</div></a>
-</div>
+    <input id="expiration_slider" type="range" min="1" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);" onmouseup="simulate();" />
+    <h2><span id="expirationCount">7</span> day expiration</h2> 
 
-<div id="barGraphArea">
-  <!-- bar chart canvas element -->
+  <!--
+  <input id="price_slider" type="range" min="0" max="20" step="1" value ="10" oninput="updateSliderCount('priceCount', this.value);"/>
+  <h2>$<span id="priceCount">10</span> / lb</h2> 
+
+  <input id="consume_slider" type="range" min="0" max="20" step="1" value ="5" oninput="updateSliderCount('consumeCount', this.value);"/>
+  <h2><span id="consumeCount">5</span> lbs consumed / hour</h2> 
+  -->
+
+  <input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);" onmouseup="simulate();" />
+  <h2><span id="predictCount">50</span>% unpredictable demand</h2> 
+
+  </section>
+  </aside>
+  </div>
+
+
+  <div id="chartMenu">
+    <a href="javascript:showChart(0);"><div class="chartHeader" id="chart0">NET PROFIT</div></a>
+    <a href="javascript:showChart(1);"><div class="chartHeader" id="chart1">AVERAGE FRESHNESS</div></a>
+    <a href="javascript:showChart(2);"><div class="chartHeader" id="chart2">TOTAL WASTE (LBS)</div></a>
+    <a href="javascript:showChart(3);"><div class="chartHeader" id="chart3">TIME WITHOUT ITEM (HOURS)</div></a>
+  </div>
+
+  <div id="barGraphArea">
+    <!-- bar chart canvas element -->
 
 
     <div id="charts">
@@ -546,30 +546,30 @@ $("#" + charts[0]).hide();
 
       <canvas id="finalStateHoursWithoutChartCanvas"></canvas>
 
-      <!-- LINE CHARTS 
-      <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
-      <h4>PROFIT / TIME</h4>
+        <!-- LINE CHARTS 
+        <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
+        <h4>PROFIT / TIME</h4>
 
-      <canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
-      <h4>FRESHNESS / TIME</h3>
+        <canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
+        <h4>FRESHNESS / TIME</h3>
 
-      <canvas id="wasteChartCanvas" width="600" height="400"></canvas>
-      <h4>WASTE / TIME</h3>
+        <canvas id="wasteChartCanvas" width="600" height="400"></canvas>
+        <h4>WASTE / TIME</h3>
 
-      <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
-      <h4>INGREDIENT DEFICIT / TIME</h3>
+        <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
+        <h4>INGREDIENT DEFICIT / TIME</h3>
         -->
-    <div>
-    In summary, here are some results that we saw in our simulation. It’s important to note that the simulation represents a perfect market and the numbers that we used in the simulation are estimated averages. But the key trends that we saw forecasted stable and slight profit raise, and an incredible freshness increase for ingredients. And of course, just by automation, we are able to save hundreds of hours for restaurants.
+        <div>
+          In summary, here are some results that we saw in our simulation. It’s important to note that the simulation represents a perfect market and the numbers that we used in the simulation are estimated averages. But the key trends that we saw forecasted stable and slight profit raise, and an incredible freshness increase for ingredients. And of course, just by automation, we are able to save hundreds of hours for restaurants.
+        </div>
+
+      </div>
     </div>
 
-  </div>
-</div>
+    <script>
 
-<script>
+    randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.5)";
 
-randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.5)";
+    </script>
 
-</script>
-
-</html>
+    </html>
