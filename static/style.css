@@ -24,9 +24,23 @@ nav { color: white;
       word-spacing: 4em;
       padding:40px 0px 80px 0px;
 }
+
+#chartMenu {
+    margin: 0em 0em 0em 20em;
+    position: absolute;
+}
+
+.chartHeader {
+    float:left;
+    padding:10px;
+    border: 2px solid black;
+    margin: 0 4px 0px 0;
+    float:left;
+}
+
 #barGraphArea {width:60%;
-      margin: 0em 0em 0em 20em;
-      position: inline-block;
+    margin: 4em 0em 0em 20em;
+    position: inline-block;
 }
 
 aside { width: 240px;

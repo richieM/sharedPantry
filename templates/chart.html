@@ -436,14 +436,39 @@ function simulate() {
         request.send();
 }
 
+
+function showChart (n, btn) {
+  // hide all charts
+  $("#finalStateProfitChartCanvas").hide();
+  $("#finalStateFreshnessChartCanvas").hide();
+  $("#finalStateWasteChartCanvas").hide();
+  $("#finalStateHoursWithoutChartCanvas").hide();
+
+  // reset all the buttons
+  $("#chart1").css("background-color", "white");
+  $("#chart2").css("background-color", "white");
+  $("#chart3").css("background-color", "white");
+  $("#chart4").css("background-color", "white");
+
+  // show the chart
+  $("#" + n).fadeIn();
+  $("#" + btn).css("background-color", "orange");
+}
+
+
 $(document).ready(function(){
     setupChartDefaults();
     simulate();
+
+    showChart("finalStateProfitChartCanvas", "chart1");
 
     $(".simulate").click(function(){
         simulate();
     });
 });
+
+
+
 </script>
 
 
@@ -486,38 +511,41 @@ $(document).ready(function(){
 </div>
 
 
+<div id="chartMenu">
+  <a href="javascript:showChart('finalStateProfitChartCanvas', 'chart1');"><div class="chartHeader" id="chart1">NET PROFIT</div></a>
+  <a href="javascript:showChart('finalStateFreshnessChartCanvas', 'chart2');"><div class="chartHeader" id="chart2">AVERAGE FRESHNESS</div></a>
+  <a href="javascript:showChart('finalStateWasteChartCanvas', 'chart3');"><div class="chartHeader" id="chart3">TOTAL WASTE (LBS)</div></a>
+  <a href="javascript:showChart('finalStateHoursWithoutChartCanvas', 'chart4');"><div class="chartHeader" id="chart4">TIME WITHOUT ITEM</div></a>
+</div>
 
 <div id="barGraphArea">
   <!-- bar chart canvas element -->
+
+
     <div id="charts">
+      <!-- BAR CHARTS -->
 
-    <!-- BAR CHARTS -->
+      <canvas id="finalStateProfitChartCanvas"></canvas>
 
-    <h4>NET PROFIT</h4>
-    <canvas id="finalStateProfitChartCanvas" width="600" height="400"></canvas>
+      <canvas id="finalStateFreshnessChartCanvas"></canvas>
 
-    <h4>AVERAGE FRESHNESS</h4>
-    <canvas id="finalStateFreshnessChartCanvas" width="600" height="400"></canvas>
+      <canvas id="finalStateWasteChartCanvas"></canvas>
 
-    <h4>TOTAL WASTE (LBS)</h4>
-    <canvas id="finalStateWasteChartCanvas" width="600" height="400"></canvas>
+      <canvas id="finalStateHoursWithoutChartCanvas"></canvas>
 
-    <h4>TIME WITHOUT ITEM</h4>
-    <canvas id="finalStateHoursWithoutChartCanvas" width="600" height="400"></canvas>
+      <!-- LINE CHARTS 
+      <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
+      <h4>PROFIT / TIME</h4>
 
-    <!-- LINE CHARTS 
-    <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
-    <h4>PROFIT / TIME</h4>
+      <canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
+      <h4>FRESHNESS / TIME</h3>
 
-    <canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
-    <h4>FRESHNESS / TIME</h3>
+      <canvas id="wasteChartCanvas" width="600" height="400"></canvas>
+      <h4>WASTE / TIME</h3>
 
-    <canvas id="wasteChartCanvas" width="600" height="400"></canvas>
-    <h4>WASTE / TIME</h3>
-
-    <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
-    <h4>INGREDIENT DEFICIT / TIME</h3>
-      -->
+      <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
+      <h4>INGREDIENT DEFICIT / TIME</h3>
+        -->
     <div>
     In summary, here are some results that we saw in our simulation. It’s important to note that the simulation represents a perfect market and the numbers that we used in the simulation are estimated averages. But the key trends that we saw forecasted stable and slight profit raise, and an incredible freshness increase for ingredients. And of course, just by automation, we are able to save hundreds of hours for restaurants.
     </div>
