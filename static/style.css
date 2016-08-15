@@ -28,6 +28,7 @@ nav { color: white;
 #chartMenu {
     margin: 0em 0em 0em 20em;
     position: absolute;
+    /*width:900px;*/
 }
 
 .chartHeader {
@@ -35,7 +36,6 @@ nav { color: white;
     padding:10px;
     border: 2px solid black;
     margin: 0 4px 0px 0;
-    float:left;
 }
 
 #barGraphArea {width:60%;
@@ -59,6 +59,8 @@ canvas {
       overflow: hidden;
       padding: 20px 20px 20px 20px;
       border: 2px solid black;   
+      width: 862px;
+      height: 431px;
 }
 
 h1   {text-align: center;

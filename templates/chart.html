@@ -437,22 +437,21 @@ function simulate() {
 }
 
 
-function showChart (n, btn) {
-  // hide all charts
-  $("#finalStateProfitChartCanvas").hide();
-  $("#finalStateFreshnessChartCanvas").hide();
-  $("#finalStateWasteChartCanvas").hide();
-  $("#finalStateHoursWithoutChartCanvas").hide();
+var charts = ["finalStateProfitChartCanvas", "finalStateFreshnessChartCanvas", "finalStateWasteChartCanvas", "finalStateHoursWithoutChartCanvas"];
 
-  // reset all the buttons
-  $("#chart1").css("background-color", "white");
-  $("#chart2").css("background-color", "white");
-  $("#chart3").css("background-color", "white");
-  $("#chart4").css("background-color", "white");
+function showChart (n) {
 
-  // show the chart
-  $("#" + n).fadeIn();
-  $("#" + btn).css("background-color", "orange");
+  // hide things, reset buttons
+  for (var i=0; i<charts.length; i++) {
+    $("#" + charts[i]).hide();
+    $("#chart" + i).css("background-color", "white");
+    $("#chart" + i).css("color", "black");
+  }
+
+  // show things, set buttons
+  $("#" + charts[n]).fadeIn();
+  $("#chart" + n).css("background-color", "black");
+  $("#chart" + n).css("color", "white");
 }
 
 
@@ -460,12 +459,15 @@ $(document).ready(function(){
     setupChartDefaults();
     simulate();
 
-    showChart("finalStateProfitChartCanvas", "chart1");
+    showChart(0);
 
     $(".simulate").click(function(){
         simulate();
     });
 });
+
+// hide the thing I hate
+$("#" + charts[0]).hide();
 
 
 
@@ -512,10 +514,10 @@ $(document).ready(function(){
 
 
 <div id="chartMenu">
-  <a href="javascript:showChart('finalStateProfitChartCanvas', 'chart1');"><div class="chartHeader" id="chart1">NET PROFIT</div></a>
-  <a href="javascript:showChart('finalStateFreshnessChartCanvas', 'chart2');"><div class="chartHeader" id="chart2">AVERAGE FRESHNESS</div></a>
-  <a href="javascript:showChart('finalStateWasteChartCanvas', 'chart3');"><div class="chartHeader" id="chart3">TOTAL WASTE (LBS)</div></a>
-  <a href="javascript:showChart('finalStateHoursWithoutChartCanvas', 'chart4');"><div class="chartHeader" id="chart4">TIME WITHOUT ITEM</div></a>
+  <a href="javascript:showChart(0);"><div class="chartHeader" id="chart0">NET PROFIT</div></a>
+  <a href="javascript:showChart(1);"><div class="chartHeader" id="chart1">AVERAGE FRESHNESS</div></a>
+  <a href="javascript:showChart(2);"><div class="chartHeader" id="chart2">TOTAL WASTE (LBS)</div></a>
+  <a href="javascript:showChart(3);"><div class="chartHeader" id="chart3">TIME WITHOUT ITEM</div></a>
 </div>
 
 <div id="barGraphArea">
