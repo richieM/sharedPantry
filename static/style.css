@@ -25,6 +25,11 @@ nav { color: white;
       padding:40px 0px 80px 0px;
 }
 
+.divSlide {
+  width: 100%;
+  height: 800px;
+}
+
 #chartMenu {
     margin: 0em 0em 0em 20em;
     position: absolute;
