@@ -6,6 +6,7 @@
    <title>plenty</title>
    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.js'></script>
     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="static/style.css">
 </head>
 <body>
@@ -487,48 +488,43 @@ $(document).ready(function(){
 
 
 <div id="barGraphArea">
-<!-- bar chart canvas element -->
-<div id="charts">
+  <!-- bar chart canvas element -->
+    <div id="charts">
 
-<!-- BAR CHARTS -->
+    <!-- BAR CHARTS -->
 
-<article>
-<h4>NET PROFIT</h4>
-<canvas id="finalStateProfitChartCanvas" width="600" height="400"></canvas>
+    <h4>NET PROFIT</h4>
+    <canvas id="finalStateProfitChartCanvas" width="600" height="400"></canvas>
 
-<h4>AVERAGE FRESHNESS</h4>
-<canvas id="finalStateFreshnessChartCanvas" width="600" height="400"></canvas>
-</article>
+    <h4>AVERAGE FRESHNESS</h4>
+    <canvas id="finalStateFreshnessChartCanvas" width="600" height="400"></canvas>
 
-<article>
-<h4>TOTAL WASTE (LBS)</h4>
-<canvas id="finalStateWasteChartCanvas" width="600" height="400"></canvas>
+    <h4>TOTAL WASTE (LBS)</h4>
+    <canvas id="finalStateWasteChartCanvas" width="600" height="400"></canvas>
 
+    <h4>TIME WITHOUT ITEM</h4>
+    <canvas id="finalStateHoursWithoutChartCanvas" width="600" height="400"></canvas>
 
-<h4>TIME WITHOUT ITEM</h4>
-<canvas id="finalStateHoursWithoutChartCanvas" width="600" height="400"></canvas>
-</article>
+    <!-- LINE CHARTS 
+    <canvas id="profitChartCanvas" width= "600" height="400"></canvas>
+    <h4>PROFIT / TIME</h4>
 
-<!-- LINE CHARTS 
-<canvas id="profitChartCanvas" width= "600" height="400"></canvas>
-<h4>PROFIT / TIME</h4>
+    <canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
+    <h4>FRESHNESS / TIME</h3>
 
-<canvas id="freshnessChartCanvas" width="600" height="400"></canvas>
-<h4>FRESHNESS / TIME</h3>
+    <canvas id="wasteChartCanvas" width="600" height="400"></canvas>
+    <h4>WASTE / TIME</h3>
 
-<canvas id="wasteChartCanvas" width="600" height="400"></canvas>
-<h4>WASTE / TIME</h3>
+    <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
+    <h4>INGREDIENT DEFICIT / TIME</h3>
+      -->
+    <div>
+    In summary, here are some results that we saw in our simulation. It’s important to note that the simulation represents a perfect market and the numbers that we used in the simulation are estimated averages. But the key trends that we saw forecasted stable and slight profit raise, and an incredible freshness increase for ingredients. And of course, just by automation, we are able to save hundreds of hours for restaurants.
+    </div>
 
-<canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
-<h4>INGREDIENT DEFICIT / TIME</h3>
-  -->
-
+  </div>
 </div>
-</div>
-<p>
-In summary, here are some results that we saw in our simulation. It’s important to note that the simulation represents a perfect market and the numbers that we used in the simulation are estimated averages. But the key trends that we saw forecasted stable and slight profit raise, and an incredible freshness increase for ingredients. And of course, just by automation, we are able to save hundreds of hours for restaurants.
-From these results, we’ve gathered some key insights. 
-</p>
+
 <script>
 
 randomColor = "rgba(" + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + "," + (Math.round(Math.random()*255)) + ",.5)";
