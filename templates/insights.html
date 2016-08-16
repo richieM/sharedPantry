@@ -11,7 +11,77 @@
   <link rel="stylesheet" type="text/css" href="static/style.css">
 </head>
 
-<body>
+<body id="gradient">
+
+<script>
+var colors = new Array(
+  [255,255,255],
+  [255,255,0],
+  [255,255,255],
+  [255,0,0],
+  [255,255,255],
+  [255,255,0],
+  [255,255,255],
+  [0,180,0]);
+
+var step = 0;
+//color table indices for: 
+// current color left
+// next color left
+// current color right
+// next color right
+var colorIndices = [0,1,2,3];
+
+//transition speed
+var gradientSpeed = 0.001;
+
+function updateGradient()
+{
+  
+  if ( $===undefined ) return;
+  
+var c0_0 = colors[colorIndices[0]];
+var c0_1 = colors[colorIndices[1]];
+var c1_0 = colors[colorIndices[2]];
+var c1_1 = colors[colorIndices[3]];
+
+var istep = 1 - step;
+var r1 = Math.round(istep * c0_0[0] + step * c0_1[0]);
+var g1 = Math.round(istep * c0_0[1] + step * c0_1[1]);
+var b1 = Math.round(istep * c0_0[2] + step * c0_1[2]);
+var color1 = "rgb("+r1+","+g1+","+b1+")";
+
+var r2 = Math.round(istep * c1_0[0] + step * c1_1[0]);
+var g2 = Math.round(istep * c1_0[1] + step * c1_1[1]);
+var b2 = Math.round(istep * c1_0[2] + step * c1_1[2]);
+var color2 = "rgb("+r2+","+g2+","+b2+")";
+
+ $('#gradient').css({
+   background: "-webkit-gradient(linear, left top, right top, from("+color1+"), to("+color2+"))"}).css({
+    background: "-moz-linear-gradient(top, "+color1+" 0%, "+color2+" 100%)"});
+  
+  step += gradientSpeed;
+  if ( step >= 1 )
+  {
+    step %= 1;
+    colorIndices[0] = colorIndices[1];
+    colorIndices[2] = colorIndices[3];
+    
+    //pick two new target color indices
+    //do not pick the same as the current one
+    colorIndices[1] = ( colorIndices[1] + Math.floor( 1 + Math.random() * (colors.length - 1))) % colors.length;
+    colorIndices[3] = ( colorIndices[3] + Math.floor( 1 + Math.random() * (colors.length - 1))) % colors.length;
+    
+  }
+}
+
+setInterval(updateGradient,10);
+</script>
+
+
+
+
+
   <nav>
 	<li>
 		<a href="/">plenty</a>
@@ -27,27 +97,27 @@
 	<div class="divSlide" id="insight1">
 <center>
 </center>
-			<h5>“insight 1</h5>
-			<h4>cool</h4>
-			<a href="#insight2"> <h7>next insight</h7> </a>
+			<h4>POOLING</h4>
+			<h5>Smaller businesses can come together to create advantages of a singular, larger corporation.</h5>
+			<center><a href="#insight2"> <h7>next insight</h7> </a></center>
 	</div>
 
 <!-- insight2-->
 	<div class="divSlide" id="insight2">
 			<center>
 </center>
-			<h5>insight 2</h5>
-			<h4>cool</h4>
-			<a href="#insight3"> <h7>next insight</h7> </a>
+			<h4>PRO-PERISHABLE</h4>
+			<h5>Peer-to-peer transactions in a micro market enable fast item turnovers, optimizing the lifespan of the item. At any given moment in the system, perishables are close to their freshest potential. </h5>
+			<center><a href="#insight3"> <h7>next insight</h7> </a></center>
 	</div>
 <!-- insight3-->
 	<div class="divSlide" id="insight3">
 		<center>
 		
 </center>
-			<h5>insight 3</h5> 
-			<h4>cool</h4>
-			<a href="#insight4"> <h7>next insight</h7> </a>
+			<h4>PREDICTIVE</h4> 
+			<h5>By more accurately predicting the demand of consumers, we can reduce waste in over-supply. </h5>
+			<center><a href="#insight4"> <h7>next insight</h7> </a></center>
 	</div>
 
 <!-- insight4-->
@@ -55,12 +125,53 @@
 		<center>
 			
 </center>
-			<h4>insight 4</h4>
-			<a href="/team"> <h7>meet the team</h7> </a>
+			<h4>PROPAGATING</h4> 
+			<h5>Although the market value of an individual micro market is relatively small, the aggregated value of all potential micro markets is massive. If the Plenty platform can be genericized to support any peer to peer micro market, it would enable quick and easy formation of such markets and foster the growth of a new ecosystem. </h5>
+			<center><a href="#questions"> <h7>?</h7> </a></center>
 	</div>
+	<!-- questions-->
+		<div class="divSlide" id="questions">
+		<center>
+			
+</center>
+			<h4>QUESTIONS</h4> 
+			<center><h1>?</h1></center>
+			<center><a href="/team"> <h7>ask away</h7> </a></center>
+	</div>
+
 
 </body>
    <style>
 a:hover{color:lightgreen;}
+
+h4{
+	font-size:4em;
+	padding: 100px 0px 0px 0px;
+	margin: 0px 0px -40px 0px;
+	color:white;
+}
+
+h5{
+	margin-bottom: 50px;
+}
+nav{
+  background-color: rgba(255,255,255,0);
+}
+
+ a{color:black;
+      text-decoration: none;
+      padding:30px;
+      font-weight: bold;
+    }
+
+    a:hover{color:white;}
+
+    a:active{color:black;}
+
+ h1{font-size: 20em;
+ 	margin-top:-200px;
+ 	padding-left: 20px;
+ 	color:black;}
+
 </style>
 </html>
