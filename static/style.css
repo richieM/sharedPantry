@@ -1,6 +1,9 @@
-    img {margin:1em 1em 1em 1em;
+    .portraits {margin:1em 1em 1em 1em;
         border:2px solid black;
         box-shadow: 8px 8px 0px black;
+    }
+    img{width:50%;
+float:left;
     }
 
     p{position: inline-block;
@@ -40,6 +43,7 @@
       background-color:white;
       position:inline-block;
     }
+
 
     #chartMenu {
         margin: 0em 0em 0em 20em;
