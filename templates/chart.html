@@ -483,7 +483,6 @@ c
   $(document).ready(function(){
     setupChartDefaults();
     simulate(true);
-
     showChart(0);
 
     $(".simulate").click(function(){
@@ -504,11 +503,11 @@ c
     <h3><b>GENERAL SETTINGS</b></h3> 
 
 
-    <input id="participants_slider" type="range" min="0" max="50" step="1" value ="7" oninput="updateSliderCount('participantCount', this.value);" onmouseup="simulate();" />
+    <input id="participants_slider" type="range" min="0" max="50" step="1" value ="7" oninput="updateSliderCount('participantCount', this.value);" onmouseup="simulate(false);" />
     <h2><span id="participantCount">7</span> participants</h2> 
 
 
-    <input id="duration_slider" type="range" min="7" max="60" step="1"  value ="18" oninput="updateSliderCount('durationCount', this.value);" onmouseup="simulate();" />
+    <input id="duration_slider" type="range" min="7" max="60" step="1"  value ="18" oninput="updateSliderCount('durationCount', this.value);" onmouseup="simulate(false);" />
     <h2><span id="durationCount">18</span> days</h2> 
 
   </section>
@@ -517,7 +516,7 @@ c
     <h3><b>ITEM PROPERTIES</b></h3> 
 
 
-    <input id="expiration_slider" type="range" min="1" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);" onmouseup="simulate();" />
+    <input id="expiration_slider" type="range" min="1" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);" onmouseup="simulate(false);" />
     <h2><span id="expirationCount">7</span> day expiration</h2> 
 
   <!--
@@ -528,7 +527,7 @@ c
   <h2><span id="consumeCount">5</span> lbs consumed / hour</h2> 
   -->
 
-  <input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);" onmouseup="simulate();" />
+  <input id="unpredictability_slider" type="range" min="0" max="100" step="1"  value ="50" oninput="updateSliderCount('predictCount', this.value);" onmouseup="simulate(false);" />
   <h2><span id="predictCount">50</span>% unpredictable demand</h2> 
 
   </section>
