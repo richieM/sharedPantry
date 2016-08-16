@@ -10,7 +10,7 @@
     body {width: 100%;
     	   height: 100%;
          margin-top:0px;
-          font-family: 'Montserrat', sans-serif;
+          font-family: 'Karla', sans-serif;
           font-size: 100%;
           line-height: 1.6875;
           background-color: rgba(255, 255, 255, 1);
@@ -128,6 +128,7 @@
     a{color:black;
       text-decoration: none;
       padding:30px;
+      font-weight: bold;
     }
 
     a:hover{color:white;}

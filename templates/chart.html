@@ -6,7 +6,7 @@
    <title>plenty</title>
    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.1/Chart.js'></script>
    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
-   <link href="https://fonts.googleapis.com/css?family=Montserrat:700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Karla:400,400i,700" rel="stylesheet">
    <link rel="stylesheet" type="text/css" href="static/style.css">
   </head>
   <body>
@@ -24,7 +24,7 @@
   <br></br>
   <br></br>
   <br></br>
-  
+
     <div id="controlsDiv">
 
       <aside>
@@ -491,7 +491,7 @@
 
   <!-- <button type="button" class="simulate" >SIMULATE</button> -->
   <section>
-    <h3>GENERAL SETTINGS</h3> 
+    <h3><b>GENERAL SETTINGS</b></h3> 
 
 
     <input id="participants_slider" type="range" min="0" max="50" step="1" value ="7" oninput="updateSliderCount('participantCount', this.value);" onmouseup="simulate();" />
@@ -505,7 +505,7 @@
 
 
   <section>
-    <h3>ITEM PROPERTIES</h3> 
+    <h3><b>ITEM PROPERTIES</b></h3> 
 
 
     <input id="expiration_slider" type="range" min="1" max="14" step="1" value ="7" oninput="updateSliderCount('expirationCount', this.value);" onmouseup="simulate();" />
@@ -528,7 +528,7 @@
 
 
   <div id="chartMenu">
-    <a href="javascript:showChart(0);"><div class="chartHeader" id="chart0">NET PROFIT</div></a>
+  <a href="javascript:showChart(0);"><div class="chartHeader" id="chart0">NET PROFIT</div></a>
     <a href="javascript:showChart(1);"><div class="chartHeader" id="chart1">AVERAGE FRESHNESS</div></a>
     <a href="javascript:showChart(2);"><div class="chartHeader" id="chart2">TOTAL WASTE (LBS)</div></a>
     <a href="javascript:showChart(3);"><div class="chartHeader" id="chart3">TIME WITHOUT ITEM (HOURS)</div></a>
