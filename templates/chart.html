@@ -35,6 +35,8 @@
 
 
         function setupChartDefaults() {
+          Chart.defaults.global.showTooltips = false;
+
           Chart.defaults.global.animationSteps = 200;
           Chart.defaults.global.animation.duration = 5000;
 
@@ -53,141 +55,145 @@
           Chart.defaults.global.elements.line.borderWidth = 1;
           Chart.defaults.global.elements.line.capBezierPoints = true;
 
-          Chart.defaults.global.showTooltips = false;
+          
 
           steps = 10;
           max = 100;
         }
 
 
-        function updateChart(response) {
+        function updateChart(response, firstTime) {
           ingredient = "lemon"
-    // allProfitsChartThingy
-    newData = [];
+      // allProfitsChartThingy
+      newData = [];
 
-    var jsonResponse = JSON.parse(response.responseText);
+      var jsonResponse = JSON.parse(response.responseText);
 
-    // Blow away profitChart if it exists
-    // TODO try deleting all the data in the chart ... .destroy()
-    if (typeof finalStateProfitChart == "object") {
+      // Blow away profitChart if it exists
+      // TODO try deleting all the data in the chart ... .destroy()
+      console.log("******** OUTSIDE *********")
 
-      $("#finalStateProfitChartCanvas").remove();
-      $("#charts").append('<canvas id="finalStateProfitChartCanvas" width="800" height="600"></canvas>');
+      if (!firstTime) {
 
-      $("#finalStateFreshnessChartCanvas").remove();
-      $("#charts").append('<canvas id="finalStateFreshnessChartCanvas" width="800" height="600"></canvas>');
+        console.log("******** DESTROYING OLD GRAPHS *********")
 
-      $("#finalStateWasteChartCanvas").remove();
-      $("#charts").append('<canvas id="finalStateWasteChartCanvas" width="800" height="600"></canvas>');
+        $("#finalStateProfitChartCanvas").remove();
+        $("#finalStateFreshnessChartCanvas").remove();
+        $("#finalStateWasteChartCanvas").remove();
+        $("#finalStateHoursWithoutChartCanvas").remove();
 
-      $("#finalStateHoursWithoutChartCanvas").remove();
-      $("#charts").append('<canvas id="finalStateHoursWithoutChartCanvas" width="800" height="600"></canvas>');
+        $(".chartjs-hidden-iframe").remove();
+
+        $("#charts").append('<canvas id="finalStateProfitChartCanvas" width="800" height="600"></canvas>');
+        $("#charts").append('<canvas id="finalStateFreshnessChartCanvas" width="800" height="600"></canvas>');
+        $("#charts").append('<canvas id="finalStateWasteChartCanvas" width="800" height="600"></canvas>');
+        $("#charts").append('<canvas id="finalStateHoursWithoutChartCanvas" width="800" height="600"></canvas>');
+
+        /*
+        $("#profitChartCanvas").remove();
+        $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
+c
+        $("#freshnessChartCanvas").remove();
+        $("#charts").append('<canvas id="freshnessChartCanvas" width="800" height="600"></canvas>');
+
+        $("#wasteChartCanvas").remove();
+        $("#charts").append('<canvas id="wasteChartCanvas" width="800" height="600"></canvas>');
+
+        $("#outOfStockChartCanvas").remove();
+        $("#charts").append('<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>');
+        */
+
+      }
+
+      // BAR CHART -- PROFIT
+      finalStateProfitChartCanvasContainer = document.getElementById("finalStateProfitChartCanvas").getContext("2d");
+
+      var finalStateProfitChart = new Chart(finalStateProfitChartCanvasContainer, {
+        type: 'bar',
+        data: getBarChartData(jsonResponse, "profit", ingredient),
+        options: getBarChartOptions("RESTAURANTS", "NET PROFITS ($)")
+      });
+
+      // BAR CHART -- FRESHNESS
+      finalStateFreshnessChartCanvasContainer = document.getElementById("finalStateFreshnessChartCanvas").getContext("2d");
+
+      var finalStateFreshnessChart = new Chart(finalStateFreshnessChartCanvasContainer, {
+        type: 'bar',
+        data: getBarChartData(jsonResponse, "avgFreshness", ingredient),
+        options: getBarChartOptions("RESTAURANTS", "AVERAGE FRESHNESS")
+      });
+
+
+     // BAR CHART -- WASTE
+     finalStateWasteChartCanvasContainer = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
+
+      // Draw Chart
+      var finalStateWasteChart = new Chart(finalStateWasteChartCanvasContainer, {
+        type: 'bar',
+        data: getBarChartData(jsonResponse, "waste", ingredient),
+        options: getBarChartOptions("RESTAURANTS", "NET WASTE (LBS)")
+      });
+
+       // BAR CHART -- HOURS WITHOUT
+       finalStateHoursWithoutChartCanvasContainer = document.getElementById("finalStateHoursWithoutChartCanvas").getContext("2d");
+
+      // Draw Chart
+      var finalStateHoursChart = new Chart(finalStateHoursWithoutChartCanvasContainer, {
+        type: 'bar',
+        data: getBarChartData(jsonResponse, "hoursWithout", ingredient),
+        options: getBarChartOptions("RESTAURANTS", "HOURS WITHOUT")
+      });
+
 
       /*
-      $("#profitChartCanvas").remove();
-      $("#charts").append('<canvas id="profitChartCanvas" width="800" height="600"></canvas>');
 
-      $("#freshnessChartCanvas").remove();
-      $("#charts").append('<canvas id="freshnessChartCanvas" width="800" height="600"></canvas>');
+      // PROFIT CHART
+      // Get canvas
+      profitChartCanvasContainer = document.getElementById("profitChartCanvas").getContext("2d");
 
-      $("#wasteChartCanvas").remove();
-      $("#charts").append('<canvas id="wasteChartCanvas" width="800" height="600"></canvas>');
+      // Draw Chart
+      var profitChart = new Chart(profitChartCanvasContainer, {
+        type: 'line',
+        data: getLineChartData(jsonResponse, "profit", ingredient),
+        options: getChartOptions("TIME (HOURS)", "PROFITS ($)")
+      });
 
-      $("#outOfStockChartCanvas").remove();
-      $("#charts").append('<canvas id="outOfStockChartCanvas" width="800" height="600"></canvas>');
-      */
+
+      // FRESHNESS CHART
+      // Get canvas
+      freshnessChartCanvasContainer = document.getElementById("freshnessChartCanvas").getContext("2d");
+
+      // Draw chart
+    var freshnessChart = new Chart(freshnessChartCanvasContainer, {
+        type: 'line',
+        data: getLineChartData(jsonResponse, "avgFreshness", ingredient),
+        options: getChartOptions("TIME (HOURS)", "FRESHNESS")
+      });
+
+      // WASTE CHART
+      wasteChartCanvasContainer = document.getElementById("wasteChartCanvas").getContext("2d");
+
+      // Draw Chart
+      var wasteChart = new Chart(wasteChartCanvasContainer, {
+        type: 'line',
+        data: getLineChartData(jsonResponse, "waste", ingredient),
+        options: getChartOptions("TIME (HOURS)", "NET WASTE (LBS)")
+      });
+
+
+      // OUT OF STOCK CHARToutOfStockChartCanvas
+      outOfStockChartCanvasContainer = document.getElementById("outOfStockChartCanvas").getContext("2d");
+
+      // Draw Chart
+      var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
+        type: 'line',
+        data: getLineChartData(jsonResponse, "hoursWithout", ingredient),
+        options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
+
+      });
+    */
 
     }
-
-    // BAR CHART -- PROFIT
-    finalStateProfitChartCanvasContainer = document.getElementById("finalStateProfitChartCanvas").getContext("2d");
-
-    var finalStateProfitChart = new Chart(finalStateProfitChartCanvasContainer, {
-      type: 'bar',
-      data: getBarChartData(jsonResponse, "profit", ingredient),
-      options: getBarChartOptions("RESTAURANTS", "NET PROFITS ($)")
-    });
-
-    // BAR CHART -- FRESHNESS
-    finalStateFreshnessChartCanvasContainer = document.getElementById("finalStateFreshnessChartCanvas").getContext("2d");
-
-    var finalStateFreshnessChart = new Chart(finalStateFreshnessChartCanvasContainer, {
-      type: 'bar',
-      data: getBarChartData(jsonResponse, "avgFreshness", ingredient),
-      options: getBarChartOptions("RESTAURANTS", "AVERAGE FRESHNESS")
-    });
-
-
-   // BAR CHART -- WASTE
-   finalStateWasteChartCanvasContainer = document.getElementById("finalStateWasteChartCanvas").getContext("2d");
-
-    // Draw Chart
-    var finalStateWasteChart = new Chart(finalStateWasteChartCanvasContainer, {
-      type: 'bar',
-      data: getBarChartData(jsonResponse, "waste", ingredient),
-      options: getBarChartOptions("RESTAURANTS", "NET WASTE (LBS)")
-    });
-
-     // BAR CHART -- HOURS WITHOUT
-     finalStateHoursWithoutChartCanvasContainer = document.getElementById("finalStateHoursWithoutChartCanvas").getContext("2d");
-
-    // Draw Chart
-    var finalStateHoursChart = new Chart(finalStateHoursWithoutChartCanvasContainer, {
-      type: 'bar',
-      data: getBarChartData(jsonResponse, "hoursWithout", ingredient),
-      options: getBarChartOptions("RESTAURANTS", "HOURS WITHOUT")
-    });
-
-
-    /*
-
-    // PROFIT CHART
-    // Get canvas
-    profitChartCanvasContainer = document.getElementById("profitChartCanvas").getContext("2d");
-
-    // Draw Chart
-    var profitChart = new Chart(profitChartCanvasContainer, {
-      type: 'line',
-      data: getLineChartData(jsonResponse, "profit", ingredient),
-      options: getChartOptions("TIME (HOURS)", "PROFITS ($)")
-    });
-
-
-    // FRESHNESS CHART
-    // Get canvas
-    freshnessChartCanvasContainer = document.getElementById("freshnessChartCanvas").getContext("2d");
-
-    // Draw chart
-  var freshnessChart = new Chart(freshnessChartCanvasContainer, {
-      type: 'line',
-      data: getLineChartData(jsonResponse, "avgFreshness", ingredient),
-      options: getChartOptions("TIME (HOURS)", "FRESHNESS")
-    });
-
-    // WASTE CHART
-    wasteChartCanvasContainer = document.getElementById("wasteChartCanvas").getContext("2d");
-
-    // Draw Chart
-    var wasteChart = new Chart(wasteChartCanvasContainer, {
-      type: 'line',
-      data: getLineChartData(jsonResponse, "waste", ingredient),
-      options: getChartOptions("TIME (HOURS)", "NET WASTE (LBS)")
-    });
-
-
-    // OUT OF STOCK CHARToutOfStockChartCanvas
-    outOfStockChartCanvasContainer = document.getElementById("outOfStockChartCanvas").getContext("2d");
-
-    // Draw Chart
-    var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
-      type: 'line',
-      data: getLineChartData(jsonResponse, "hoursWithout", ingredient),
-      options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
-
-    });
-  */
-
-  }
 
 
   function getBarChartData(simData, chartType, ingrName) {
@@ -355,6 +361,9 @@
       scaleShowLabels: true,
       bezierCurve: false,
       legendTemplate : false,
+      tooltips : {
+        enabled: false      
+      },
 
       scales: {
         xAxes: [{
@@ -387,7 +396,7 @@
   }
 
 
-  function simulate() {
+  function simulate(firstTime) {
     // Collect all the data we need from sliders and shit
           // call the simulator with those parameters
           // get data back and then replace the chart with stuff
@@ -421,7 +430,6 @@
           console.log("consumptionRate: " + consumptionRate);
           console.log("unitPrice: " + unitPrice);
 
-
           /*
           Vars not included:
             priceButton
@@ -442,8 +450,10 @@
             "&unitPrice=" + unitPrice
 
             var request = new XMLHttpRequest();
+
             request.onload = function() {
-              updateChart(request);
+              updateChart(request, firstTime);
+              showChart(0);
             };
           // We point the request at the appropriate command
           request.open("GET", url_text, true);
@@ -472,12 +482,12 @@
 
   $(document).ready(function(){
     setupChartDefaults();
-    simulate();
+    simulate(true);
 
     showChart(0);
 
     $(".simulate").click(function(){
-      simulate();
+      simulate(false);
     });
   });
 
@@ -561,11 +571,10 @@
         <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
         <h4>INGREDIENT DEFICIT / TIME</h3>
         -->
-        <div>
+      </div>
+      <div>
           In summary, here are some results that we saw in our simulation. It’s important to note that the simulation represents a perfect market and the numbers that we used in the simulation are estimated averages. But the key trends that we saw forecasted stable and slight profit raise, and an incredible freshness increase for ingredients. And of course, just by automation, we are able to save hundreds of hours for restaurants.
         </div>
-
-      </div>
     </div>
 
     <script>
