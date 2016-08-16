@@ -143,57 +143,36 @@ c
         data: getBarChartData(jsonResponse, "hoursWithout", ingredient),
         options: getBarChartOptions("RESTAURANTS", "HOURS WITHOUT")
       });
-
-
-      /*
-
-      // PROFIT CHART
-      // Get canvas
-      profitChartCanvasContainer = document.getElementById("profitChartCanvas").getContext("2d");
-
-      // Draw Chart
-      var profitChart = new Chart(profitChartCanvasContainer, {
-        type: 'line',
-        data: getLineChartData(jsonResponse, "profit", ingredient),
-        options: getChartOptions("TIME (HOURS)", "PROFITS ($)")
-      });
-
-
-      // FRESHNESS CHART
-      // Get canvas
-      freshnessChartCanvasContainer = document.getElementById("freshnessChartCanvas").getContext("2d");
-
-      // Draw chart
-    var freshnessChart = new Chart(freshnessChartCanvasContainer, {
-        type: 'line',
-        data: getLineChartData(jsonResponse, "avgFreshness", ingredient),
-        options: getChartOptions("TIME (HOURS)", "FRESHNESS")
-      });
-
-      // WASTE CHART
-      wasteChartCanvasContainer = document.getElementById("wasteChartCanvas").getContext("2d");
-
-      // Draw Chart
-      var wasteChart = new Chart(wasteChartCanvasContainer, {
-        type: 'line',
-        data: getLineChartData(jsonResponse, "waste", ingredient),
-        options: getChartOptions("TIME (HOURS)", "NET WASTE (LBS)")
-      });
-
-
-      // OUT OF STOCK CHARToutOfStockChartCanvas
-      outOfStockChartCanvasContainer = document.getElementById("outOfStockChartCanvas").getContext("2d");
-
-      // Draw Chart
-      var outOfStockChart = new Chart(outOfStockChartCanvasContainer, {
-        type: 'line',
-        data: getLineChartData(jsonResponse, "hoursWithout", ingredient),
-        options: getChartOptions("TIME (HOURS)", "NET DEFICIT (LBS)"),
-
-      });
-    */
-
     }
+
+  function getStatsText(response) {
+    /*
+    self.simData["stats"]["avgProfit"] = avgProfit
+    self.simData["stats"]["avgFreshness"] = avgFreshness
+    self.simData["stats"]["totalWaste"] = totalWaste
+    self.simData["stats"]["totalHrsWithout"] = totalHrsWithout
+    self.simData["stats"]["totalNumTransactions"] = self.totalNumberOfTransactions
+    self.simData["stats"]["totalAmountOfGoods"] = self.totalNumberOfTransactions
+    */
+    var simData = JSON.parse(response.responseText);
+
+    profitIncrease = ((simData.results.stats["avgProfit"] - simData.control.stats["avgProfit"]) / simData.control.stats["avgProfit"]) * 100
+    freshnessIncrease = ((simData.results.stats["avgFreshness"] - simData.control.stats["avgFreshness"]) / simData.control.stats["avgFreshness"]) * 100
+    totalWasteDecrease = simData.results.stats["totalWaste"] - simData.control.stats["totalWaste"]
+    totalHrsWithoutDecrease = simData.results.stats["totalHrsWithout"] - simData.control.stats["totalHrsWithout"]
+    totalNumTransactions = simData.results.stats["totalNumTransactions"]
+    totalTraded = simData.results.stats["totalAmountOfGoods"]
+
+    stats = []
+    stats.push("Profit increase: " + profitIncrease.toFixed(2) + "%");
+    stats.push("Freshness increase: " + freshnessIncrease.toFixed(2) + "%");
+    stats.push("Total waste delta: " + totalWasteDecrease.toFixed(2) + " pounds");
+    stats.push("Time without ingredient delta: " + totalHrsWithoutDecrease.toFixed(2) + " hours");
+    stats.push("Total number of transactions: " + totalNumTransactions);
+    stats.push("Total transaction value: $" + totalTraded.toFixed(2));
+
+    return stats;
+  }
 
 
   function getBarChartData(simData, chartType, ingrName) {
@@ -454,6 +433,14 @@ c
             request.onload = function() {
               updateChart(request, firstTime);
               showChart(0);
+              stats = getStatsText(request);
+              console.log(stats);
+
+              $('#stats_div p').text("Comparing our market to the status quo:");
+              for (i=0; i<stats.length; i++) {
+                $('#stats_div p').append("<br>");
+                $('#stats_div p').append(stats[i]);
+              }
             };
           // We point the request at the appropriate command
           request.open("GET", url_text, true);
@@ -492,9 +479,6 @@ c
 
   // hide the thing I hate
   $("#" + charts[0]).hide();
-
-
-
   </script>
 
 
@@ -571,9 +555,9 @@ c
         <h4>INGREDIENT DEFICIT / TIME</h3>
         -->
       </div>
-      <div>
-          In summary, here are some results that we saw in our simulation. It’s important to note that the simulation represents a perfect market and the numbers that we used in the simulation are estimated averages. But the key trends that we saw forecasted stable and slight profit raise, and an incredible freshness increase for ingredients. And of course, just by automation, we are able to save hundreds of hours for restaurants.
-        </div>
+      <div id="stats_div">
+        <p></p>
+      </div>
     </div>
 
     <script>

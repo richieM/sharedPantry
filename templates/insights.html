@@ -25,7 +25,7 @@ var colors = new Array(
   [0,180,0]);
 
 var step = 0;
-//color table indices for: 
+//color table indices for:
 // current color left
 // next color left
 // current color right
@@ -37,9 +37,9 @@ var gradientSpeed = 0.001;
 
 function updateGradient()
 {
-  
+
   if ( $===undefined ) return;
-  
+
 var c0_0 = colors[colorIndices[0]];
 var c0_1 = colors[colorIndices[1]];
 var c1_0 = colors[colorIndices[2]];
@@ -59,19 +59,19 @@ var color2 = "rgb("+r2+","+g2+","+b2+")";
  $('#gradient').css({
    background: "-webkit-gradient(linear, left top, right top, from("+color1+"), to("+color2+"))"}).css({
     background: "-moz-linear-gradient(top, "+color1+" 0%, "+color2+" 100%)"});
-  
+
   step += gradientSpeed;
   if ( step >= 1 )
   {
     step %= 1;
     colorIndices[0] = colorIndices[1];
     colorIndices[2] = colorIndices[3];
-    
+
     //pick two new target color indices
     //do not pick the same as the current one
     colorIndices[1] = ( colorIndices[1] + Math.floor( 1 + Math.random() * (colors.length - 1))) % colors.length;
     colorIndices[3] = ( colorIndices[3] + Math.floor( 1 + Math.random() * (colors.length - 1))) % colors.length;
-    
+
   }
 }
 
@@ -103,15 +103,15 @@ setInterval(updateGradient,10);
 			<center>
 </center>
 			<h4>FRESH</h4>
-			<h5>Peer-to-peer transactions in local micro markets enable fast item turnover. We provide remarkably fresher items at the same or lower cost.</h5>
+			<h5>Peer-to-peer transactions in local micromarkets enable fast item turnover. We provide remarkably fresher items at the same or lower cost.</h5>
 			<center><a href="#insight3"> <h7>next insight</h7> </a></center>
 	</div>
 <!-- insight3-->
 	<div class="divSlide" id="insight3">
 		<center>
-		
+
 </center>
-			<h4>PREDICTIVE</h4> 
+			<h4>PREDICTIVE</h4>
 			<h5>By more accurately predicting the demand of consumers, we reduce waste in over-supply. </h5>
 			<center><a href="#insight4"> <h7>next insight</h7> </a></center>
 	</div>
@@ -119,9 +119,9 @@ setInterval(updateGradient,10);
 <!-- insight4-->
 	<div class="divSlide" id="insight4">
 		<center>
-		
+
 </center>
-			<h4>DIVERSIFIED</h4> 
+			<h4>DIVERSIFIED</h4>
 			<h5>We provide responsive diversification of supply. In our system, businesses are no longer single source reliant.</h5>
 			<center><a href="#insight5"> <h7>next insight</h7> </a></center>
 	</div>
@@ -130,18 +130,18 @@ setInterval(updateGradient,10);
 <!-- insight5-->
 		<div class="divSlide" id="insight5">
 		<center>
-			
+
 </center>
-			<h4>PROPAGATING</h4> 
-			<h5>Although the market value of an individual micro market is relatively small, the aggregate value of all potential micro markets is massive. </h5>
-			<center><a href="#questions"> <h7>?</h7> </a></center>
+			<h4>PROPAGATING</h4>
+			<h5>Although the market value of an individual micromarket is relatively small, the aggregate value of all potential micromarkets is massive. </h5>
+			<center><a href="#questions"> <h7>Q&A</h7> </a></center>
 	</div>
 	<!-- questions-->
 		<div class="divSlide" id="questions">
 		<center>
-			
+
 </center>
-			<h4>QUESTIONS</h4> 
+			<h4>QUESTIONS</h4>
 			<center><h1>?</h1></center>
 			<center><a href="/team"> <h7>ask away</h7> </a></center>
 	</div>
