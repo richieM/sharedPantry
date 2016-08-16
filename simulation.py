@@ -12,11 +12,11 @@ def dynamicSim(params, ingrName, randomConsumptionRates, control=False):
 
 	ingredientName = ingrName
 	howManyRestaurants = int(params["participants"])
-	duration = int(params["duration"])
+	duration = int(params["duration"]) * 24 # duration is in days, so convert to hours
 	unpredictability = float(params["unpredictability"]) / 100
 	expirationTime = int(params["expirationTime"]) * 24 # expirationTime is in days on the graph
-	avgConsumptionRate = int(params["consumptionRate"])
-	unitPrice = int(params["unitPrice"])
+	avgConsumptionRate = float(params["consumptionRate"])
+	unitPrice = float(params["unitPrice"])
 
 	totalAmountOfFoodPerDay = avgConsumptionRate * howManyRestaurants
 
