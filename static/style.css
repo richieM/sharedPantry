@@ -10,7 +10,7 @@
     body {width: 100%;
     	   height: 100%;
          margin-top:0px;
-          font-family: 'Montserrat', sans-serif;
+          font-family: 'Karla', sans-serif;
           font-size: 100%;
           line-height: 1.6875;
           background-color: rgba(255, 255, 255, 1);
@@ -22,8 +22,8 @@
           letter-spacing: 2px;
           vertical-align: bottom;
           text-align: center;
-          word-spacing: 4em;
-          padding:40px 0px 20px 0px;
+          padding:30px 0px 20px 0px;
+          margin: 0px 0px 0px 0px;
           position: fixed;
           width: 100%;
           top: 0;
@@ -79,7 +79,7 @@
   }
 
   h1   {text-align: center;
-        padding: 0px 0px 0px 0px;
+        padding: 150px 0px 0px 0px;
         margin-bottom: 0px;
         font-size: 10em;
         letter-spacing: .1em;
@@ -116,16 +116,8 @@
         word-spacing: 10px;
         color:black;
         font-style:italic;
-  >>>>>>> fdb4f3dceb9d0c4224d500479a76656dcd0ee617
     }
 
-    h5{   text-align: center;
-          padding-left: 0px;
-          padding-top: 0px;
-          font-size: 1em;
-          letter-spacing: 2px;
-          word-spacing: 10px;
-          color:black;}
 
     h6{   vertical-align: text-top;
           font-size: 1em;
@@ -135,7 +127,8 @@
 
     a{color:black;
       text-decoration: none;
-      padding:40px;
+      padding:30px;
+      font-weight: bold;
     }
 
     a:hover{color:white;}
