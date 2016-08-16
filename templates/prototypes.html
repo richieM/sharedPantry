@@ -9,6 +9,15 @@
 	    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
 	   <link href="https://fonts.googleapis.com/css?family=Karla:400,400i,700" rel="stylesheet">
 	    <link rel="stylesheet" type="text/css" href="static/style.css">
+			<link href="static/colorbox.css" rel="stylesheet">
+			<script src="static/jquery.colorbox-min.js"></script>
+			<script>
+			    $(document).ready(function(){
+						$(".binproto").colorbox({inline:true, width:"50%"});
+						$(".scaleproto").colorbox({inline:true, width:"50%"});
+			    });
+			</script>
+	</head>
 
 	<body>
 	  <nav>
@@ -37,23 +46,47 @@
 	  <!-- proto2: bin-->
 	<div class="divSlide" id="proto2">
 
-
-<a id="firstPic" href="#secondPic" <center><img src="static/scale.png"></center>
-
+		<a class="binproto cboxElement" href="#binhidden">
+			<!-- <a id="firstPic" href="#secondPic" <center><img src="static/scale.png"></center></a> -->
+<center><img src="static/scale.png"></center>
 			<h5>Smart Bin</h5>
 			<h4>Measures amount of ingredients stored. Three inventory status LED indicators.</h4>
+		</a>
 			<center><a href="#proto3"> <h7>next prototype</h7> </a></center>
+	</div>
+
+	<div style="display:none">
+        <div id="binhidden" style="padding-right:10px; background:#fff">
+            <h8>
+							This is our first smart bin prototype.
+							The weight sensor system was build into the bin.
+							Three LED lights indicate whether your ingredient was sufficiently stocked, out of stock, or was currently being delivered.
+							After taking this prototype out into the field, we learned that there were a few features that needed improvements. <br />
+							1) The bin needed to be washable <br />
+							2) The system had to support bins of multiple sizes </br />
+							3) The indicator should provide a warning of when an ingredient is almost out rather than a binary “out” or “not out”.
+						</h8>
+        </div>
 	</div>
 
 <!-- proto3: scale -->
 	<div class="divSlide" id="proto3">
-
-			<a id="firstPic" href="#secondPic" <center><img src="static/scale.png"></center>
+		<a class="scaleproto cboxElement" href="#scalehidden">
+			<!-- <a id="firstPic" href="#secondPic" <center><img src="static/scale.png"></center> -->
+			<center><img src="static/scale.png"></center>
 			<h5>Smart Scale</h5>
 			<h4>Supports multiple bin sizes. Gradient invetory status indicator. Washable.</h4>
+		</a>
 			<center><a href="/runSim"> <h7>our market</h7> </a></center>
 	</div>
 
+	<div style="display:none">
+				<div id="scalehidden" style="padding:10px; background:#fff">
+						<h8> Based on learnings from our original smart bin prototype, we redesigned our weight sensor to be washable, have a language independent gradient indicator,
+							and to have the  ability to support a wide variety of bin sizes.
+						</h8>
+				</div>
+	</div>
 
 
 </body>
