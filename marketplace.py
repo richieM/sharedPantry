@@ -31,6 +31,8 @@ class Marketplace:
 		self.currentHour = -1
 		self.control = control
 		self.expirationTime = expirationTime
+		self.totalNumberOfTransactions = 0
+		self.totalAmountOfGoodsTransacted = 0
 
 		self.bulkResupplySize = bulkResupplySize
 
@@ -80,6 +82,11 @@ class Marketplace:
 			myPreferredSellRequest, howMuchFood, cost = self.getPreferredSellRequest(br)
 			if myPreferredSellRequest is not None:
 				amountsOfGoodsTransacted = self.makeATransaction(myPreferredSellRequest, howMuchFood, cost, br)
+
+				# log stats
+				self.totalNumberOfTransactions += 1
+				self.totalAmountOfGoodsTransacted += amountsOfGoodsTransacted
+
 				br.ingredient.sellWeight += amountsOfGoodsTransacted
 				print "ADDING sell weight due to transaction by %f" % amountsOfGoodsTransacted
 			else:
@@ -215,12 +222,37 @@ class Marketplace:
 	def gatherSimData(self):
 		self.simData = {}
 		self.simData["market"] = {}
+		self.simData["stats"] = {}
 		for r in self.restaurants.values():
 			currRestData = {}
 			for ingr in r.ingredients.values():
 				currIngrData = ingr.getSimData()
 				currRestData[ingr.name] = currIngrData
 			self.simData["market"][r.name] = currRestData
+
+
+		## STATS
+		length = len(self.simData["market"][0]["lemon"]["profit"])
+		numRestaurants = len(self.simData["market"])
+		totalProfit = 0
+		totalFreshness = 0
+		totalWaste = 0
+		totalHrsWithout = 0
+		for r in self.simData["market"].values():
+			totalProfit += r["lemon"]["profit"][length-1]
+			totalFreshness += r["lemon"]["avgFreshness"][length-1]
+			totalWaste += r["lemon"]["waste"][length-1]
+			totalHrsWithout += r["lemon"]["hoursWithout"][length-1]
+
+		avgProfit = totalProfit / numRestaurants
+		avgFreshness = totalFreshness / numRestaurants
+		
+		self.simData["stats"]["avgProfit"] = avgProfit
+		self.simData["stats"]["avgFreshness"] = avgFreshness
+		self.simData["stats"]["totalWaste"] = totalWaste
+		self.simData["stats"]["totalHrsWithout"] = totalHrsWithout
+		self.simData["stats"]["totalNumTransactions"] = self.totalNumberOfTransactions
+		self.simData["stats"]["totalAmountOfGoods"] = self.totalAmountOfGoodsTransacted
 
 		return self.simData
 
