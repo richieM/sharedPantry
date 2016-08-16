@@ -196,7 +196,7 @@
     numParticipants = parseInt($("#participants_slider").val());
     labelData = Array.apply(null, {length: numParticipants}).map(Number.call, Number)
 
-    duration = parseInt($("#duration_slider").val());
+    duration = parseInt($("#duration_slider").val()) * 24;
 
     experimentDataLastValues = []
     controlDataLastValues = []
@@ -405,8 +405,8 @@
           sellAmount = $("#sell_amount_slider").val();
           buyWeight = $("#buy_weight_slider").val();
           buyAmount = $("#buy_amount_slider").val();
-          consumptionRate = 5 //$("#consume_slider").val();
-          unitPrice = 10 //$("#price_slider").val();
+          consumptionRate = 1 //$("#consume_slider").val();
+          unitPrice = 5.33 //$("#price_slider").val();
 
           console.log("Participants: " + participants);
           console.log("Duration: " + duration);
@@ -498,11 +498,10 @@
     <h2><span id="participantCount">7</span> participants</h2> 
 
 
-    <input id="duration_slider" type="range" min="0" max="1680" step="5"  value ="167" oninput="updateSliderCount('durationCount', this.value);" onmouseup="simulate();" />
-    <h2><span id="durationCount">1683</span> hours</h2> 
+    <input id="duration_slider" type="range" min="7" max="60" step="1"  value ="18" oninput="updateSliderCount('durationCount', this.value);" onmouseup="simulate();" />
+    <h2><span id="durationCount">18</span> days</h2> 
 
   </section>
-
 
   <section>
     <h3><b>ITEM PROPERTIES</b></h3> 

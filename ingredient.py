@@ -1,7 +1,7 @@
 import random
 
-base_ingredient_prices = {"lemon": (1.2, 1.0)}
-bulk_lemon_cost = 1
+bulk_lemon_cost = 1.94
+base_ingredient_prices = {"lemon": (bulk_lemon_cost*1.2, bulk_lemon_cost)}
 
 class Ingredient:
 	"""
