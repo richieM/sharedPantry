@@ -110,6 +110,7 @@
   text-align: center;
   color: lightgreen;
   font-weight: bold;
+  margin-bottom:20px;
   padding:0px 0px 0px 0px;
   }
 
@@ -119,7 +120,7 @@
         color:black;
         font-style:italic;
         letter-spacing:1.5px;
-        margin: 40px 250px -20px 250px;
+        margin: 20px 250px -20px 250px;
         text-indent:-0.5em;
     }
 
@@ -288,5 +289,5 @@
         background: black;
     }
     svg {
-      margin:150px 0px 40px 0px;
+      margin:150px 0px 20px 0px;
     }
