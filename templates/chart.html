@@ -168,7 +168,7 @@ c
     stats.push("Freshness increase: " + freshnessIncrease.toFixed(2) + "%");
     stats.push("Total waste delta: " + totalWasteDecrease.toFixed(2) + " pounds");
     stats.push("Time without ingredient delta: " + totalHrsWithoutDecrease.toFixed(2) + " hours");
-    stats.push("Total number of transactions: " + totalNumTransactions);
+    stats.push("Transactions: " + totalNumTransactions);
     stats.push("Total transaction value: $" + totalTraded.toFixed(2));
 
     return stats;
@@ -432,15 +432,16 @@ c
 
             request.onload = function() {
               updateChart(request, firstTime);
-              showChart(0);
               stats = getStatsText(request);
               console.log(stats);
 
-              $('#stats_div p').text("Comparing our market to the status quo:");
-              for (i=0; i<stats.length; i++) {
-                $('#stats_div p').append("<br>");
-                $('#stats_div p').append(stats[i]);
+              for (i=0; i<6; i++) {
+                thisName = "#stat_" + i + " h4"
+                $(thisName).text("");
+                $(thisName).append(stats[i]);
               }
+
+              showChart(0);
             };
           // We point the request at the appropriate command
           request.open("GET", url_text, true);
@@ -464,6 +465,19 @@ c
     $("#" + charts[n]).fadeIn();
     $("#chart" + n).css("background-color", "black");
     $("#chart" + n).css("color", "white");
+
+    for (i=0; i < 4; i++) {
+      divName = "#stat_" + i;
+      if (i == n) {
+        $(divName).show();
+      } else {
+        $(divName).hide();
+      }
+    }
+  }
+
+  function showStats(n) {
+
   }
 
 
@@ -554,11 +568,29 @@ c
         <canvas id="outOfStockChartCanvas" width="600" height="400"></canvas>
         <h4>INGREDIENT DEFICIT / TIME</h3>
         -->
+    </div>
+    <div style="float: left">
+      <div id="stat_0" class="statistic">
+        <h4></h4>
       </div>
-      <div id="stats_div">
-        <p></p>
+      <div id="stat_1" class="statistic">
+        <h4></h4>
+      </div>
+      <div id="stat_2" class="statistic">
+        <h4></h4>
+      </div>
+      <div id="stat_3" class="statistic">
+        <h4></h4>
+      </div>
+      <div id="stat_4" class="statistic">
+        <h4></h4>
+      </div>
+      <div id="stat_5" class="statistic">
+        <h4></h4>
       </div>
     </div>
+  </div>
+    
 
     <script>
 
