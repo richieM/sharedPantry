@@ -164,12 +164,12 @@ c
     totalTraded = simData.results.stats["totalAmountOfGoods"]
 
     stats = []
-    stats.push("Profit increase: " + profitIncrease.toFixed(2) + "%");
-    stats.push("Freshness increase: " + freshnessIncrease.toFixed(2) + "%");
-    stats.push("Total waste delta: " + totalWasteDecrease.toFixed(2) + " pounds");
-    stats.push("Time without ingredient delta: " + totalHrsWithoutDecrease.toFixed(2) + " hours");
-    stats.push("Transactions: " + totalNumTransactions);
-    stats.push("Total transaction value: $" + totalTraded.toFixed(2));
+    stats.push("Profit increase: <br>" + profitIncrease.toFixed(2) + "%");
+    stats.push("Freshness increase: <br>" + freshnessIncrease.toFixed(2) + "%");
+    stats.push("Total waste delta: <br>" + totalWasteDecrease.toFixed(2) + " pounds");
+    stats.push("Time without ingredient delta: <br>" + totalHrsWithoutDecrease.toFixed(2) + " hours");
+    stats.push("Transactions: <br>" + totalNumTransactions);
+    stats.push("Total value: <br>$" + totalTraded.toFixed(2));
 
     return stats;
   }
