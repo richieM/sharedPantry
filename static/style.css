@@ -43,7 +43,6 @@
       position:inline-block;
     }
 
-
     #chartMenu {
         margin: 0em 0em 0em 20em;
         position: absolute;
@@ -61,6 +60,11 @@
     #barGraphArea {width:60%;
         margin: 4.5em 0em 0em 20em;
         position: inline-block;
+    }
+
+    .statistic {
+      float: left;
+      width: 30%;
     }
 
     aside { width: 240px;
